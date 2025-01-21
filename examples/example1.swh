@@ -1,0 +1,10 @@
+kazi kuongeza(a, b) {
+    rudisha a + b
+}
+
+kazi kuu() {
+    namba x = 10
+    namba y = 20
+    namba jibu = kuongeza(x, y)
+    andika(jibu)
+}
