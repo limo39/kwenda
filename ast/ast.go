@@ -1,27 +1,49 @@
 package ast
 
+// ASTNode represents a node in the Abstract Syntax Tree
 type ASTNode interface{}
 
-type FunctionNode struct {
-    Name   string
-    Params []string
-    Body   []ASTNode
+// NumberNode represents a numeric literal
+type NumberNode struct {
+    Value string
 }
 
-type ReturnNode struct {
-    Value ASTNode
+// IdentifierNode represents a variable or function name
+type IdentifierNode struct {
+    Value string
 }
 
+// BinaryOpNode represents a binary operation (e.g., a + b)
 type BinaryOpNode struct {
     Left  ASTNode
     Op    string
     Right ASTNode
 }
 
-type NumberNode struct {
-    Value string
+// ReturnNode represents a return statement
+type ReturnNode struct {
+    Value ASTNode
 }
 
-type IdentifierNode struct {
-    Value string
+// InputNode represents a user input operation
+type InputNode struct {
+    Prompt string // Optional prompt message
+}
+
+// FunctionCallNode represents a function call (e.g., andika(x, y))
+type FunctionCallNode struct {
+    Name string   // Function name
+    Args []ASTNode // Function arguments
+}
+
+// VariableDeclarationNode represents a variable declaration (e.g., namba x = 10)
+type VariableDeclarationNode struct {
+    Name  string // Variable name
+    Value ASTNode // Variable value
+}
+
+// FunctionNode represents a function definition (e.g., kazi kuu() { ... })
+type FunctionNode struct {
+    Name string   // Function name
+    Body []ASTNode // Function body
 }

@@ -25,6 +25,7 @@ func main() {
     fmt.Println("AST:", ast)
 
     // Interpretation
-    result := interpreter.Interpret(ast)
+    env := interpreter.NewEnvironment()
+    result := interpreter.Interpret(ast, env)
     fmt.Println("Result:", result)
 }

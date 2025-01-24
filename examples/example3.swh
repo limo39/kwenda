@@ -1,7 +1,6 @@
 kazi kuu() {
     namba x = ingiza("Ingiza namba ya kwanza:")
     namba y = ingiza("Ingiza namba ya pili:")
-
     namba jibu = x + y
     andika("Jibu ni:", jibu)
 }

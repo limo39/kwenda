@@ -1,0 +1,10 @@
+kazi kuu() {
+    andika("Ingiza namba ya kwanza:")
+    namba x = ingiza()
+
+    andika("Ingiza namba ya pili:")
+    namba y = ingiza()
+
+    namba jibu = x + y
+    andika("Jibu ni:", jibu)
+}
