@@ -1,9 +1,7 @@
 package interpreter
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"lugha-yangu/ast"
 )
@@ -34,21 +32,62 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return value
 
 	case ast.IdentifierNode:
+		// Check if it's a string literal (starts and ends with quotes)
+		if len(n.Value) >= 2 && n.Value[0] == '"' && n.Value[len(n.Value)-1] == '"' {
+			return n.Value[1 : len(n.Value)-1] // Remove quotes
+		}
 		// Look up the identifier in the environment
-		return env.Get(n.Value)
+		value := env.Get(n.Value)
+		if value == nil {
+			// If not found in environment, return the identifier name itself (for debugging)
+			return n.Value
+		}
+		return value
 
 	case ast.BinaryOpNode:
 		left := Interpret(n.Left, env)
 		right := Interpret(n.Right, env)
+		
+		// Convert to integers if they're not already
+		leftInt, leftOk := left.(int)
+		if !leftOk {
+			if str, ok := left.(string); ok {
+				if num, err := strconv.Atoi(str); err == nil {
+					leftInt = num
+				} else {
+					leftInt = 0
+				}
+			} else {
+				leftInt = 0
+			}
+		}
+		
+		rightInt, rightOk := right.(int)
+		if !rightOk {
+			if str, ok := right.(string); ok {
+				if num, err := strconv.Atoi(str); err == nil {
+					rightInt = num
+				} else {
+					rightInt = 0
+				}
+			} else {
+				rightInt = 0
+			}
+		}
+		
 		switch n.Op {
 		case "+":
-			return left.(int) + right.(int)
+			result := leftInt + rightInt
+			return result
 		case "-":
-			return left.(int) - right.(int)
+			return leftInt - rightInt
 		case "*":
-			return left.(int) * right.(int)
+			return leftInt * rightInt
 		case "/":
-			return left.(int) / right.(int)
+			if rightInt != 0 {
+				return leftInt / rightInt
+			}
+			return 0
 		default:
 			fmt.Println("Operesheni isiyojulikana:", n.Op)
 			return nil
@@ -58,26 +97,31 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return Interpret(n.Value, env)
 
 	case ast.InputNode:
-		reader := bufio.NewReader(os.Stdin)
 		if n.Prompt != "" {
 			fmt.Print(n.Prompt + " ")
 		} else {
 			fmt.Print("Ingiza thamani: ")
 		}
-		input, _ := reader.ReadString('\n')
-		input = input[:len(input)-1] // Remove the newline character
+		
+		var input string
+		fmt.Scanln(&input)
 
-		// Try to convert the input to a number
+		// Always try to convert the input to a number for namba variables
 		if num, err := strconv.Atoi(input); err == nil {
 			return num
 		}
-		return input // Return as a string if not a number
+		// If conversion fails, return 0 for numeric operations
+		return 0
 
 	case ast.FunctionCallNode:
 		// Handle function calls (e.g., andika(x, y))
 		if n.Name == "andika" {
-			for _, arg := range n.Args {
-				fmt.Print(Interpret(arg, env), " ")
+			for i, arg := range n.Args {
+				result := Interpret(arg, env)
+				if i > 0 {
+					fmt.Print(" ")
+				}
+				fmt.Print(result)
 			}
 			fmt.Println()
 		}
@@ -91,9 +135,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 
 	case ast.FunctionNode:
 		// Handle function definitions (e.g., kazi kuu() { ... })
-		for _, statement := range n.Body {
-			Interpret(statement, env)
+		// If this is the main function (kuu), execute it immediately
+		if n.Name == "kuu" {
+			var result interface{}
+			for _, statement := range n.Body {
+				result = Interpret(statement, env)
+			}
+			return result
 		}
+		// For other functions, just store them (not implemented yet)
 		return nil
 
 	default:

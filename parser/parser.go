@@ -72,6 +72,14 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 			Args: ParseArguments(tokens[2:]),
 		}
 	}
+	
+	// Handle function calls with keyword (e.g., andika(x, y))
+	if tokens[0].Value == "andika" && len(tokens) > 1 && tokens[1].Value == "(" {
+		return ast.FunctionCallNode{
+			Name: tokens[0].Value,
+			Args: ParseArguments(tokens[2:]),
+		}
+	}
 
 	// Handle binary operations (e.g., a + b)
 	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator {
@@ -99,29 +107,62 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 // ParseBlock parses a block of statements (e.g., inside a function body)
 func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 	var statements []ast.ASTNode
-	var currentStatement []lexer.Token
+	i := 0
 
-	for i := 0; i < len(tokens); i++ {
-		token := tokens[i]
-
-		// End of statement (semicolon or closing brace)
-		if token.Value == ";" || token.Value == "}" {
-			if len(currentStatement) > 0 {
-				statements = append(statements, Parse(currentStatement))
-				currentStatement = nil
-			}
+	for i < len(tokens) {
+		// Skip any whitespace or empty tokens
+		if tokens[i].Value == "" {
+			i++
 			continue
 		}
 
-		// Handle opening brace (start of a nested block)
-		if token.Value == "{" {
-			nestedBlock := ParseBlock(tokens[i+1:])
-			statements = append(statements, nestedBlock...)
-			break
+		// Parse variable declarations (namba x = ...)
+		if tokens[i].Value == "namba" && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+			// Find the end of this statement (look for next "namba" or "andika" keyword)
+			end := i + 3
+			parenCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika") {
+					break
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
 		}
 
-		// Add token to the current statement
-		currentStatement = append(currentStatement, token)
+		// Parse function calls (andika(...))
+		if tokens[i].Value == "andika" && i+1 < len(tokens) && tokens[i+1].Value == "(" {
+			// Find the matching closing parenthesis
+			end := i + 2
+			parenCount := 1
+			for end < len(tokens) && parenCount > 0 {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		i++
 	}
 
 	return statements
@@ -132,7 +173,40 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) == 0 {
 		return nil
 	}
-	return Parse(tokens)
+	
+	// Handle function calls like ingiza("prompt")
+	if len(tokens) >= 3 && tokens[0].Value == "ingiza" && tokens[1].Value == "(" {
+		// Find the closing parenthesis
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == ")" {
+				if i > 2 && tokens[2].Type == lexer.TokenString {
+					return ast.InputNode{Prompt: tokens[2].Value}
+				}
+				return ast.InputNode{}
+			}
+		}
+	}
+	
+	// Handle binary operations (e.g., x + y)
+	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator {
+		return ast.BinaryOpNode{
+			Left:  ParseExpression(tokens[:1]),
+			Op:    tokens[1].Value,
+			Right: ParseExpression(tokens[2:3]), // Take one token for the right operand
+		}
+	}
+	
+	// Handle numbers
+	if tokens[0].Type == lexer.TokenNumber {
+		return ast.NumberNode{Value: tokens[0].Value}
+	}
+
+	// Handle identifiers
+	if tokens[0].Type == lexer.TokenIdentifier {
+		return ast.IdentifierNode{Value: tokens[0].Value}
+	}
+	
+	return nil
 }
 
 // ParseArguments parses function arguments (e.g., x, y)
@@ -143,7 +217,12 @@ func ParseArguments(tokens []lexer.Token) []ast.ASTNode {
 	for _, token := range tokens {
 		if token.Value == "," || token.Value == ")" {
 			if len(currentArg) > 0 {
-				args = append(args, ParseExpression(currentArg))
+				// Handle string literals directly
+				if len(currentArg) == 1 && currentArg[0].Type == lexer.TokenString {
+					args = append(args, ast.IdentifierNode{Value: currentArg[0].Value})
+				} else {
+					args = append(args, ParseExpression(currentArg))
+				}
 				currentArg = nil
 			}
 		} else {
