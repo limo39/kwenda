@@ -9,6 +9,7 @@
 - **Arithmetic Operations**: Basic mathematical operations
 - **Variable Declarations**: Type-safe variable handling
 - **Function Definitions**: Support for custom functions
+- **Conditional Statements**: If/else logic with `kama`/`sivyo`
 - **Educational Focus**: Perfect for learning programming concepts
 
 ## 🚀 Quick Start
@@ -41,6 +42,8 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `ingiza` | input | Get user input |
 | `andika` | print | Print output |
 | `rudisha` | return | Return a value |
+| `kama` | if | Conditional statement |
+| `sivyo` | else | Alternative condition |
 
 ### Basic Syntax
 
@@ -71,6 +74,25 @@ namba bidhaa = x * y  // Multiplication
 namba mgawanyo = x / y // Division
 ```
 
+#### Conditional Statements
+```swahili
+kama x > 10 {
+    andika("Kubwa kuliko 10")
+} sivyo {
+    andika("Ndogo au sawa na 10")
+}
+```
+
+#### Comparison Operators
+```swahili
+x == y    // Equal to
+x != y    // Not equal to
+x < y     // Less than
+x <= y    // Less than or equal to
+x > y     // Greater than
+x >= y    // Greater than or equal to
+```
+
 ## 📚 Examples
 
 ### Example 1: Simple Calculator
@@ -91,19 +113,47 @@ Ingiza namba ya pili: 15
 Jibu ni: 25
 ```
 
-### Example 2: Multiple Operations
+### Example 2: Conditional Logic
 ```swahili
 kazi kuu() {
-    namba a = ingiza("Ingiza namba ya kwanza:")
-    namba b = ingiza("Ingiza namba ya pili:")
+    namba umri = ingiza("Ingiza umri wako:")
     
-    namba jumla = a + b
-    namba tofauti = a - b
-    namba bidhaa = a * b
+    kama umri >= 18 {
+        andika("Wewe ni mtu mzima")
+    } sivyo {
+        andika("Wewe ni mtoto")
+    }
     
-    andika("Jumla:", jumla)
-    andika("Tofauti:", tofauti)
-    andika("Bidhaa:", bidhaa)
+    kama umri == 21 {
+        andika("Hongera! Umefika umri wa miaka 21!")
+    }
+}
+```
+
+**Output:**
+```
+Ingiza umri wako: 25
+Wewe ni mtu mzima
+```
+
+### Example 3: Nested Conditionals
+```swahili
+kazi kuu() {
+    namba alama = ingiza("Ingiza alama yako:")
+    
+    kama alama >= 90 {
+        andika("A - Bora sana!")
+    } sivyo {
+        kama alama >= 80 {
+            andika("B - Nzuri")
+        } sivyo {
+            kama alama >= 70 {
+                andika("C - Wastani")
+            } sivyo {
+                andika("D au F - Jitahidi zaidi")
+            }
+        }
+    }
 }
 ```
 
@@ -123,9 +173,12 @@ lugha-yangu/
 ├── environment/
 │   └── environment.go  # Variable environment
 ├── examples/
-│   ├── example1.swh    # Basic calculator
-│   ├── example2.swh    # Alternative syntax
-│   └── example3.swh    # Minimal example
+│   ├── example1.swh           # Basic calculator
+│   ├── example2.swh           # Alternative syntax
+│   ├── example3.swh           # Minimal example
+│   ├── conditional.swh        # Conditional statements
+│   ├── nested_if.swh          # Nested conditionals
+│   └── conditionals_demo.swh  # Comprehensive demo
 └── README.md
 ```
 
@@ -147,31 +200,35 @@ The interpreter follows a traditional architecture:
 
 ### Operations
 - **Arithmetic**: `+`, `-`, `*`, `/`
+- **Comparison**: `==`, `!=`, `<`, `<=`, `>`, `>=`
 - **Input**: `ingiza()` with optional prompt
 - **Output**: `andika()` with multiple arguments
 - **Assignment**: `=` operator
 
 ### Control Flow
 - **Functions**: `kazi` keyword for function definitions
+- **Conditionals**: `kama`/`sivyo` for if/else statements
+- **Nested Logic**: Support for nested conditional statements
 - **Main execution**: Automatic execution of `kuu()` function
 
 ## 🚧 Current Limitations
 
 - Only integer arithmetic (no floating-point)
-- No conditional statements (if/else)
 - No loops (for/while)
 - No arrays or complex data structures
 - Single-file programs only
 - No function parameters (except main)
+- No boolean data type (uses integers for conditions)
 
 ## 🔮 Future Enhancements
 
-- [ ] Conditional statements (`kama`/`sivyo` for if/else)
+- [x] Conditional statements (`kama`/`sivyo` for if/else) ✅
 - [ ] Loop constructs (`wakati` for while, `kwa` for for)
+- [ ] Boolean data type (`kweli`/`uwongo` for true/false)
 - [ ] Function parameters and return values
 - [ ] String manipulation functions
 - [ ] File I/O operations
-- [ ] Error handling
+- [ ] Error handling and better error messages
 - [ ] Multi-file support
 - [ ] Standard library functions
 
