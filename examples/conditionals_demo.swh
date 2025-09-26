@@ -1,0 +1,37 @@
+# Mfano wa Masharti (Conditional Statements) katika Kwenda
+# Hii ni mfano wa jinsi ya kutumia "kama" na "sivyo"
+
+kazi kuu() {
+    andika("=== Mfano wa Masharti ===")
+    
+    namba umri = ingiza("Ingiza umri wako:")
+    
+    # Sharti la msingi
+    kama umri >= 18 {
+        andika("Wewe ni mtu mzima")
+    } sivyo {
+        andika("Wewe ni mtoto")
+    }
+    
+    # Masharti mengi
+    kama umri < 13 {
+        andika("Wewe ni mtoto mdogo")
+    }
+    
+    kama umri >= 13 {
+        kama umri < 20 {
+            andika("Wewe ni kijana")
+        } sivyo {
+            kama umri < 60 {
+                andika("Wewe ni mtu mzima")
+            } sivyo {
+                andika("Wewe ni mzee")
+            }
+        }
+    }
+    
+    # Uchunguzi wa thamani maalum
+    kama umri == 21 {
+        andika("Hongera! Umefika umri wa miaka 21!")
+    }
+}

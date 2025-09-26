@@ -1,0 +1,13 @@
+kazi kuu() {
+    namba x = 15
+    
+    kama x > 10 {
+        kama x > 20 {
+            andika("Kubwa sana!")
+        } sivyo {
+            andika("Kubwa kidogo")
+        }
+    } sivyo {
+        andika("Ndogo")
+    }
+}

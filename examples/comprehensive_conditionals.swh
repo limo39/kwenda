@@ -1,0 +1,32 @@
+kazi kuu() {
+    andika("Mfumo wa Kuhesabu Alama")
+    andika("========================")
+    
+    namba alama = ingiza("Ingiza alama yako (0-100):")
+    
+    kama alama >= 90 {
+        andika("Hongera! Umepata A - Bora sana!")
+    } sivyo {
+        kama alama >= 80 {
+            andika("Vizuri! Umepata B - Nzuri")
+        } sivyo {
+            kama alama >= 70 {
+                andika("Umepata C - Wastani")
+            } sivyo {
+                kama alama >= 60 {
+                    andika("Umepata D - Chini ya wastani")
+                } sivyo {
+                    andika("Pole! Umepata F - Umeshindwa")
+                }
+            }
+        }
+    }
+    
+    kama alama == 100 {
+        andika("Umepata alama kamili! Hongera sana!")
+    }
+    
+    kama alama < 0 {
+        andika("Kosa: Alama haiwezi kuwa hasi")
+    }
+}

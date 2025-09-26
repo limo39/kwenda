@@ -1,0 +1,19 @@
+kazi kuu() {
+    namba x = ingiza("Ingiza namba:")
+    
+    kama x > 10 {
+        andika("Namba ni kubwa kuliko 10")
+    } sivyo {
+        andika("Namba ni ndogo au sawa na 10")
+    }
+    
+    kama x == 5 {
+        andika("Umepata namba 5!")
+    }
+    
+    kama x < 0 {
+        andika("Namba ni hasi")
+    } sivyo {
+        andika("Namba ni chanya au sifuri")
+    }
+}

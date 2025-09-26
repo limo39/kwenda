@@ -39,8 +39,11 @@ func Lex(input string) []Token {
 	var tokens []Token
 	var currentToken strings.Builder
 	var inString bool
+	runes := []rune(input)
 
-	for _, char := range input {
+	for i := 0; i < len(runes); i++ {
+		char := runes[i]
+		
 		if char == '"' {
 			// Handle string literals
 			if inString {
@@ -80,7 +83,23 @@ func Lex(input string) []Token {
 				}
 				currentToken.Reset()
 			}
-			tokens = append(tokens, Token{Type: TokenOperator, Value: string(char)})
+			
+			// Handle multi-character operators like ==, !=, <=, >=
+			if i+1 < len(runes) && runes[i+1] == '=' {
+				if char == '=' {
+					tokens = append(tokens, Token{Type: TokenOperator, Value: "=="})
+				} else if char == '!' {
+					tokens = append(tokens, Token{Type: TokenOperator, Value: "!="})
+				} else if char == '<' {
+					tokens = append(tokens, Token{Type: TokenOperator, Value: "<="})
+				} else if char == '>' {
+					tokens = append(tokens, Token{Type: TokenOperator, Value: ">="})
+				}
+				// Skip the next character since we consumed it
+				i++
+			} else {
+				tokens = append(tokens, Token{Type: TokenOperator, Value: string(char)})
+			}
 		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == ';' || char == ',' {
 			// Handle punctuation
 			if currentToken.Len() > 0 {

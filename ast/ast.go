@@ -47,3 +47,10 @@ type FunctionNode struct {
     Name string   // Function name
     Body []ASTNode // Function body
 }
+
+// IfNode represents a conditional statement (e.g., kama x > 5 { ... } sivyo { ... })
+type IfNode struct {
+    Condition ASTNode   // The condition to evaluate
+    ThenBody  []ASTNode // Statements to execute if condition is true
+    ElseBody  []ASTNode // Statements to execute if condition is false (optional)
+}

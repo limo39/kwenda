@@ -88,6 +88,18 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				return leftInt / rightInt
 			}
 			return 0
+		case "==":
+			return leftInt == rightInt
+		case "!=":
+			return leftInt != rightInt
+		case "<":
+			return leftInt < rightInt
+		case "<=":
+			return leftInt <= rightInt
+		case ">":
+			return leftInt > rightInt
+		case ">=":
+			return leftInt >= rightInt
 		default:
 			fmt.Println("Operesheni isiyojulikana:", n.Op)
 			return nil
@@ -132,6 +144,38 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		value := Interpret(n.Value, env)
 		env.Set(n.Name, value)
 		return value
+
+	case ast.IfNode:
+		// Handle conditional statements (kama ... { ... } sivyo { ... })
+		condition := Interpret(n.Condition, env)
+		
+		// Convert condition to boolean
+		var conditionBool bool
+		switch v := condition.(type) {
+		case bool:
+			conditionBool = v
+		case int:
+			conditionBool = v != 0
+		default:
+			conditionBool = false
+		}
+		
+		if conditionBool {
+			// Execute then body
+			var result interface{}
+			for _, statement := range n.ThenBody {
+				result = Interpret(statement, env)
+			}
+			return result
+		} else if len(n.ElseBody) > 0 {
+			// Execute else body
+			var result interface{}
+			for _, statement := range n.ElseBody {
+				result = Interpret(statement, env)
+			}
+			return result
+		}
+		return nil
 
 	case ast.FunctionNode:
 		// Handle function definitions (e.g., kazi kuu() { ... })

@@ -1,0 +1,7 @@
+kazi kuu() {
+    namba x = 15
+    
+    kama x > 10 {
+        andika("Kubwa!")
+    }
+}
