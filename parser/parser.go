@@ -16,6 +16,16 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ParseIfStatement(tokens)
 	}
 
+	// Handle while loops (e.g., wakati x < 10 { ... })
+	if tokens[0].Value == "wakati" {
+		return ParseWhileStatement(tokens)
+	}
+
+	// Handle for loops (e.g., kwa i = 0; i < 10; i = i + 1 { ... })
+	if tokens[0].Value == "kwa" {
+		return ParseForStatement(tokens)
+	}
+
 	// Handle function definitions (e.g., kazi kuu() { ... })
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" && tokens[3].Value == ")" {
 		// Extract the function name
@@ -62,6 +72,14 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle assignment statements (e.g., x = 10)
+	if len(tokens) >= 3 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "=" {
+		return ast.VariableDeclarationNode{
+			Name:  tokens[0].Value,
+			Value: ParseExpression(tokens[2:]),
+		}
+	}
+
 	// Handle user input (ingiza)
 	if tokens[0].Value == "ingiza" {
 		if len(tokens) > 1 && tokens[1].Type == lexer.TokenString {
@@ -86,8 +104,8 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle binary operations (e.g., a + b)
-	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator {
+	// Handle binary operations (e.g., a + b) but NOT assignment
+	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator && tokens[1].Value != "=" {
 		return ast.BinaryOpNode{
 			Left:  ParseExpression(tokens[:1]),
 			Op:    tokens[1].Value,
@@ -175,6 +193,64 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
+		// Parse while loops (wakati ...)
+		if tokens[i].Value == "wakati" {
+			// Find the end of the while loop
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+			
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse for loops (kwa ...)
+		if tokens[i].Value == "kwa" {
+			// Find the end of the for loop
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+			
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
 		// Parse variable declarations (namba x = ...)
 		if tokens[i].Value == "namba" && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			// Find the end of this statement (look for next keyword or end of tokens)
@@ -185,7 +261,31 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					parenCount++
 				} else if tokens[end].Value == ")" {
 					parenCount--
-				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika" || tokens[end].Value == "kama") {
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+					break
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse assignment statements (x = ...)
+		if i+2 < len(tokens) && tokens[i].Type == lexer.TokenIdentifier && tokens[i+1].Value == "=" {
+			// Find the end of this statement
+			end := i + 2
+			parenCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
 					break
 				}
 				end++
@@ -252,8 +352,8 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 	
-	// Handle binary operations (e.g., x + y, x > 5, x == 10)
-	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator {
+	// Handle binary operations (e.g., x + y, x > 5, x == 10) but NOT assignment
+	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator && tokens[1].Value != "=" {
 		return ast.BinaryOpNode{
 			Left:  ParseExpression(tokens[:1]),
 			Op:    tokens[1].Value,
@@ -384,5 +484,180 @@ func ParseIfStatement(tokens []lexer.Token) ast.ASTNode {
 		Condition: condition,
 		ThenBody:  thenBody,
 		ElseBody:  elseBody,
+	}
+}
+
+// ParseWhileStatement parses while loops (wakati condition { ... })
+func ParseWhileStatement(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "wakati" {
+		return nil
+	}
+
+	// Find the condition (between "wakati" and "{")
+	conditionStart := 1
+	conditionEnd := -1
+	for i := conditionStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			conditionEnd = i
+			break
+		}
+	}
+
+	if conditionEnd == -1 {
+		return nil
+	}
+
+	// Parse the condition
+	condition := ParseExpression(tokens[conditionStart:conditionEnd])
+
+	// Find the body (between "{" and "}")
+	bodyStart := conditionEnd + 1
+	bodyEnd := -1
+	braceCount := 1
+	for i := bodyStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				bodyEnd = i
+				break
+			}
+		}
+	}
+
+	if bodyEnd == -1 {
+		return nil
+	}
+
+	// Parse the body
+	body := ParseBlock(tokens[bodyStart:bodyEnd])
+
+	return ast.WhileNode{
+		Condition: condition,
+		Body:      body,
+	}
+}
+
+// ParseForStatement parses for loops (kwa init; condition; update { ... })
+func ParseForStatement(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "kwa" {
+		return nil
+	}
+
+	// Find the parts of the for loop (init; condition; update)
+	// Look for semicolons to separate the parts
+	var initEnd, conditionEnd, updateEnd int = -1, -1, -1
+	semicolonCount := 0
+	
+	for i := 1; i < len(tokens); i++ {
+		if tokens[i].Value == ";" {
+			semicolonCount++
+			if semicolonCount == 1 {
+				initEnd = i
+			} else if semicolonCount == 2 {
+				conditionEnd = i
+			}
+		} else if tokens[i].Value == "{" {
+			updateEnd = i
+			break
+		}
+	}
+
+	// If we don't have semicolons, treat it as a simple for loop with just condition
+	if semicolonCount == 0 {
+		// Simple for loop: kwa condition { ... }
+		conditionStart := 1
+		conditionEnd := -1
+		for i := conditionStart; i < len(tokens); i++ {
+			if tokens[i].Value == "{" {
+				conditionEnd = i
+				break
+			}
+		}
+
+		if conditionEnd == -1 {
+			return nil
+		}
+
+		condition := ParseExpression(tokens[conditionStart:conditionEnd])
+
+		// Find the body
+		bodyStart := conditionEnd + 1
+		bodyEnd := -1
+		braceCount := 1
+		for i := bodyStart; i < len(tokens); i++ {
+			if tokens[i].Value == "{" {
+				braceCount++
+			} else if tokens[i].Value == "}" {
+				braceCount--
+				if braceCount == 0 {
+					bodyEnd = i
+					break
+				}
+			}
+		}
+
+		if bodyEnd == -1 {
+			return nil
+		}
+
+		body := ParseBlock(tokens[bodyStart:bodyEnd])
+
+		return ast.ForNode{
+			Init:      nil,
+			Condition: condition,
+			Update:    nil,
+			Body:      body,
+		}
+	}
+
+	// Full for loop with init; condition; update
+	if initEnd == -1 || conditionEnd == -1 || updateEnd == -1 {
+		return nil
+	}
+
+	// Parse init, condition, and update
+	var init, condition, update ast.ASTNode
+	
+	if initEnd > 1 {
+		init = ParseExpression(tokens[1:initEnd])
+	}
+	
+	if conditionEnd > initEnd+1 {
+		condition = ParseExpression(tokens[initEnd+1:conditionEnd])
+	}
+	
+	if updateEnd > conditionEnd+1 {
+		update = ParseExpression(tokens[conditionEnd+1:updateEnd])
+	}
+
+	// Find the body
+	bodyStart := updateEnd + 1
+	bodyEnd := -1
+	braceCount := 1
+	for i := bodyStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				bodyEnd = i
+				break
+			}
+		}
+	}
+
+	if bodyEnd == -1 {
+		return nil
+	}
+
+	body := ParseBlock(tokens[bodyStart:bodyEnd])
+
+	return ast.ForNode{
+		Init:      init,
+		Condition: condition,
+		Update:    update,
+		Body:      body,
 	}
 }

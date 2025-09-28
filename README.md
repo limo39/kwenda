@@ -10,6 +10,7 @@
 - **Variable Declarations**: Type-safe variable handling
 - **Function Definitions**: Support for custom functions
 - **Conditional Statements**: If/else logic with `kama`/`sivyo`
+- **Loop Constructs**: While loops with `wakati` and for loops with `kwa`
 - **Educational Focus**: Perfect for learning programming concepts
 
 ## 🚀 Quick Start
@@ -44,6 +45,8 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `rudisha` | return | Return a value |
 | `kama` | if | Conditional statement |
 | `sivyo` | else | Alternative condition |
+| `wakati` | while | While loop |
+| `kwa` | for | For loop |
 
 ### Basic Syntax
 
@@ -91,6 +94,33 @@ x < y     // Less than
 x <= y    // Less than or equal to
 x > y     // Greater than
 x >= y    // Greater than or equal to
+```
+
+#### Loop Constructs
+
+##### While Loops
+```swahili
+namba i = 1
+wakati i <= 5 {
+    andika("Namba:", i)
+    i = i + 1
+}
+```
+
+##### For Loops (Full Syntax)
+```swahili
+kwa i = 0; i < 5; i = i + 1 {
+    andika("Iteration:", i)
+}
+```
+
+##### For Loops (Simple Condition)
+```swahili
+namba x = 10
+kwa x > 0 {
+    andika("x ni:", x)
+    x = x - 1
+}
 ```
 
 ## 📚 Examples
@@ -157,6 +187,66 @@ kazi kuu() {
 }
 ```
 
+### Example 4: While Loop
+```swahili
+kazi kuu() {
+    namba i = 1
+    
+    andika("Mfuatano wa namba kutoka 1 hadi 5:")
+    
+    wakati i <= 5 {
+        andika("Namba:", i)
+        i = i + 1
+    }
+    
+    andika("Mwisho wa loop!")
+}
+```
+
+**Output:**
+```
+Mfuatano wa namba kutoka 1 hadi 5:
+Namba: 1
+Namba: 2
+Namba: 3
+Namba: 4
+Namba: 5
+Mwisho wa loop!
+```
+
+### Example 5: For Loop
+```swahili
+kazi kuu() {
+    andika("For loop kutoka 0 hadi 4:")
+    
+    kwa i = 0; i < 5; i = i + 1 {
+        andika("Iteration:", i)
+    }
+    
+    andika("For loop simple:")
+    namba j = 3
+    
+    kwa j > 0 {
+        andika("j ni:", j)
+        j = j - 1
+    }
+}
+```
+
+**Output:**
+```
+For loop kutoka 0 hadi 4:
+Iteration: 0
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+For loop simple:
+j ni: 3
+j ni: 2
+j ni: 1
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -178,7 +268,10 @@ lugha-yangu/
 │   ├── example3.swh           # Minimal example
 │   ├── conditional.swh        # Conditional statements
 │   ├── nested_if.swh          # Nested conditionals
-│   └── conditionals_demo.swh  # Comprehensive demo
+│   ├── conditionals_demo.swh  # Comprehensive demo
+│   ├── while_loop.swh         # While loop examples
+│   ├── for_loop.swh           # For loop examples
+│   └── nested_loops.swh       # Nested loop examples
 └── README.md
 ```
 
@@ -208,22 +301,24 @@ The interpreter follows a traditional architecture:
 ### Control Flow
 - **Functions**: `kazi` keyword for function definitions
 - **Conditionals**: `kama`/`sivyo` for if/else statements
-- **Nested Logic**: Support for nested conditional statements
+- **Loops**: `wakati` for while loops, `kwa` for for loops
+- **Nested Logic**: Support for nested conditional and loop statements
 - **Main execution**: Automatic execution of `kuu()` function
 
 ## 🚧 Current Limitations
 
 - Only integer arithmetic (no floating-point)
-- No loops (for/while)
 - No arrays or complex data structures
 - Single-file programs only
 - No function parameters (except main)
 - No boolean data type (uses integers for conditions)
+- No break/continue statements in loops
 
 ## 🔮 Future Enhancements
 
 - [x] Conditional statements (`kama`/`sivyo` for if/else) ✅
-- [ ] Loop constructs (`wakati` for while, `kwa` for for)
+- [x] Loop constructs (`wakati` for while, `kwa` for for) ✅
+- [ ] Break and continue statements (`vunja`/`endelea` for break/continue)
 - [ ] Boolean data type (`kweli`/`uwongo` for true/false)
 - [ ] Function parameters and return values
 - [ ] String manipulation functions

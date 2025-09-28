@@ -1,0 +1,11 @@
+kazi kuu() {
+    andika("Simple for loop test:")
+    
+    namba i = 0
+    kwa i < 3 {
+        andika("i ni:", i)
+        i = i + 1
+    }
+    
+    andika("Mwisho!")
+}

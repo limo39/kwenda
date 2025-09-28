@@ -1,0 +1,12 @@
+kazi kuu() {
+    namba i = 1
+    
+    andika("Mfuatano wa namba kutoka 1 hadi 5:")
+    
+    wakati i <= 5 {
+        andika("Namba:", i)
+        i = i + 1
+    }
+    
+    andika("Mwisho wa loop!")
+}

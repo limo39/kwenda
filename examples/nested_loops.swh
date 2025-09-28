@@ -1,0 +1,23 @@
+kazi kuu() {
+    andika("Jedwali la kuzidisha (multiplication table):")
+    
+    namba i = 1
+    wakati i <= 3 {
+        namba j = 1
+        wakati j <= 3 {
+            namba bidhaa = i * j
+            andika(i, "x", j, "=", bidhaa)
+            j = j + 1
+        }
+        i = i + 1
+    }
+    
+    andika("Mfumo wa for loops:")
+    
+    kwa x = 1; x <= 2; x = x + 1 {
+        kwa y = 1; y <= 2; y = y + 1 {
+            namba jumla = x + y
+            andika(x, "+", y, "=", jumla)
+        }
+    }
+}

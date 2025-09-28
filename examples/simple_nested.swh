@@ -1,0 +1,16 @@
+kazi kuu() {
+    andika("Jedwali la kuzidisha 2x2:")
+    
+    namba i = 1
+    wakati i <= 2 {
+        namba j = 1
+        wakati j <= 2 {
+            namba bidhaa = i * j
+            andika(i, "x", j, "=", bidhaa)
+            j = j + 1
+        }
+        i = i + 1
+    }
+    
+    andika("Mwisho!")
+}

@@ -10,7 +10,7 @@ import (
 
 func main() {
     // Read the source code from a file
-    input, err := os.ReadFile("examples/example2.swh")
+    input, err := os.ReadFile("examples/example1.swh")
     if err != nil {
         fmt.Println("Error reading file:", err)
         return

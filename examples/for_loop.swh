@@ -1,0 +1,17 @@
+kazi kuu() {
+    andika("For loop kutoka 0 hadi 4:")
+    
+    kwa i = 0; i < 5; i = i + 1 {
+        andika("Iteration:", i)
+    }
+    
+    andika("For loop simple (kama while):")
+    namba j = 10
+    
+    kwa j > 7 {
+        andika("j ni:", j)
+        j = j - 1
+    }
+    
+    andika("Mwisho!")
+}

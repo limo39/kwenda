@@ -1,0 +1,31 @@
+kazi kuu() {
+    andika("=== DEMO YA LOOPS ===")
+    
+    andika("1. While Loop - Kuhesabu kutoka 1 hadi 3:")
+    namba i = 1
+    wakati i <= 3 {
+        andika("  Namba:", i)
+        i = i + 1
+    }
+    
+    andika("2. Simple For Loop - Kupunguza kutoka 3:")
+    namba j = 3
+    kwa j > 0 {
+        andika("  j ni:", j)
+        j = j - 1
+    }
+    
+    andika("3. Nested Loops - Jedwali la kuzidisha:")
+    namba x = 1
+    wakati x <= 2 {
+        namba y = 1
+        wakati y <= 3 {
+            namba bidhaa = x * y
+            andika("  ", x, "x", y, "=", bidhaa)
+            y = y + 1
+        }
+        x = x + 1
+    }
+    
+    andika("=== MWISHO WA DEMO ===")
+}

@@ -100,6 +100,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			return leftInt > rightInt
 		case ">=":
 			return leftInt >= rightInt
+		case "=":
+			// This should not happen in binary operations - assignment is handled in VariableDeclarationNode
+			fmt.Println("Operesheni ya assignment haiwezi kuwa katika binary operation")
+			return nil
 		default:
 			fmt.Println("Operesheni isiyojulikana:", n.Op)
 			return nil
@@ -176,6 +180,82 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			return result
 		}
 		return nil
+
+	case ast.WhileNode:
+		// Handle while loops (wakati condition { ... })
+		var result interface{}
+		for {
+			condition := Interpret(n.Condition, env)
+			
+			// Convert condition to boolean
+			var conditionBool bool
+			switch v := condition.(type) {
+			case bool:
+				conditionBool = v
+			case int:
+				conditionBool = v != 0
+			default:
+				conditionBool = false
+			}
+			
+			if !conditionBool {
+				break
+			}
+			
+			// Execute loop body
+			for _, statement := range n.Body {
+				result = Interpret(statement, env)
+			}
+		}
+		return result
+
+	case ast.ForNode:
+		// Handle for loops (kwa init; condition; update { ... })
+		var result interface{}
+		
+		// Execute initialization if present
+		if n.Init != nil {
+			Interpret(n.Init, env)
+		}
+		
+		// Loop while condition is true
+		for {
+			// Check condition if present
+			if n.Condition != nil {
+				condition := Interpret(n.Condition, env)
+				
+				// Convert condition to boolean
+				var conditionBool bool
+				switch v := condition.(type) {
+				case bool:
+					conditionBool = v
+				case int:
+					conditionBool = v != 0
+				default:
+					conditionBool = false
+				}
+				
+				if !conditionBool {
+					break
+				}
+			}
+			
+			// Execute loop body
+			for _, statement := range n.Body {
+				result = Interpret(statement, env)
+			}
+			
+			// Execute update if present
+			if n.Update != nil {
+				Interpret(n.Update, env)
+			}
+			
+			// If no condition, break after first iteration to prevent infinite loop
+			if n.Condition == nil {
+				break
+			}
+		}
+		return result
 
 	case ast.FunctionNode:
 		// Handle function definitions (e.g., kazi kuu() { ... })

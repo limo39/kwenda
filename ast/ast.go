@@ -54,3 +54,17 @@ type IfNode struct {
     ThenBody  []ASTNode // Statements to execute if condition is true
     ElseBody  []ASTNode // Statements to execute if condition is false (optional)
 }
+
+// WhileNode represents a while loop (e.g., wakati x < 10 { ... })
+type WhileNode struct {
+    Condition ASTNode   // The condition to evaluate
+    Body      []ASTNode // Statements to execute while condition is true
+}
+
+// ForNode represents a for loop (e.g., kwa i = 0; i < 10; i = i + 1 { ... })
+type ForNode struct {
+    Init      ASTNode   // Initialization statement (e.g., i = 0)
+    Condition ASTNode   // Loop condition (e.g., i < 10)
+    Update    ASTNode   // Update statement (e.g., i = i + 1)
+    Body      []ASTNode // Statements to execute in each iteration
+}
