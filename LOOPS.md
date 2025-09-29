@@ -136,9 +136,109 @@ kazi kuu() {
 2 x 2 = 4
 ```
 
+## Loop Control Statements
+
+### Break Statement (`vunja`)
+
+The `vunja` statement immediately exits the current loop.
+
+#### Syntax
+```swahili
+vunja
+```
+
+#### Example
+```swahili
+kazi kuu() {
+    namba i = 1
+    
+    wakati i <= 10 {
+        kama i == 5 {
+            andika("Tunavunja loop!")
+            vunja
+        }
+        andika("i =", i)
+        i = i + 1
+    }
+}
+```
+
+**Output:**
+```
+i = 1
+i = 2
+i = 3
+i = 4
+Tunavunja loop!
+```
+
+### Continue Statement (`endelea`)
+
+The `endelea` statement skips the rest of the current iteration and continues with the next iteration.
+
+#### Syntax
+```swahili
+endelea
+```
+
+#### Example
+```swahili
+kazi kuu() {
+    namba i = 0
+    
+    wakati i < 5 {
+        i = i + 1
+        kama i == 3 {
+            andika("Tunaruka i =", i)
+            endelea
+        }
+        andika("i =", i)
+    }
+}
+```
+
+**Output:**
+```
+i = 1
+i = 2
+Tunaruka i = 3
+i = 4
+i = 5
+```
+
+### Nested Loops with Break/Continue
+
+Break and continue statements only affect the innermost loop they are in.
+
+```swahili
+kazi kuu() {
+    namba i = 1
+    wakati i <= 2 {
+        namba j = 1
+        wakati j <= 3 {
+            kama j == 2 {
+                j = j + 1
+                endelea  # Only affects inner loop
+            }
+            andika(i, ":", j)
+            j = j + 1
+        }
+        i = i + 1
+    }
+}
+```
+
+**Output:**
+```
+1 : 1
+1 : 3
+2 : 1
+2 : 3
+```
+
 ## Current Limitations
 
-1. **No break/continue statements**: Loops cannot be terminated early or skip iterations
+1. **No labeled break/continue**: Break and continue only affect the innermost loop
 2. **Full for loop syntax**: The `kwa init; condition; update` syntax is experimental
 3. **No infinite loop protection**: Be careful with loop conditions to avoid infinite loops
 
@@ -154,5 +254,7 @@ kazi kuu() {
 
 - `wakati` - while loop
 - `kwa` - for loop
+- `vunja` - break statement
+- `endelea` - continue statement
 - `namba` - number variable declaration
 - `andika` - print statement

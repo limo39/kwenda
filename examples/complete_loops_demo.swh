@@ -1,0 +1,57 @@
+kazi kuu() {
+    andika("=== DEMO KAMILI YA LOOPS ===")
+    
+    andika("1. While Loop - Basic:")
+    namba i = 1
+    wakati i <= 3 {
+        andika("  i =", i)
+        i = i + 1
+    }
+    
+    andika("2. While Loop na Break:")
+    namba j = 1
+    wakati j <= 10 {
+        kama j == 4 {
+            andika("  Vunja wakati j =", j)
+            vunja
+        }
+        andika("  j =", j)
+        j = j + 1
+    }
+    
+    andika("3. For Loop na Continue:")
+    namba k = 0
+    kwa k < 5 {
+        k = k + 1
+        kama k == 3 {
+            andika("  Ruka k =", k)
+            endelea
+        }
+        andika("  k =", k)
+    }
+    
+    andika("4. Nested Loops na Break/Continue:")
+    namba x = 1
+    wakati x <= 2 {
+        andika("  Outer x =", x)
+        namba y = 1
+        wakati y <= 4 {
+            kama y == 3 {
+                andika("    Ruka y =", y)
+                y = y + 1
+                endelea
+            }
+            kama x == 2 {
+                kama y == 2 {
+                    andika("    Vunja inner loop")
+                    vunja
+                }
+            }
+            andika("    Inner y =", y)
+            y = y + 1
+        }
+        x = x + 1
+    }
+    
+    andika("=== MWISHO WA DEMO ===")
+}

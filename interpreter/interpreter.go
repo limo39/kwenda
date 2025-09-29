@@ -6,6 +6,20 @@ import (
 	"lugha-yangu/ast"
 )
 
+// Special control flow values
+type ControlFlow int
+
+const (
+	ControlNormal ControlFlow = iota
+	ControlBreak
+	ControlContinue
+)
+
+type ControlFlowResult struct {
+	Type  ControlFlow
+	Value interface{}
+}
+
 // Environment stores variables and their values
 type Environment struct {
 	Variables map[string]interface{}
@@ -203,8 +217,25 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			
 			// Execute loop body
+			shouldBreak := false
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
+				
+				// Check for control flow
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlBreak {
+						shouldBreak = true
+						result = cf.Value
+						break
+					} else if cf.Type == ControlContinue {
+						result = cf.Value
+						break // Break inner loop to continue outer loop
+					}
+				}
+			}
+			
+			if shouldBreak {
+				break
 			}
 		}
 		return result
@@ -241,12 +272,34 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			
 			// Execute loop body
+			shouldBreak := false
+			shouldContinue := false
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
+				
+				// Check for control flow
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlBreak {
+						shouldBreak = true
+						result = cf.Value
+						break
+					} else if cf.Type == ControlContinue {
+						shouldContinue = true
+						result = cf.Value
+						break
+					}
+				}
 			}
 			
-			// Execute update if present
-			if n.Update != nil {
+			if shouldBreak {
+				break
+			}
+			
+			// Execute update if present and not continuing
+			if !shouldContinue && n.Update != nil {
+				Interpret(n.Update, env)
+			} else if shouldContinue && n.Update != nil {
+				// Still execute update on continue
 				Interpret(n.Update, env)
 			}
 			
@@ -257,6 +310,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		}
 		return result
 
+	case ast.BreakNode:
+		// Handle break statements (vunja)
+		return ControlFlowResult{Type: ControlBreak, Value: nil}
+
+	case ast.ContinueNode:
+		// Handle continue statements (endelea)
+		return ControlFlowResult{Type: ControlContinue, Value: nil}
+
 	case ast.FunctionNode:
 		// Handle function definitions (e.g., kazi kuu() { ... })
 		// If this is the main function (kuu), execute it immediately
@@ -264,6 +325,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			var result interface{}
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
+				
+				// Don't propagate control flow outside of main function
+				if _, ok := result.(ControlFlowResult); ok {
+					// Control flow statements outside loops are ignored
+					result = nil
+				}
 			}
 			return result
 		}

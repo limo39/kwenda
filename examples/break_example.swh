@@ -1,0 +1,27 @@
+kazi kuu() {
+    andika("=== MFANO WA VUNJA (BREAK) ===")
+    
+    andika("1. While loop na break:")
+    namba i = 1
+    wakati i <= 10 {
+        kama i == 5 {
+            andika("Tunavunja loop wakati i =", i)
+            vunja
+        }
+        andika("i =", i)
+        i = i + 1
+    }
+    
+    andika("2. For loop na break:")
+    namba j = 0
+    kwa j < 10 {
+        kama j == 3 {
+            andika("Tunavunja for loop wakati j =", j)
+            vunja
+        }
+        andika("j =", j)
+        j = j + 1
+    }
+    
+    andika("=== MWISHO ===")
+}

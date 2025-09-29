@@ -1,0 +1,29 @@
+kazi kuu() {
+    andika("=== NESTED LOOPS NA BREAK/CONTINUE ===")
+    
+    andika("Jedwali la kuzidisha na break/continue:")
+    
+    namba i = 1
+    wakati i <= 3 {
+        namba j = 1
+        wakati j <= 4 {
+            kama j == 3 {
+                andika("  Ruka", i, "x", j)
+                j = j + 1
+                endelea
+            }
+            
+            kama i == 2 na j == 4 {
+                andika("  Vunja inner loop kwa i =", i)
+                vunja
+            }
+            
+            namba bidhaa = i * j
+            andika("  ", i, "x", j, "=", bidhaa)
+            j = j + 1
+        }
+        i = i + 1
+    }
+    
+    andika("=== MWISHO ===")
+}

@@ -26,6 +26,16 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ParseForStatement(tokens)
 	}
 
+	// Handle break statements (vunja)
+	if tokens[0].Value == "vunja" {
+		return ast.BreakNode{}
+	}
+
+	// Handle continue statements (endelea)
+	if tokens[0].Value == "endelea" {
+		return ast.ContinueNode{}
+	}
+
 	// Handle function definitions (e.g., kazi kuu() { ... })
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" && tokens[3].Value == ")" {
 		// Extract the function name
@@ -318,6 +328,20 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 				statements = append(statements, stmt)
 			}
 			i = end
+			continue
+		}
+
+		// Parse break statements (vunja)
+		if tokens[i].Value == "vunja" {
+			statements = append(statements, ast.BreakNode{})
+			i++
+			continue
+		}
+
+		// Parse continue statements (endelea)
+		if tokens[i].Value == "endelea" {
+			statements = append(statements, ast.ContinueNode{})
+			i++
 			continue
 		}
 

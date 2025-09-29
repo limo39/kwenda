@@ -1,0 +1,27 @@
+kazi kuu() {
+    andika("=== MFANO WA ENDELEA (CONTINUE) ===")
+    
+    andika("1. While loop na continue:")
+    namba i = 0
+    wakati i < 5 {
+        i = i + 1
+        kama i == 3 {
+            andika("Tunaruka i =", i)
+            endelea
+        }
+        andika("i =", i)
+    }
+    
+    andika("2. For loop na continue:")
+    namba j = 0
+    kwa j < 5 {
+        j = j + 1
+        kama j == 2 {
+            andika("Tunaruka j =", j)
+            endelea
+        }
+        andika("j =", j)
+    }
+    
+    andika("=== MWISHO ===")
+}

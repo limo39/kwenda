@@ -68,3 +68,13 @@ type ForNode struct {
     Update    ASTNode   // Update statement (e.g., i = i + 1)
     Body      []ASTNode // Statements to execute in each iteration
 }
+
+// BreakNode represents a break statement (vunja)
+type BreakNode struct {
+    // No additional fields needed
+}
+
+// ContinueNode represents a continue statement (endelea)
+type ContinueNode struct {
+    // No additional fields needed
+}

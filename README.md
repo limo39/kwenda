@@ -47,6 +47,8 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `sivyo` | else | Alternative condition |
 | `wakati` | while | While loop |
 | `kwa` | for | For loop |
+| `vunja` | break | Break out of loop |
+| `endelea` | continue | Continue to next iteration |
 
 ### Basic Syntax
 
@@ -120,6 +122,30 @@ namba x = 10
 kwa x > 0 {
     andika("x ni:", x)
     x = x - 1
+}
+```
+
+#### Loop Control Statements
+
+##### Break Statement (`vunja`)
+```swahili
+wakati i <= 10 {
+    kama i == 5 {
+        vunja  # Exit the loop
+    }
+    andika("i =", i)
+    i = i + 1
+}
+```
+
+##### Continue Statement (`endelea`)
+```swahili
+wakati i < 5 {
+    i = i + 1
+    kama i == 3 {
+        endelea  # Skip to next iteration
+    }
+    andika("i =", i)
 }
 ```
 
@@ -247,6 +273,49 @@ j ni: 2
 j ni: 1
 ```
 
+### Example 6: Break and Continue
+```swahili
+kazi kuu() {
+    andika("Break example:")
+    namba i = 1
+    wakati i <= 10 {
+        kama i == 5 {
+            andika("Breaking at i =", i)
+            vunja
+        }
+        andika("i =", i)
+        i = i + 1
+    }
+    
+    andika("Continue example:")
+    namba j = 0
+    wakati j < 5 {
+        j = j + 1
+        kama j == 3 {
+            andika("Skipping j =", j)
+            endelea
+        }
+        andika("j =", j)
+    }
+}
+```
+
+**Output:**
+```
+Break example:
+i = 1
+i = 2
+i = 3
+i = 4
+Breaking at i = 5
+Continue example:
+j = 1
+j = 2
+Skipping j = 3
+j = 4
+j = 5
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -271,7 +340,10 @@ lugha-yangu/
 │   ├── conditionals_demo.swh  # Comprehensive demo
 │   ├── while_loop.swh         # While loop examples
 │   ├── for_loop.swh           # For loop examples
-│   └── nested_loops.swh       # Nested loop examples
+│   ├── nested_loops.swh       # Nested loop examples
+│   ├── break_example.swh      # Break statement examples
+│   ├── continue_example.swh   # Continue statement examples
+│   └── simple_nested_break.swh # Nested loops with break/continue
 └── README.md
 ```
 
@@ -302,6 +374,7 @@ The interpreter follows a traditional architecture:
 - **Functions**: `kazi` keyword for function definitions
 - **Conditionals**: `kama`/`sivyo` for if/else statements
 - **Loops**: `wakati` for while loops, `kwa` for for loops
+- **Loop Control**: `vunja` for break, `endelea` for continue
 - **Nested Logic**: Support for nested conditional and loop statements
 - **Main execution**: Automatic execution of `kuu()` function
 
@@ -312,13 +385,13 @@ The interpreter follows a traditional architecture:
 - Single-file programs only
 - No function parameters (except main)
 - No boolean data type (uses integers for conditions)
-- No break/continue statements in loops
+- No labeled break/continue (only affects innermost loop)
 
 ## 🔮 Future Enhancements
 
 - [x] Conditional statements (`kama`/`sivyo` for if/else) ✅
 - [x] Loop constructs (`wakati` for while, `kwa` for for) ✅
-- [ ] Break and continue statements (`vunja`/`endelea` for break/continue)
+- [x] Break and continue statements (`vunja`/`endelea` for break/continue) ✅
 - [ ] Boolean data type (`kweli`/`uwongo` for true/false)
 - [ ] Function parameters and return values
 - [ ] String manipulation functions
