@@ -1,0 +1,32 @@
+kazi kuu() {
+    andika("=== BOOLEAN NA LOOPS ===")
+    
+    boolean endelea_loop = kweli
+    namba hesabu = 0
+    
+    andika("While loop na boolean condition:")
+    wakati endelea_loop {
+        hesabu = hesabu + 1
+        andika("Hesabu:", hesabu)
+        
+        kama hesabu >= 3 {
+            endelea_loop = uwongo
+        }
+    }
+    
+    andika("For loop na boolean variables:")
+    namba i = 0
+    boolean imeisha = uwongo
+    
+    kwa imeisha == uwongo {
+        i = i + 1
+        andika("i =", i)
+        
+        boolean condition = i >= 3
+        kama condition {
+            imeisha = kweli
+        }
+    }
+    
+    andika("=== MWISHO ===")
+}

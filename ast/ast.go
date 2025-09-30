@@ -78,3 +78,8 @@ type BreakNode struct {
 type ContinueNode struct {
     // No additional fields needed
 }
+
+// BooleanNode represents a boolean literal (kweli/uwongo)
+type BooleanNode struct {
+    Value bool // true for kweli, false for uwongo
+}

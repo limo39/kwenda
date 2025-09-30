@@ -82,6 +82,14 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle boolean variable declarations (e.g., boolean x = kweli)
+	if tokens[0].Value == "boolean" && len(tokens) >= 4 && tokens[2].Value == "=" {
+		return ast.VariableDeclarationNode{
+			Name:  tokens[1].Value,
+			Value: ParseExpression(tokens[3:]),
+		}
+	}
+
 	// Handle assignment statements (e.g., x = 10)
 	if len(tokens) >= 3 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "=" {
 		return ast.VariableDeclarationNode{
@@ -114,6 +122,15 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle logical operations (na, au)
+	if len(tokens) >= 3 && (tokens[1].Value == "na" || tokens[1].Value == "au") {
+		return ast.BinaryOpNode{
+			Left:  ParseExpression(tokens[:1]),
+			Op:    tokens[1].Value,
+			Right: ParseExpression(tokens[2:]),
+		}
+	}
+
 	// Handle binary operations (e.g., a + b) but NOT assignment
 	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator && tokens[1].Value != "=" {
 		return ast.BinaryOpNode{
@@ -126,6 +143,11 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle numbers
 	if tokens[0].Type == lexer.TokenNumber {
 		return ast.NumberNode{Value: tokens[0].Value}
+	}
+
+	// Handle boolean literals
+	if tokens[0].Type == lexer.TokenBoolean || tokens[0].Value == "kweli" || tokens[0].Value == "uwongo" {
+		return ast.BooleanNode{Value: tokens[0].Value == "kweli"}
 	}
 
 	// Handle identifiers
@@ -271,7 +293,31 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					parenCount++
 				} else if tokens[end].Value == ")" {
 					parenCount--
-				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+					break
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse boolean variable declarations (boolean x = ...)
+		if tokens[i].Value == "boolean" && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+			// Find the end of this statement
+			end := i + 3
+			parenCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
 					break
 				}
 				end++
@@ -295,7 +341,7 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					parenCount++
 				} else if tokens[end].Value == ")" {
 					parenCount--
-				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
 					break
 				}
 				end++
@@ -376,6 +422,15 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 	
+	// Handle logical operations (na, au)
+	if len(tokens) >= 3 && (tokens[1].Value == "na" || tokens[1].Value == "au") {
+		return ast.BinaryOpNode{
+			Left:  ParseExpression(tokens[:1]),
+			Op:    tokens[1].Value,
+			Right: ParseExpression(tokens[2:3]), // Take one token for the right operand
+		}
+	}
+
 	// Handle binary operations (e.g., x + y, x > 5, x == 10) but NOT assignment
 	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator && tokens[1].Value != "=" {
 		return ast.BinaryOpNode{
@@ -388,6 +443,11 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 	// Handle numbers
 	if tokens[0].Type == lexer.TokenNumber {
 		return ast.NumberNode{Value: tokens[0].Value}
+	}
+
+	// Handle boolean literals
+	if tokens[0].Type == lexer.TokenBoolean || tokens[0].Value == "kweli" || tokens[0].Value == "uwongo" {
+		return ast.BooleanNode{Value: tokens[0].Value == "kweli"}
 	}
 
 	// Handle identifiers

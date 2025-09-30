@@ -1,0 +1,31 @@
+kazi kuu() {
+    andika("=== BOOLEAN NA CONDITIONALS ===")
+    
+    boolean iko_jua = kweli
+    boolean mvua = uwongo
+    namba joto = 25
+    
+    andika("Hali ya hewa:")
+    andika("Jua:", iko_jua)
+    andika("Mvua:", mvua)
+    andika("Joto:", joto)
+    
+    kama iko_jua na joto > 20 {
+        andika("Siku nzuri ya kwenda nje!")
+    } sivyo {
+        andika("Bora ukae ndani")
+    }
+    
+    kama mvua au joto < 15 {
+        andika("Chukua jaketi")
+    } sivyo {
+        andika("Vaa nguo za kawaida")
+    }
+    
+    boolean hali_nzuri = iko_jua na joto > 18
+    kama hali_nzuri {
+        andika("Hali ya hewa ni nzuri!")
+    }
+    
+    andika("=== MWISHO ===")
+}

@@ -1,0 +1,73 @@
+kazi kuu() {
+    andika("=== COMPREHENSIVE BOOLEAN DEMO ===")
+    
+    andika("1. Basic Boolean Variables:")
+    boolean iko_jua = kweli
+    boolean mvua = uwongo
+    boolean baridi = uwongo
+    
+    andika("Jua:", iko_jua)
+    andika("Mvua:", mvua)
+    andika("Baridi:", baridi)
+    
+    andika("2. Logical Operations:")
+    boolean hali_nzuri = iko_jua na mvua == uwongo
+    boolean hali_mbaya = mvua au baridi
+    
+    andika("Hali nzuri (jua na hakuna mvua):", hali_nzuri)
+    andika("Hali mbaya (mvua au baridi):", hali_mbaya)
+    
+    andika("3. Boolean Conditionals:")
+    kama hali_nzuri {
+        andika("Twende nje!")
+    } sivyo {
+        andika("Tukae ndani")
+    }
+    
+    andika("4. Boolean with Numbers:")
+    namba joto = 25
+    boolean joto_la_kutosha = joto > 20
+    
+    andika("Joto:", joto)
+    andika("Joto la kutosha:", joto_la_kutosha)
+    
+    kama iko_jua na joto_la_kutosha {
+        andika("Siku nzuri ya kwenda pwani!")
+    }
+    
+    andika("5. Boolean Loop Control:")
+    boolean bado_endelea = kweli
+    namba hesabu = 0
+    
+    andika("Kuhesabu kwa kutumia boolean:")
+    wakati bado_endelea {
+        hesabu = hesabu + 1
+        andika("  Hesabu:", hesabu)
+        
+        boolean imefikia_kikomo = hesabu >= 3
+        kama imefikia_kikomo {
+            bado_endelea = uwongo
+            andika("  Tumefikia kikomo!")
+        }
+    }
+    
+    andika("6. Complex Boolean Logic:")
+    boolean ni_wikendi = kweli
+    boolean hakuna_kazi = kweli
+    boolean nina_pesa = kweli
+    
+    boolean naweza_kwenda_safari = ni_wikendi na hakuna_kazi na nina_pesa
+    
+    andika("Ni wikendi:", ni_wikendi)
+    andika("Hakuna kazi:", hakuna_kazi)
+    andika("Nina pesa:", nina_pesa)
+    andika("Naweza kwenda safari:", naweza_kwenda_safari)
+    
+    kama naweza_kwenda_safari {
+        andika("Safari time!")
+    } sivyo {
+        andika("Bado sina uhuru wa kwenda safari")
+    }
+    
+    andika("=== MWISHO WA UKURASA ===")
+}

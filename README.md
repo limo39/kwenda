@@ -49,6 +49,11 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `kwa` | for | For loop |
 | `vunja` | break | Break out of loop |
 | `endelea` | continue | Continue to next iteration |
+| `boolean` | boolean | Declare a boolean variable |
+| `kweli` | true | Boolean true value |
+| `uwongo` | false | Boolean false value |
+| `na` | and | Logical AND operator |
+| `au` | or | Logical OR operator |
 
 ### Basic Syntax
 
@@ -56,6 +61,8 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 ```swahili
 namba x = 10
 namba y = ingiza("Ingiza namba:")
+boolean iko_kweli = kweli
+boolean si_kweli = uwongo
 ```
 
 #### Function Definition
@@ -96,6 +103,16 @@ x < y     // Less than
 x <= y    // Less than or equal to
 x > y     // Greater than
 x >= y    // Greater than or equal to
+```
+
+#### Boolean Operations
+```swahili
+boolean a = kweli
+boolean b = uwongo
+
+boolean c = a na b    // Logical AND (false)
+boolean d = a au b    // Logical OR (true)
+boolean e = a == kweli // Boolean comparison (true)
 ```
 
 #### Loop Constructs
@@ -273,6 +290,37 @@ j ni: 2
 j ni: 1
 ```
 
+### Example 7: Boolean Data Type
+```swahili
+kazi kuu() {
+    boolean iko_jua = kweli
+    boolean mvua = uwongo
+    namba joto = 25
+    
+    andika("Hali ya hewa:")
+    andika("Jua:", iko_jua)
+    andika("Mvua:", mvua)
+    
+    kama iko_jua na joto > 20 {
+        andika("Siku nzuri!")
+    } sivyo {
+        andika("Hali mbaya")
+    }
+    
+    boolean hali_nzuri = iko_jua au joto > 30
+    andika("Hali nzuri:", hali_nzuri)
+}
+```
+
+**Output:**
+```
+Hali ya hewa:
+Jua: true
+Mvua: false
+Siku nzuri!
+Hali nzuri: true
+```
+
 ### Example 6: Break and Continue
 ```swahili
 kazi kuu() {
@@ -343,7 +391,10 @@ lugha-yangu/
 │   ├── nested_loops.swh       # Nested loop examples
 │   ├── break_example.swh      # Break statement examples
 │   ├── continue_example.swh   # Continue statement examples
-│   └── simple_nested_break.swh # Nested loops with break/continue
+│   ├── simple_nested_break.swh # Nested loops with break/continue
+│   ├── boolean_basic.swh      # Basic boolean operations
+│   ├── boolean_conditionals.swh # Booleans with conditionals
+│   └── boolean_loops.swh      # Booleans with loops
 └── README.md
 ```
 
@@ -361,11 +412,13 @@ The interpreter follows a traditional architecture:
 
 ### Data Types
 - **Numbers**: Integer values
+- **Booleans**: True/false values (`kweli`/`uwongo`)
 - **Strings**: Text literals (for prompts and output)
 
 ### Operations
 - **Arithmetic**: `+`, `-`, `*`, `/`
 - **Comparison**: `==`, `!=`, `<`, `<=`, `>`, `>=`
+- **Logical**: `na` (AND), `au` (OR)
 - **Input**: `ingiza()` with optional prompt
 - **Output**: `andika()` with multiple arguments
 - **Assignment**: `=` operator
@@ -384,7 +437,7 @@ The interpreter follows a traditional architecture:
 - No arrays or complex data structures
 - Single-file programs only
 - No function parameters (except main)
-- No boolean data type (uses integers for conditions)
+- Limited operator precedence (use parentheses for complex expressions)
 - No labeled break/continue (only affects innermost loop)
 
 ## 🔮 Future Enhancements
@@ -392,7 +445,7 @@ The interpreter follows a traditional architecture:
 - [x] Conditional statements (`kama`/`sivyo` for if/else) ✅
 - [x] Loop constructs (`wakati` for while, `kwa` for for) ✅
 - [x] Break and continue statements (`vunja`/`endelea` for break/continue) ✅
-- [ ] Boolean data type (`kweli`/`uwongo` for true/false)
+- [x] Boolean data type (`kweli`/`uwongo` for true/false) ✅
 - [ ] Function parameters and return values
 - [ ] String manipulation functions
 - [ ] File I/O operations

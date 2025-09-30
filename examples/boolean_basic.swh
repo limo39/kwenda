@@ -1,0 +1,26 @@
+kazi kuu() {
+    andika("=== MFANO WA BOOLEAN ===")
+    
+    andika("1. Boolean variables:")
+    boolean x = kweli
+    boolean y = uwongo
+    
+    andika("x =", x)
+    andika("y =", y)
+    
+    andika("2. Boolean operations:")
+    boolean z = x na y
+    andika("x na y =", z)
+    
+    boolean w = x au y
+    andika("x au y =", w)
+    
+    andika("3. Boolean comparisons:")
+    boolean same = x == kweli
+    andika("x == kweli:", same)
+    
+    boolean different = y != uwongo
+    andika("y != uwongo:", different)
+    
+    andika("=== MWISHO ===")
+}

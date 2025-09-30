@@ -39,11 +39,28 @@ func (env *Environment) Get(name string) interface{} {
 	return env.Variables[name]
 }
 
+// toBool converts a value to boolean following Kwenda's rules
+func toBool(value interface{}) bool {
+	switch v := value.(type) {
+	case bool:
+		return v
+	case int:
+		return v != 0
+	case string:
+		return v != ""
+	default:
+		return false
+	}
+}
+
 func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	switch n := node.(type) {
 	case ast.NumberNode:
 		value, _ := strconv.Atoi(n.Value)
 		return value
+
+	case ast.BooleanNode:
+		return n.Value
 
 	case ast.IdentifierNode:
 		// Check if it's a string literal (starts and ends with quotes)
@@ -62,12 +79,46 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		left := Interpret(n.Left, env)
 		right := Interpret(n.Right, env)
 		
-		// Convert to integers if they're not already
+		// Handle logical operators first
+		if n.Op == "na" || n.Op == "au" {
+			// Convert to boolean
+			leftBool := toBool(left)
+			rightBool := toBool(right)
+			
+			switch n.Op {
+			case "na": // AND
+				return leftBool && rightBool
+			case "au": // OR
+				return leftBool || rightBool
+			}
+		}
+		
+		// Handle comparison operators that can work with booleans
+		if n.Op == "==" || n.Op == "!=" {
+			// If both are booleans, compare as booleans
+			if leftBool, leftIsBool := left.(bool); leftIsBool {
+				if rightBool, rightIsBool := right.(bool); rightIsBool {
+					if n.Op == "==" {
+						return leftBool == rightBool
+					} else {
+						return leftBool != rightBool
+					}
+				}
+			}
+		}
+		
+		// Convert to integers for arithmetic and numeric comparisons
 		leftInt, leftOk := left.(int)
 		if !leftOk {
 			if str, ok := left.(string); ok {
 				if num, err := strconv.Atoi(str); err == nil {
 					leftInt = num
+				} else {
+					leftInt = 0
+				}
+			} else if b, ok := left.(bool); ok {
+				if b {
+					leftInt = 1
 				} else {
 					leftInt = 0
 				}
@@ -81,6 +132,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			if str, ok := right.(string); ok {
 				if num, err := strconv.Atoi(str); err == nil {
 					rightInt = num
+				} else {
+					rightInt = 0
+				}
+			} else if b, ok := right.(bool); ok {
+				if b {
+					rightInt = 1
 				} else {
 					rightInt = 0
 				}
@@ -168,15 +225,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		condition := Interpret(n.Condition, env)
 		
 		// Convert condition to boolean
-		var conditionBool bool
-		switch v := condition.(type) {
-		case bool:
-			conditionBool = v
-		case int:
-			conditionBool = v != 0
-		default:
-			conditionBool = false
-		}
+		conditionBool := toBool(condition)
 		
 		if conditionBool {
 			// Execute then body
@@ -202,15 +251,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			condition := Interpret(n.Condition, env)
 			
 			// Convert condition to boolean
-			var conditionBool bool
-			switch v := condition.(type) {
-			case bool:
-				conditionBool = v
-			case int:
-				conditionBool = v != 0
-			default:
-				conditionBool = false
-			}
+			conditionBool := toBool(condition)
 			
 			if !conditionBool {
 				break
@@ -256,15 +297,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				condition := Interpret(n.Condition, env)
 				
 				// Convert condition to boolean
-				var conditionBool bool
-				switch v := condition.(type) {
-				case bool:
-					conditionBool = v
-				case int:
-					conditionBool = v != 0
-				default:
-					conditionBool = false
-				}
+				conditionBool := toBool(condition)
 				
 				if !conditionBool {
 					break
