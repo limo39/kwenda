@@ -1,0 +1,48 @@
+kazi ongeza(namba x, namba y) namba {
+    rudisha x + y
+}
+
+kazi ni_sawa(namba a, namba b) boolean {
+    rudisha a == b
+}
+
+kazi salamu_mtu(namba umri) {
+    kama umri >= 18 {
+        andika("Karibu mtu mzima!")
+    } sivyo {
+        andika("Karibu kijana!")
+    }
+}
+
+kazi hesabu_kwa_loop(namba n) namba {
+    namba jumla = 0
+    namba i = 1
+    
+    wakati i <= n {
+        jumla = jumla + i
+        i = i + 1
+    }
+    
+    rudisha jumla
+}
+
+kazi kuu() {
+    andika("=== TESTING FUNCTIONS ===")
+    
+    namba jibu = ongeza(7, 3)
+    andika("7 + 3 =", jibu)
+    
+    boolean sawa = ni_sawa(5, 5)
+    andika("5 == 5:", sawa)
+    
+    salamu_mtu(20)
+    salamu_mtu(15)
+    
+    namba sum = hesabu_kwa_loop(4)
+    andika("Sum 1 to 4:", sum)
+    
+    namba nested = ongeza(ongeza(2, 3), 4)
+    andika("(2+3)+4 =", nested)
+    
+    andika("=== ALL TESTS PASSED ===")
+}

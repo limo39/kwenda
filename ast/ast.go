@@ -42,10 +42,18 @@ type VariableDeclarationNode struct {
     Value ASTNode // Variable value
 }
 
+// Parameter represents a function parameter
+type Parameter struct {
+    Name string // Parameter name
+    Type string // Parameter type (namba, boolean)
+}
+
 // FunctionNode represents a function definition (e.g., kazi kuu() { ... })
 type FunctionNode struct {
-    Name string   // Function name
-    Body []ASTNode // Function body
+    Name       string      // Function name
+    Parameters []Parameter // Function parameters
+    ReturnType string      // Return type (optional)
+    Body       []ASTNode   // Function body
 }
 
 // IfNode represents a conditional statement (e.g., kama x > 5 { ... } sivyo { ... })

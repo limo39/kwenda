@@ -1,0 +1,22 @@
+kazi ongeza(namba x, namba y) namba {
+    rudisha x + y
+}
+
+kazi zidisha(namba a, namba b) namba {
+    rudisha a * b
+}
+
+kazi kuu() {
+    andika("=== NESTED FUNCTION CALLS ===")
+    
+    namba jibu1 = ongeza(3, 4)
+    andika("3 + 4 =", jibu1)
+    
+    namba jibu2 = zidisha(jibu1, 2)
+    andika("(3 + 4) * 2 =", jibu2)
+    
+    namba jibu3 = ongeza(ongeza(2, 3), 4)
+    andika("(2 + 3) + 4 =", jibu3)
+    
+    andika("=== SUCCESS ===")
+}

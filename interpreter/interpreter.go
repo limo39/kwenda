@@ -13,6 +13,7 @@ const (
 	ControlNormal ControlFlow = iota
 	ControlBreak
 	ControlContinue
+	ControlReturn
 )
 
 type ControlFlowResult struct {
@@ -23,11 +24,23 @@ type ControlFlowResult struct {
 // Environment stores variables and their values
 type Environment struct {
 	Variables map[string]interface{}
+	Functions map[string]ast.FunctionNode
+	Parent    *Environment // For function scope
 }
 
 func NewEnvironment() *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
+		Functions: make(map[string]ast.FunctionNode),
+		Parent:    nil,
+	}
+}
+
+func NewChildEnvironment(parent *Environment) *Environment {
+	return &Environment{
+		Variables: make(map[string]interface{}),
+		Functions: parent.Functions, // Share functions with parent
+		Parent:    parent,
 	}
 }
 
@@ -36,7 +49,23 @@ func (env *Environment) Set(name string, value interface{}) {
 }
 
 func (env *Environment) Get(name string) interface{} {
-	return env.Variables[name]
+	if value, exists := env.Variables[name]; exists {
+		return value
+	}
+	// Look in parent environment
+	if env.Parent != nil {
+		return env.Parent.Get(name)
+	}
+	return nil
+}
+
+func (env *Environment) SetFunction(name string, function ast.FunctionNode) {
+	env.Functions[name] = function
+}
+
+func (env *Environment) GetFunction(name string) (ast.FunctionNode, bool) {
+	function, exists := env.Functions[name]
+	return function, exists
 }
 
 // toBool converts a value to boolean following Kwenda's rules
@@ -181,7 +210,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		}
 
 	case ast.ReturnNode:
-		return Interpret(n.Value, env)
+		if n.Value != nil {
+			value := Interpret(n.Value, env)
+			return ControlFlowResult{Type: ControlReturn, Value: value}
+		}
+		return ControlFlowResult{Type: ControlReturn, Value: nil}
 
 	case ast.InputNode:
 		if n.Prompt != "" {
@@ -201,7 +234,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return 0
 
 	case ast.FunctionCallNode:
-		// Handle function calls (e.g., andika(x, y))
+		// Handle built-in function calls
 		if n.Name == "andika" {
 			for i, arg := range n.Args {
 				result := Interpret(arg, env)
@@ -211,7 +244,40 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				fmt.Print(result)
 			}
 			fmt.Println()
+			return nil
 		}
+
+		// Handle user-defined function calls
+		if function, exists := env.GetFunction(n.Name); exists {
+			// Create new environment for function execution
+			funcEnv := NewChildEnvironment(env)
+
+			// Evaluate arguments and bind to parameters
+			for i, param := range function.Parameters {
+				if i < len(n.Args) {
+					argValue := Interpret(n.Args[i], env)
+					funcEnv.Set(param.Name, argValue)
+				}
+			}
+
+			// Execute function body
+			var result interface{}
+			for _, statement := range function.Body {
+				result = Interpret(statement, funcEnv)
+
+				// Check for return statement
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlReturn {
+						return cf.Value
+					}
+					// Other control flow (break/continue) should not escape function
+				}
+			}
+
+			return result
+		}
+
+		fmt.Printf("Kazi '%s' haijulikani\n", n.Name)
 		return nil
 
 	case ast.VariableDeclarationNode:
@@ -232,6 +298,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			var result interface{}
 			for _, statement := range n.ThenBody {
 				result = Interpret(statement, env)
+				// Propagate return statements
+				if cf, ok := result.(ControlFlowResult); ok && cf.Type == ControlReturn {
+					return result
+				}
 			}
 			return result
 		} else if len(n.ElseBody) > 0 {
@@ -239,6 +309,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			var result interface{}
 			for _, statement := range n.ElseBody {
 				result = Interpret(statement, env)
+				// Propagate return statements
+				if cf, ok := result.(ControlFlowResult); ok && cf.Type == ControlReturn {
+					return result
+				}
 			}
 			return result
 		}
@@ -271,6 +345,8 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					} else if cf.Type == ControlContinue {
 						result = cf.Value
 						break // Break inner loop to continue outer loop
+					} else if cf.Type == ControlReturn {
+						return result // Propagate return up
 					}
 				}
 			}
@@ -320,6 +396,8 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						shouldContinue = true
 						result = cf.Value
 						break
+					} else if cf.Type == ControlReturn {
+						return result // Propagate return up
 					}
 				}
 			}
@@ -352,23 +430,28 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return ControlFlowResult{Type: ControlContinue, Value: nil}
 
 	case ast.FunctionNode:
-		// Handle function definitions (e.g., kazi kuu() { ... })
-		// If this is the main function (kuu), execute it immediately
+		// Handle function definitions
 		if n.Name == "kuu" {
+			// Execute main function immediately
 			var result interface{}
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
 				
-				// Don't propagate control flow outside of main function
-				if _, ok := result.(ControlFlowResult); ok {
-					// Control flow statements outside loops are ignored
+				// Handle return from main function
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlReturn {
+						return cf.Value
+					}
+					// Other control flow statements outside loops are ignored
 					result = nil
 				}
 			}
 			return result
+		} else {
+			// Store user-defined function
+			env.SetFunction(n.Name, n)
+			return nil
 		}
-		// For other functions, just store them (not implemented yet)
-		return nil
 
 	default:
 		fmt.Println("Aina ya nodi haijulikani:", n)

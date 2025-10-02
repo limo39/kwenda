@@ -5,6 +5,58 @@ import (
 	"lugha-yangu/lexer"
 )
 
+// ProgramNode represents the entire program
+type ProgramNode struct {
+	Functions []ast.ASTNode
+}
+
+// ParseProgram parses the entire program with multiple functions
+func ParseProgram(tokens []lexer.Token) ProgramNode {
+	var functions []ast.ASTNode
+	i := 0
+
+	for i < len(tokens) {
+		// Skip empty tokens
+		if tokens[i].Value == "" {
+			i++
+			continue
+		}
+
+		// Find the end of the current function
+		if tokens[i].Value == "kazi" {
+			// Find the end of this function
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+
+			// Parse this function
+			function := Parse(tokens[i:end])
+			if function != nil {
+				functions = append(functions, function)
+			}
+			i = end
+		} else {
+			i++
+		}
+	}
+
+	return ProgramNode{Functions: functions}
+}
+
 // Parse converts tokens into an Abstract Syntax Tree (AST)
 func Parse(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) == 0 {
@@ -36,42 +88,17 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ast.ContinueNode{}
 	}
 
-	// Handle function definitions (e.g., kazi kuu() { ... })
-	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" && tokens[3].Value == ")" {
-		// Extract the function name
-		functionName := tokens[1].Value
-
-		// Find the opening and closing braces for the function body
-		bodyStart := -1
-		bodyEnd := -1
-		braceCount := 0
-
-		for i, token := range tokens {
-			if token.Value == "{" {
-				if braceCount == 0 {
-					bodyStart = i + 1
-				}
-				braceCount++
-			} else if token.Value == "}" {
-				braceCount--
-				if braceCount == 0 {
-					bodyEnd = i
-					break
-				}
-			}
+	// Handle return statements (rudisha)
+	if tokens[0].Value == "rudisha" {
+		if len(tokens) > 1 {
+			return ast.ReturnNode{Value: ParseExpression(tokens[1:])}
 		}
+		return ast.ReturnNode{Value: nil}
+	}
 
-		if bodyStart == -1 || bodyEnd == -1 {
-			return nil // Invalid function body
-		}
-
-		// Parse the function body
-		body := ParseBlock(tokens[bodyStart:bodyEnd])
-
-		return ast.FunctionNode{
-			Name: functionName,
-			Body: body,
-		}
+	// Handle function definitions (e.g., kazi kuu() { ... } or kazi hesabu(namba x, namba y) namba { ... })
+	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" {
+		return ParseFunctionDefinition(tokens)
 	}
 
 	// Handle variable declarations (e.g., namba x = 10)
@@ -355,8 +382,8 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
-		// Parse function calls (andika(...))
-		if tokens[i].Value == "andika" && i+1 < len(tokens) && tokens[i+1].Value == "(" {
+		// Parse function calls (andika(...) or any function call)
+		if i+1 < len(tokens) && tokens[i+1].Value == "(" {
 			// Find the matching closing parenthesis
 			end := i + 2
 			parenCount := 1
@@ -391,6 +418,30 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
+		// Parse return statements (rudisha)
+		if tokens[i].Value == "rudisha" {
+			// Find the end of the return statement
+			end := i + 1
+			parenCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "rudisha") {
+					break
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
 		// If we reach here, we didn't match any specific pattern
 		// Try to parse as a general statement
 		stmt := Parse(tokens[i:i+1])
@@ -409,15 +460,23 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 	
-	// Handle function calls like ingiza("prompt")
-	if len(tokens) >= 3 && tokens[0].Value == "ingiza" && tokens[1].Value == "(" {
-		// Find the closing parenthesis
-		for i := 2; i < len(tokens); i++ {
-			if tokens[i].Value == ")" {
-				if i > 2 && tokens[2].Type == lexer.TokenString {
-					return ast.InputNode{Prompt: tokens[2].Value}
+	// Handle function calls like ingiza("prompt") or any function call
+	if len(tokens) >= 3 && tokens[1].Value == "(" {
+		if tokens[0].Value == "ingiza" {
+			// Special handling for ingiza
+			for i := 2; i < len(tokens); i++ {
+				if tokens[i].Value == ")" {
+					if i > 2 && tokens[2].Type == lexer.TokenString {
+						return ast.InputNode{Prompt: tokens[2].Value}
+					}
+					return ast.InputNode{}
 				}
-				return ast.InputNode{}
+			}
+		} else {
+			// General function call
+			return ast.FunctionCallNode{
+				Name: tokens[0].Value,
+				Args: ParseArguments(tokens[2:]),
 			}
 		}
 	}
@@ -744,4 +803,114 @@ func ParseForStatement(tokens []lexer.Token) ast.ASTNode {
 		Update:    update,
 		Body:      body,
 	}
+}
+
+// ParseFunctionDefinition parses function definitions with parameters and return types
+func ParseFunctionDefinition(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "kazi" {
+		return nil
+	}
+
+	functionName := tokens[1].Value
+
+	// Find the closing parenthesis for parameters
+	parenStart := -1
+	parenEnd := -1
+	for i := 2; i < len(tokens); i++ {
+		if tokens[i].Value == "(" {
+			parenStart = i
+		} else if tokens[i].Value == ")" {
+			parenEnd = i
+			break
+		}
+	}
+
+	if parenStart == -1 || parenEnd == -1 {
+		return nil
+	}
+
+	// Parse parameters
+	var parameters []ast.Parameter
+	if parenEnd > parenStart+1 {
+		parameters = ParseParameters(tokens[parenStart+1:parenEnd])
+	}
+
+	// Check for return type
+	var returnType string
+	bodyStart := parenEnd + 1
+
+	// If there's a type after the closing parenthesis, it's the return type
+	if bodyStart < len(tokens) && (tokens[bodyStart].Value == "namba" || tokens[bodyStart].Value == "boolean") {
+		returnType = tokens[bodyStart].Value
+		bodyStart++
+	}
+
+	// Find the function body
+	braceStart := -1
+	braceEnd := -1
+	braceCount := 0
+
+	for i := bodyStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			if braceCount == 0 {
+				braceStart = i + 1
+			}
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				braceEnd = i
+				break
+			}
+		}
+	}
+
+	if braceStart == -1 || braceEnd == -1 {
+		return nil
+	}
+
+	// Parse the function body
+	body := ParseBlock(tokens[braceStart:braceEnd])
+
+	return ast.FunctionNode{
+		Name:       functionName,
+		Parameters: parameters,
+		ReturnType: returnType,
+		Body:       body,
+	}
+}
+
+// ParseParameters parses function parameters (e.g., namba x, boolean y)
+func ParseParameters(tokens []lexer.Token) []ast.Parameter {
+	var parameters []ast.Parameter
+	var currentParam []lexer.Token
+
+	for _, token := range tokens {
+		if token.Value == "," {
+			if len(currentParam) >= 2 {
+				// Parameter should be: type name
+				paramType := currentParam[0].Value
+				paramName := currentParam[1].Value
+				parameters = append(parameters, ast.Parameter{
+					Name: paramName,
+					Type: paramType,
+				})
+			}
+			currentParam = nil
+		} else {
+			currentParam = append(currentParam, token)
+		}
+	}
+
+	// Handle the last parameter
+	if len(currentParam) >= 2 {
+		paramType := currentParam[0].Value
+		paramName := currentParam[1].Value
+		parameters = append(parameters, ast.Parameter{
+			Name: paramName,
+			Type: paramType,
+		})
+	}
+
+	return parameters
 }

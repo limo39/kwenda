@@ -1,0 +1,11 @@
+kazi test_return(namba x) namba {
+    kama x > 5 {
+        rudisha 10
+    }
+    rudisha 0
+}
+
+kazi kuu() {
+    namba jibu = test_return(8)
+    andika("Jibu:", jibu)
+}

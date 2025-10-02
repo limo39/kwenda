@@ -21,11 +21,22 @@ func main() {
     fmt.Println("Tokens:", tokens)
 
     // Parsing
-    ast := parser.Parse(tokens)
-    fmt.Println("AST:", ast)
+    program := parser.ParseProgram(tokens)
+    fmt.Println("Program AST:", program)
 
     // Interpretation
     env := interpreter.NewEnvironment()
-    result := interpreter.Interpret(ast, env)
+    var result interface{}
+    
+    // First pass: register all functions
+    for _, function := range program.Functions {
+        interpreter.Interpret(function, env)
+    }
+    
+    // Second pass: execute main function if it exists
+    if mainFunc, exists := env.GetFunction("kuu"); exists {
+        result = interpreter.Interpret(mainFunc, env)
+    }
+    
     fmt.Println("Result:", result)
 }

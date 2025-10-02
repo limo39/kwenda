@@ -1,0 +1,19 @@
+kazi hesabu_kwa_loop(namba mwanzo, namba mwisho) namba {
+    namba jumla = 0
+    namba i = mwanzo
+    
+    wakati i <= mwisho {
+        andika("Loop iteration, i =", i)
+        jumla = jumla + i
+        i = i + 1
+        andika("After increment, i =", i)
+    }
+    
+    rudisha jumla
+}
+
+kazi kuu() {
+    andika("Testing loop function:")
+    namba result = hesabu_kwa_loop(1, 3)
+    andika("Result:", result)
+}

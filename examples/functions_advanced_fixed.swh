@@ -1,0 +1,40 @@
+kazi max(namba a, namba b) namba {
+    kama a > b {
+        rudisha a
+    } sivyo {
+        rudisha b
+    }
+}
+
+kazi ni_sawa(namba x, namba y) boolean {
+    rudisha x == y
+}
+
+kazi simple_sum(namba n) namba {
+    kama n <= 1 {
+        rudisha n
+    }
+    namba result = n + simple_sum(n - 1)
+    rudisha result
+}
+
+kazi kuu() {
+    andika("=== ADVANCED FUNCTIONS (FIXED) ===")
+    
+    andika("1. Function na conditional return:")
+    namba mkubwa = max(15, 8)
+    andika("max(15, 8) =", mkubwa)
+    
+    andika("2. Boolean function:")
+    boolean sawa = ni_sawa(7, 7)
+    andika("7 == 7:", sawa)
+    
+    boolean si_sawa = ni_sawa(5, 3)
+    andika("5 == 3:", si_sawa)
+    
+    andika("3. Simple recursive function:")
+    namba sum3 = simple_sum(3)
+    andika("sum(3) =", sum3)
+    
+    andika("=== MWISHO ===")
+}

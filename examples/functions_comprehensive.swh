@@ -1,0 +1,77 @@
+kazi ongeza(namba x, namba y) namba {
+    rudisha x + y
+}
+
+kazi toa(namba x, namba y) namba {
+    rudisha x - y
+}
+
+kazi zidisha(namba x, namba y) namba {
+    rudisha x * y
+}
+
+kazi gawanya(namba x, namba y) namba {
+    kama y == 0 {
+        andika("Hitilafu: Haiwezi kugawanya na sifuri!")
+        rudisha 0
+    }
+    rudisha x / y
+}
+
+kazi ni_namba_kubwa(namba n) boolean {
+    rudisha n > 100
+}
+
+kazi angalia_umri(namba umri) {
+    kama umri < 13 {
+        andika("Wewe ni mtoto")
+    } sivyo {
+        kama umri < 20 {
+            andika("Wewe ni kijana")
+        } sivyo {
+            kama umri < 60 {
+                andika("Wewe ni mtu mzima")
+            } sivyo {
+                andika("Wewe ni mzee")
+            }
+        }
+    }
+}
+
+kazi hesabu_wastani(namba a, namba b, namba c) namba {
+    namba jumla = ongeza(ongeza(a, b), c)
+    namba wastani = gawanya(jumla, 3)
+    rudisha wastani
+}
+
+kazi kuu() {
+    andika("=== COMPREHENSIVE FUNCTIONS DEMO ===")
+    
+    andika("1. Basic arithmetic functions:")
+    andika("10 + 5 =", ongeza(10, 5))
+    andika("10 - 3 =", toa(10, 3))
+    andika("4 * 6 =", zidisha(4, 6))
+    andika("15 / 3 =", gawanya(15, 3))
+    
+    andika("2. Error handling:")
+    namba jibu = gawanya(10, 0)
+    
+    andika("3. Boolean function:")
+    boolean kubwa = ni_namba_kubwa(150)
+    andika("150 > 100:", kubwa)
+    
+    boolean ndogo = ni_namba_kubwa(50)
+    andika("50 > 100:", ndogo)
+    
+    andika("4. Function bila return:")
+    angalia_umri(8)
+    angalia_umri(16)
+    angalia_umri(35)
+    angalia_umri(70)
+    
+    andika("5. Nested function calls:")
+    namba wastani = hesabu_wastani(10, 20, 30)
+    andika("Wastani wa 10, 20, 30:", wastani)
+    
+    andika("=== MWISHO ===")
+}

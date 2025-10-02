@@ -1,0 +1,52 @@
+kazi factorial(namba n) namba {
+    kama n <= 1 {
+        rudisha 1
+    }
+    namba jibu = n * factorial(n - 1)
+    rudisha jibu
+}
+
+kazi max(namba a, namba b) namba {
+    kama a > b {
+        rudisha a
+    } sivyo {
+        rudisha b
+    }
+}
+
+kazi ni_sawa(namba x, namba y) boolean {
+    rudisha x == y
+}
+
+kazi hesabu_kwa_loop(namba mwanzo, namba mwisho) namba {
+    kama mwanzo > mwisho {
+        rudisha 0
+    }
+    kama mwanzo == mwisho {
+        rudisha mwanzo
+    }
+    namba jibu = mwanzo + hesabu_kwa_loop(mwanzo + 1, mwisho)
+    rudisha jibu
+}
+
+kazi kuu() {
+    andika("=== ADVANCED FUNCTIONS ===")
+    
+    andika("1. Recursive function (factorial):")
+    namba fact5 = factorial(5)
+    andika("5! =", fact5)
+    
+    andika("2. Function na conditional return:")
+    namba mkubwa = max(15, 8)
+    andika("max(15, 8) =", mkubwa)
+    
+    andika("3. Boolean function:")
+    boolean sawa = ni_sawa(7, 7)
+    andika("7 == 7:", sawa)
+    
+    andika("4. Function na loop:")
+    namba jumla = hesabu_kwa_loop(1, 5)
+    andika("Jumla ya 1 hadi 5:", jumla)
+    
+    andika("=== MWISHO ===")
+}

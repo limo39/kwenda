@@ -1,6 +1,6 @@
 # Lugha Yangu - A Swahili Programming Language
 
-**Lugha Yangu** (meaning "My Language" in Swahili) is a simple, educational programming language with Swahili syntax. Built in Go, it's designed to make programming more accessible to Swahili speakers by using familiar keywords and concepts.
+**Lugha Yangu** (meaning "My Language" in Swahili) is a fully-featured, educational programming language with native Swahili syntax. Built in Go, it's designed to make programming more accessible to Swahili speakers by using familiar keywords and concepts while providing modern programming capabilities.
 
 ## 🌟 Features
 
@@ -54,6 +54,7 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `uwongo` | false | Boolean false value |
 | `na` | and | Logical AND operator |
 | `au` | or | Logical OR operator |
+| `rudisha` | return | Return a value from function |
 
 ### Basic Syntax
 
@@ -68,7 +69,17 @@ boolean si_kweli = uwongo
 #### Function Definition
 ```swahili
 kazi kuu() {
-    // Your code here
+    // Main function (entry point)
+}
+
+kazi jumla(namba x, namba y) namba {
+    // Function with parameters and return type
+    rudisha x + y
+}
+
+kazi salamu(namba umri) {
+    // Function with parameters, no return type
+    andika("Habari!")
 }
 ```
 
@@ -290,6 +301,43 @@ j ni: 2
 j ni: 1
 ```
 
+### Example 8: Functions with Parameters and Return Values
+```swahili
+kazi jumla(namba a, namba b) namba {
+    namba jibu = a + b
+    rudisha jibu
+}
+
+kazi salamu(namba umri) {
+    kama umri >= 18 {
+        andika("Habari za asubuhi, mtu mzima!")
+    } sivyo {
+        andika("Habari za asubuhi, kijana!")
+    }
+}
+
+kazi ni_kubwa(namba x, namba y) boolean {
+    rudisha x > y
+}
+
+kazi kuu() {
+    namba jibu = jumla(10, 5)
+    andika("10 + 5 =", jibu)
+    
+    salamu(25)
+    
+    boolean kubwa = ni_kubwa(8, 3)
+    andika("8 > 3:", kubwa)
+}
+```
+
+**Output:**
+```
+10 + 5 = 15
+Habari za asubuhi, mtu mzima!
+8 > 3: true
+```
+
 ### Example 7: Boolean Data Type
 ```swahili
 kazi kuu() {
@@ -394,7 +442,10 @@ lugha-yangu/
 │   ├── simple_nested_break.swh # Nested loops with break/continue
 │   ├── boolean_basic.swh      # Basic boolean operations
 │   ├── boolean_conditionals.swh # Booleans with conditionals
-│   └── boolean_loops.swh      # Booleans with loops
+│   ├── boolean_loops.swh      # Booleans with loops
+│   ├── functions_basic.swh    # Basic function examples
+│   ├── functions_advanced.swh # Advanced function features
+│   └── functions_comprehensive.swh # Comprehensive function demo
 └── README.md
 ```
 
@@ -424,7 +475,9 @@ The interpreter follows a traditional architecture:
 - **Assignment**: `=` operator
 
 ### Control Flow
-- **Functions**: `kazi` keyword for function definitions
+- **Functions**: `kazi` keyword for function definitions with parameters and return types
+- **Function Calls**: Support for user-defined functions with arguments
+- **Return Statements**: `rudisha` keyword for returning values
 - **Conditionals**: `kama`/`sivyo` for if/else statements
 - **Loops**: `wakati` for while loops, `kwa` for for loops
 - **Loop Control**: `vunja` for break, `endelea` for continue
@@ -436,8 +489,9 @@ The interpreter follows a traditional architecture:
 - Only integer arithmetic (no floating-point)
 - No arrays or complex data structures
 - Single-file programs only
-- No function parameters (except main)
 - Limited operator precedence (use parentheses for complex expressions)
+- No function overloading
+- No recursive function optimization
 - No labeled break/continue (only affects innermost loop)
 
 ## 🔮 Future Enhancements
@@ -446,7 +500,7 @@ The interpreter follows a traditional architecture:
 - [x] Loop constructs (`wakati` for while, `kwa` for for) ✅
 - [x] Break and continue statements (`vunja`/`endelea` for break/continue) ✅
 - [x] Boolean data type (`kweli`/`uwongo` for true/false) ✅
-- [ ] Function parameters and return values
+- [x] Function parameters and return values ✅
 - [ ] String manipulation functions
 - [ ] File I/O operations
 - [ ] Error handling and better error messages

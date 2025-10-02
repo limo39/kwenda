@@ -1,0 +1,37 @@
+kazi jumla(namba a, namba b) namba {
+    namba jibu = a + b
+    rudisha jibu
+}
+
+kazi salamu(namba umri) {
+    kama umri >= 18 {
+        andika("Habari za asubuhi, mtu mzima!")
+    } sivyo {
+        andika("Habari za asubuhi, kijana!")
+    }
+}
+
+kazi ni_kubwa(namba x, namba y) boolean {
+    rudisha x > y
+}
+
+kazi kuu() {
+    andika("=== MFANO WA FUNCTIONS ===")
+    
+    andika("1. Function na return value:")
+    namba jibu = jumla(10, 5)
+    andika("10 + 5 =", jibu)
+    
+    andika("2. Function bila return value:")
+    salamu(25)
+    salamu(16)
+    
+    andika("3. Function inayorudisha boolean:")
+    boolean kubwa = ni_kubwa(8, 3)
+    andika("8 > 3:", kubwa)
+    
+    boolean ndogo = ni_kubwa(2, 7)
+    andika("2 > 7:", ndogo)
+    
+    andika("=== MWISHO ===")
+}
