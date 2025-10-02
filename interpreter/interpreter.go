@@ -3,7 +3,8 @@ package interpreter
 import (
 	"fmt"
 	"strconv"
-	"lugha-yangu/ast"
+	"strings"
+	"github.com/limo39/kwenda/ast"
 )
 
 // Special control flow values
@@ -91,6 +92,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.BooleanNode:
 		return n.Value
 
+	case ast.StringNode:
+		return n.Value
+
+	case ast.StringVariableDeclarationNode:
+		// Handle string variable declarations (e.g., maneno x = "habari")
+		value := Interpret(n.Value, env)
+		env.Set(n.Name, value)
+		return value
+
 	case ast.IdentifierNode:
 		// Check if it's a string literal (starts and ends with quotes)
 		if len(n.Value) >= 2 && n.Value[0] == '"' && n.Value[len(n.Value)-1] == '"' {
@@ -177,6 +187,19 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		
 		switch n.Op {
 		case "+":
+			// Handle string concatenation
+			if leftStr, leftIsStr := left.(string); leftIsStr {
+				if rightStr, rightIsStr := right.(string); rightIsStr {
+					return leftStr + rightStr
+				}
+				// Convert right to string and concatenate
+				return leftStr + fmt.Sprintf("%v", right)
+			}
+			if rightStr, rightIsStr := right.(string); rightIsStr {
+				// Convert left to string and concatenate
+				return fmt.Sprintf("%v", left) + rightStr
+			}
+			// Numeric addition
 			result := leftInt + rightInt
 			return result
 		case "-":
@@ -189,8 +212,20 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			return 0
 		case "==":
+			// Handle string comparison
+			if leftStr, leftIsStr := left.(string); leftIsStr {
+				if rightStr, rightIsStr := right.(string); rightIsStr {
+					return leftStr == rightStr
+				}
+			}
 			return leftInt == rightInt
 		case "!=":
+			// Handle string comparison
+			if leftStr, leftIsStr := left.(string); leftIsStr {
+				if rightStr, rightIsStr := right.(string); rightIsStr {
+					return leftStr != rightStr
+				}
+			}
 			return leftInt != rightInt
 		case "<":
 			return leftInt < rightInt
@@ -245,6 +280,162 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			fmt.Println()
 			return nil
+		}
+
+		// String manipulation functions
+		if n.Name == "urefu" && len(n.Args) == 1 {
+			// Get string length
+			arg := Interpret(n.Args[0], env)
+			if str, ok := arg.(string); ok {
+				return len(str)
+			}
+			return 0
+		}
+
+		if n.Name == "unganisha" && len(n.Args) >= 2 {
+			// Concatenate strings
+			var result strings.Builder
+			for _, arg := range n.Args {
+				value := Interpret(arg, env)
+				if str, ok := value.(string); ok {
+					result.WriteString(str)
+				} else {
+					result.WriteString(fmt.Sprintf("%v", value))
+				}
+			}
+			return result.String()
+		}
+
+		if n.Name == "kata" && len(n.Args) >= 2 {
+			// Substring function: kata(string, start) or kata(string, start, length)
+			str := Interpret(n.Args[0], env)
+			start := Interpret(n.Args[1], env)
+			
+			if strVal, ok := str.(string); ok {
+				if startVal, ok := start.(int); ok {
+					if startVal < 0 || startVal >= len(strVal) {
+						return ""
+					}
+					
+					if len(n.Args) == 3 {
+						// kata(string, start, length)
+						length := Interpret(n.Args[2], env)
+						if lengthVal, ok := length.(int); ok {
+							end := startVal + lengthVal
+							if end > len(strVal) {
+								end = len(strVal)
+							}
+							return strVal[startVal:end]
+						}
+					} else {
+						// kata(string, start) - from start to end
+						return strVal[startVal:]
+					}
+				}
+			}
+			return ""
+		}
+
+		if n.Name == "badilisha" && len(n.Args) == 3 {
+			// Replace function: badilisha(string, old, new)
+			str := Interpret(n.Args[0], env)
+			old := Interpret(n.Args[1], env)
+			new := Interpret(n.Args[2], env)
+			
+			if strVal, ok := str.(string); ok {
+				if oldVal, ok := old.(string); ok {
+					if newVal, ok := new.(string); ok {
+						return strings.ReplaceAll(strVal, oldVal, newVal)
+					}
+				}
+			}
+			return str
+		}
+
+		if n.Name == "tafuta" && len(n.Args) == 2 {
+			// Find function: tafuta(string, substring) - returns index or -1
+			str := Interpret(n.Args[0], env)
+			substr := Interpret(n.Args[1], env)
+			
+			if strVal, ok := str.(string); ok {
+				if substrVal, ok := substr.(string); ok {
+					return strings.Index(strVal, substrVal)
+				}
+			}
+			return -1
+		}
+
+		if n.Name == "awali" && len(n.Args) == 2 {
+			// Starts with function: awali(string, prefix) - returns boolean
+			str := Interpret(n.Args[0], env)
+			prefix := Interpret(n.Args[1], env)
+			
+			if strVal, ok := str.(string); ok {
+				if prefixVal, ok := prefix.(string); ok {
+					return strings.HasPrefix(strVal, prefixVal)
+				}
+			}
+			return false
+		}
+
+		if n.Name == "mwisho" && len(n.Args) == 2 {
+			// Ends with function: mwisho(string, suffix) - returns boolean
+			str := Interpret(n.Args[0], env)
+			suffix := Interpret(n.Args[1], env)
+			
+			if strVal, ok := str.(string); ok {
+				if suffixVal, ok := suffix.(string); ok {
+					return strings.HasSuffix(strVal, suffixVal)
+				}
+			}
+			return false
+		}
+
+		if n.Name == "herufi_kubwa" && len(n.Args) == 1 {
+			// Convert to uppercase: herufi_kubwa(string)
+			str := Interpret(n.Args[0], env)
+			if strVal, ok := str.(string); ok {
+				return strings.ToUpper(strVal)
+			}
+			return str
+		}
+
+		if n.Name == "herufi_ndogo" && len(n.Args) == 1 {
+			// Convert to lowercase: herufi_ndogo(string)
+			str := Interpret(n.Args[0], env)
+			if strVal, ok := str.(string); ok {
+				return strings.ToLower(strVal)
+			}
+			return str
+		}
+
+		if n.Name == "ondoa_nafasi" && len(n.Args) == 1 {
+			// Trim whitespace: ondoa_nafasi(string)
+			str := Interpret(n.Args[0], env)
+			if strVal, ok := str.(string); ok {
+				return strings.TrimSpace(strVal)
+			}
+			return str
+		}
+
+		if n.Name == "gawanya_maneno" && len(n.Args) >= 1 {
+			// Split string: gawanya_maneno(string) or gawanya_maneno(string, separator)
+			str := Interpret(n.Args[0], env)
+			if strVal, ok := str.(string); ok {
+				if len(n.Args) == 2 {
+					separator := Interpret(n.Args[1], env)
+					if sepVal, ok := separator.(string); ok {
+						parts := strings.Split(strVal, sepVal)
+						// Return the number of parts for now (could be enhanced to return array)
+						return len(parts)
+					}
+				} else {
+					// Split by whitespace
+					parts := strings.Fields(strVal)
+					return len(parts)
+				}
+			}
+			return 0
 		}
 
 		// Handle user-defined function calls

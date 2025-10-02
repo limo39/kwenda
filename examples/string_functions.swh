@@ -1,0 +1,103 @@
+kazi salamu_kamili(maneno jina, maneno muda) maneno {
+    maneno salamu = unganisha("Habari za ", muda, ", ", jina, "!")
+    rudisha salamu
+}
+
+kazi angalia_jina(maneno jina) {
+    namba urefu_jina = urefu(jina)
+    
+    kama urefu_jina < 3 {
+        andika("Jina ni fupi sana!")
+    } sivyo {
+        kama urefu_jina > 10 {
+            andika("Jina ni refu sana!")
+        } sivyo {
+            andika("Jina ni la kawaida.")
+        }
+    }
+    
+    # Check if name starts with vowel
+    maneno herufi_ya_kwanza = kata(jina, 0, 1)
+    maneno ndogo = herufi_ndogo(herufi_ya_kwanza)
+    
+    boolean ni_a = ndogo == "a"
+    boolean ni_e = ndogo == "e"
+    boolean ni_i = ndogo == "i"
+    boolean ni_o = ndogo == "o"
+    boolean ni_u = ndogo == "u"
+    boolean ni_irabu = ni_a au ni_e au ni_i au ni_o au ni_u
+    
+    kama ni_irabu {
+        andika("Jina linaanza na irabu.")
+    } sivyo {
+        andika("Jina linaanza na konsonanti.")
+    }
+}
+
+kazi badilisha_jina(maneno jina_kamili) maneno {
+    # Replace common abbreviations
+    maneno jina1 = badilisha(jina_kamili, "Dr.", "Daktari")
+    maneno jina2 = badilisha(jina1, "Mr.", "Bwana")
+    maneno jina3 = badilisha(jina2, "Mrs.", "Bibi")
+    maneno jina4 = badilisha(jina3, "Ms.", "Bi.")
+    
+    rudisha jina4
+}
+
+kazi hesabu_maneno(maneno sentensi) namba {
+    # Count words in a sentence
+    namba idadi = gawanya_maneno(sentensi)
+    rudisha idadi
+}
+
+kazi ni_barua_pepe(maneno barua) boolean {
+    # Simple email validation
+    namba mahali_at = tafuta(barua, "@")
+    namba mahali_dot = tafuta(barua, ".")
+    
+    namba hasi_moja = 0 - 1
+    boolean ina_at = mahali_at != hasi_moja
+    boolean ina_dot = mahali_dot != hasi_moja
+    boolean dot_baada_at = mahali_dot > mahali_at
+    
+    rudisha ina_at na ina_dot na dot_baada_at
+}
+
+kazi kuu() {
+    andika("=== MFANO WA FUNCTIONS ZA MANENO ===")
+    
+    # 1. Function that returns string
+    maneno ujumbe = salamu_kamili("Amina", "asubuhi")
+    andika("Ujumbe:", ujumbe)
+    
+    # 2. Function that analyzes string
+    andika("Uchambuzi wa majina:")
+    angalia_jina("Ali")
+    angalia_jina("Fatuma")
+    angalia_jina("Abdulrahman")
+    angalia_jina("Ai")
+    
+    # 3. Function that modifies string
+    maneno jina_asili = "Dr. John Smith"
+    maneno jina_mpya = badilisha_jina(jina_asili)
+    andika("Jina asili:", jina_asili)
+    andika("Jina mpya:", jina_mpya)
+    
+    # 4. Function that counts words
+    maneno sentensi = "Hii ni sentensi yenye maneno kadhaa"
+    namba idadi_maneno = hesabu_maneno(sentensi)
+    andika("Sentensi:", sentensi)
+    andika("Idadi ya maneno:", idadi_maneno)
+    
+    # 5. Function that validates email
+    maneno barua1 = "user@example.com"
+    maneno barua2 = "invalid-email"
+    
+    boolean sahihi1 = ni_barua_pepe(barua1)
+    boolean sahihi2 = ni_barua_pepe(barua2)
+    
+    andika("Barua pepe 1:", barua1, "- Sahihi:", sahihi1)
+    andika("Barua pepe 2:", barua2, "- Sahihi:", sahihi2)
+    
+    andika("=== MWISHO ===")
+}

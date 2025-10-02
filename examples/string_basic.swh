@@ -1,0 +1,34 @@
+kazi kuu() {
+    andika("=== MFANO WA MANENO (STRINGS) ===")
+    
+    # String variable declarations
+    maneno jina = "Amina"
+    maneno salamu = "Habari"
+    maneno ulimwengu = "Dunia"
+    
+    andika("1. String variables:")
+    andika("Jina:", jina)
+    andika("Salamu:", salamu)
+    
+    # String concatenation using +
+    maneno ujumbe = salamu + " " + jina
+    andika("Ujumbe:", ujumbe)
+    
+    # String concatenation using unganisha function
+    maneno ujumbe2 = unganisha(salamu, " ya ", ulimwengu, "!")
+    andika("Ujumbe 2:", ujumbe2)
+    
+    # String length
+    namba urefu_jina = urefu(jina)
+    andika("Urefu wa jina:", urefu_jina)
+    
+    # String comparison
+    maneno jina2 = "Amina"
+    boolean ni_sawa = jina == jina2
+    andika("Majina ni sawa:", ni_sawa)
+    
+    boolean si_sawa = jina != "Bakari"
+    andika("Jina si Bakari:", si_sawa)
+    
+    andika("=== MWISHO ===")
+}

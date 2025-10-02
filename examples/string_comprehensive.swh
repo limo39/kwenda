@@ -1,0 +1,67 @@
+kazi kuu() {
+    andika("=== COMPREHENSIVE STRING DEMO ===")
+    
+    # Basic string operations
+    maneno jina = "Amina"
+    maneno mji = "Dar es Salaam"
+    maneno ujumbe = "Habari " + jina + " kutoka " + mji
+    
+    andika("Basic concatenation:", ujumbe)
+    namba urefu_ujumbe = urefu(ujumbe)
+    andika("Length of message:", urefu_ujumbe)
+    
+    # String manipulation functions
+    maneno kubwa = herufi_kubwa(ujumbe)
+    maneno ndogo = herufi_ndogo(ujumbe)
+    
+    andika("Uppercase:", kubwa)
+    andika("Lowercase:", ndogo)
+    
+    # Substring operations
+    maneno sehemu = kata(ujumbe, 0, 6)
+    andika("First 6 characters:", sehemu)
+    
+    # Find and replace
+    namba mahali = tafuta(ujumbe, "Amina")
+    andika("Position of 'Amina':", mahali)
+    
+    maneno mpya = badilisha(ujumbe, "Amina", "Fatuma")
+    andika("After replacement:", mpya)
+    
+    # Prefix and suffix checks
+    boolean inaanza = awali(ujumbe, "Habari")
+    boolean inaishia = mwisho(ujumbe, "Salaam")
+    
+    andika("Starts with 'Habari':", inaanza)
+    andika("Ends with 'Salaam':", inaishia)
+    
+    # String with spaces
+    maneno na_nafasi = "   Karibu Tanzania   "
+    maneno safi = ondoa_nafasi(na_nafasi)
+    
+    andika("Original with spaces: '" + na_nafasi + "'")
+    andika("Trimmed: '" + safi + "'")
+    
+    # Word counting
+    maneno sentensi = "Hii ni sentensi yenye maneno kadhaa"
+    namba idadi = gawanya_maneno(sentensi)
+    andika("Sentence:", sentensi)
+    andika("Word count:", idadi)
+    
+    # String comparison
+    maneno neno1 = "Habari"
+    maneno neno2 = "Habari"
+    maneno neno3 = "Mambo"
+    
+    boolean sawa = neno1 == neno2
+    boolean tofauti = neno1 != neno3
+    
+    andika("'Habari' == 'Habari':", sawa)
+    andika("'Habari' != 'Mambo':", tofauti)
+    
+    # Complex string building
+    maneno salamu_kamili = unganisha("Habari za ", "asubuhi", ", ", jina, "!")
+    andika("Complex greeting:", salamu_kamili)
+    
+    andika("=== END OF DEMO ===")
+}

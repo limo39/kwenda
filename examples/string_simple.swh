@@ -1,0 +1,7 @@
+kazi kuu() {
+    maneno jina = "Amina"
+    andika("Jina:", jina)
+    
+    namba urefu_jina = urefu(jina)
+    andika("Urefu:", urefu_jina)
+}

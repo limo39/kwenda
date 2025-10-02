@@ -2,15 +2,23 @@ package main
 
 import (
     "fmt"
-    "lugha-yangu/lexer"
-    "lugha-yangu/parser"
-    "lugha-yangu/interpreter"
+    "github.com/limo39/kwenda/lexer"
+    "github.com/limo39/kwenda/parser"
+    "github.com/limo39/kwenda/interpreter"
     "os"
 )
 
 func main() {
+    // Check for command line arguments
+    if len(os.Args) < 2 {
+        fmt.Println("Usage: kwenda <filename.swh>")
+        return
+    }
+    
+    filename := os.Args[1]
+    
     // Read the source code from a file
-    input, err := os.ReadFile("examples/example1.swh")
+    input, err := os.ReadFile(filename)
     if err != nil {
         fmt.Println("Error reading file:", err)
         return

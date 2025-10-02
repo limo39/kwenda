@@ -25,7 +25,10 @@ type Token struct {
 func isSwahiliKeyword(word string) bool {
 	keywords := []string{
 		"kazi", "kama", "sivyo", "kwa", "wakati", "rudisha", "namba", "andika", "ingiza",
-		"kweli", "uwongo", "na", "au", "vunja", "endelea", "boolean",
+		"kweli", "uwongo", "na", "au", "vunja", "endelea", "boolean", "maneno",
+		// String manipulation functions
+		"urefu", "unganisha", "kata", "badilisha", "tafuta", "awali", "mwisho",
+		"herufi_kubwa", "herufi_ndogo", "ondoa_nafasi", "gawanya_maneno",
 	}
 	for _, kw := range keywords {
 		if kw == word {
@@ -116,8 +119,8 @@ func Lex(input string) []Token {
 			tokens = append(tokens, Token{Type: TokenPunctuation, Value: string(char)})
 		} else if char == '#' {
 			// Handle comments (ignore the rest of the line)
-			for char != '\n' {
-				break
+			for i+1 < len(runes) && runes[i+1] != '\n' {
+				i++
 			}
 		} else {
 			// Build the current token

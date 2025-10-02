@@ -8,10 +8,14 @@
 - **Interactive Input/Output**: Built-in support for user interaction
 - **Arithmetic Operations**: Basic mathematical operations
 - **Variable Declarations**: Type-safe variable handling
-- **Function Definitions**: Support for custom functions
+- **String Manipulation**: Comprehensive string operations and functions
+- **Function Definitions**: Support for custom functions with parameters and return values
+- **Boolean Data Type**: Native boolean support with `kweli`/`uwongo`
 - **Conditional Statements**: If/else logic with `kama`/`sivyo`
 - **Loop Constructs**: While loops with `wakati` and for loops with `kwa`
-- **Educational Focus**: Perfect for learning programming concepts
+- **Loop Control**: Break and continue statements with `vunja`/`endelea`
+- **Logical Operations**: AND/OR operations with `na`/`au`
+- **Educational Focus**: Perfect for learning programming concepts in Swahili
 
 ## 🚀 Quick Start
 
@@ -30,7 +34,7 @@ go build
 go run main.go
 ```
 
-The interpreter will execute the program in `examples/example1.swh` by default.
+The interpreter will execute the program specified in `main.go`. You can change the input file to run different examples from the `examples/` directory.
 
 ## 📝 Language Syntax
 
@@ -54,6 +58,18 @@ The interpreter will execute the program in `examples/example1.swh` by default.
 | `uwongo` | false | Boolean false value |
 | `na` | and | Logical AND operator |
 | `au` | or | Logical OR operator |
+| `maneno` | string | Declare a string variable |
+| `urefu` | length | Get string length |
+| `unganisha` | concatenate | Join strings together |
+| `kata` | substring | Extract part of string |
+| `badilisha` | replace | Replace text in string |
+| `tafuta` | find | Find position of substring |
+| `awali` | starts_with | Check if string starts with text |
+| `mwisho` | ends_with | Check if string ends with text |
+| `herufi_kubwa` | uppercase | Convert to uppercase |
+| `herufi_ndogo` | lowercase | Convert to lowercase |
+| `ondoa_nafasi` | trim | Remove whitespace |
+| `gawanya_maneno` | split | Split string into parts |
 | `rudisha` | return | Return a value from function |
 
 ### Basic Syntax
@@ -64,6 +80,8 @@ namba x = 10
 namba y = ingiza("Ingiza namba:")
 boolean iko_kweli = kweli
 boolean si_kweli = uwongo
+maneno jina = "Amina"
+maneno salamu = "Habari"
 ```
 
 #### Function Definition
@@ -177,7 +195,61 @@ wakati i < 5 {
 }
 ```
 
+#### String Manipulation
+
+##### String Variables and Concatenation
+```swahili
+maneno jina = "Amina"
+maneno mji = "Dar es Salaam"
+maneno ujumbe = "Habari " + jina + " kutoka " + mji
+
+# Using unganisha function
+maneno salamu = unganisha("Habari za ", "asubuhi", ", ", jina, "!")
+```
+
+##### String Functions
+```swahili
+maneno neno = "Habari Dunia"
+
+# Get string length
+namba urefu_neno = urefu(neno)  # 12
+
+# Convert case
+maneno kubwa = herufi_kubwa(neno)    # "HABARI DUNIA"
+maneno ndogo = herufi_ndogo(neno)    # "habari dunia"
+
+# Substring operations
+maneno sehemu = kata(neno, 0, 6)     # "Habari"
+maneno mwisho = kata(neno, 7)        # "Dunia"
+
+# Find and replace
+namba mahali = tafuta(neno, "Dunia") # 7
+maneno mpya = badilisha(neno, "Dunia", "Tanzania") # "Habari Tanzania"
+
+# Prefix and suffix checks
+boolean inaanza = awali(neno, "Habari")  # kweli
+boolean inaishia = mwisho(neno, "Dunia") # kweli
+
+# Trim whitespace
+maneno na_nafasi = "   Karibu   "
+maneno safi = ondoa_nafasi(na_nafasi)    # "Karibu"
+
+# Word counting
+maneno sentensi = "Hii ni sentensi yenye maneno kadhaa"
+namba idadi = gawanya_maneno(sentensi)   # 6
+```
+
+##### String Comparison
+```swahili
+maneno neno1 = "Habari"
+maneno neno2 = "Habari"
+boolean ni_sawa = neno1 == neno2  # kweli
+boolean si_sawa = neno1 != "Mambo"  # kweli
+```
+
 ## 📚 Examples
+
+> **Note**: All examples are available in the `examples/` directory. You can run any example by changing the file path in `main.go`.
 
 ### Example 1: Simple Calculator
 ```swahili
@@ -412,6 +484,55 @@ j = 4
 j = 5
 ```
 
+### Example 9: String Manipulation
+```swahili
+kazi kuu() {
+    # Basic string operations
+    maneno jina = "Amina"
+    maneno mji = "Dar es Salaam"
+    maneno ujumbe = "Habari " + jina + " kutoka " + mji
+    
+    andika("Basic concatenation:", ujumbe)
+    
+    namba urefu_ujumbe = urefu(ujumbe)
+    andika("Length of message:", urefu_ujumbe)
+    
+    # String manipulation functions
+    maneno kubwa = herufi_kubwa(ujumbe)
+    maneno ndogo = herufi_ndogo(ujumbe)
+    
+    andika("Uppercase:", kubwa)
+    andika("Lowercase:", ndogo)
+    
+    # Substring operations
+    maneno sehemu = kata(ujumbe, 0, 6)
+    andika("First 6 characters:", sehemu)
+    
+    # Find and replace
+    namba mahali = tafuta(ujumbe, "Amina")
+    andika("Position of 'Amina':", mahali)
+    
+    maneno mpya = badilisha(ujumbe, "Amina", "Fatuma")
+    andika("After replacement:", mpya)
+    
+    # Complex string building
+    maneno salamu_kamili = unganisha("Habari za ", "asubuhi", ", ", jina, "!")
+    andika("Complex greeting:", salamu_kamili)
+}
+```
+
+**Output:**
+```
+Basic concatenation: Habari Amina kutoka Dar es Salaam
+Length of message: 33
+Uppercase: HABARI AMINA KUTOKA DAR ES SALAAM
+Lowercase: habari amina kutoka dar es salaam
+First 6 characters: Habari
+Position of 'Amina': 7
+After replacement: Habari Fatuma kutoka Dar es Salaam
+Complex greeting: Habari za asubuhi, Amina!
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -445,7 +566,11 @@ lugha-yangu/
 │   ├── boolean_loops.swh      # Booleans with loops
 │   ├── functions_basic.swh    # Basic function examples
 │   ├── functions_advanced.swh # Advanced function features
-│   └── functions_comprehensive.swh # Comprehensive function demo
+│   ├── functions_comprehensive.swh # Comprehensive function demo
+│   ├── string_basic.swh       # Basic string operations
+│   ├── string_manipulation.swh # String manipulation functions
+│   ├── string_functions.swh   # String functions with user-defined functions
+│   └── string_comprehensive.swh # Comprehensive string demo
 └── README.md
 ```
 
@@ -464,7 +589,7 @@ The interpreter follows a traditional architecture:
 ### Data Types
 - **Numbers**: Integer values
 - **Booleans**: True/false values (`kweli`/`uwongo`)
-- **Strings**: Text literals (for prompts and output)
+- **Strings**: Text values with comprehensive manipulation functions
 
 ### Operations
 - **Arithmetic**: `+`, `-`, `*`, `/`
@@ -496,16 +621,24 @@ The interpreter follows a traditional architecture:
 
 ## 🔮 Future Enhancements
 
+### ✅ Completed Features
 - [x] Conditional statements (`kama`/`sivyo` for if/else) ✅
 - [x] Loop constructs (`wakati` for while, `kwa` for for) ✅
 - [x] Break and continue statements (`vunja`/`endelea` for break/continue) ✅
 - [x] Boolean data type (`kweli`/`uwongo` for true/false) ✅
 - [x] Function parameters and return values ✅
-- [ ] String manipulation functions
-- [ ] File I/O operations
-- [ ] Error handling and better error messages
-- [ ] Multi-file support
+- [x] Logical operators (`na`/`au` for AND/OR) ✅
+- [x] String data type and manipulation functions ✅
+
+### 🚀 Planned Features
+- [ ] Array/list data structures
+- [ ] File I/O operations (`soma`/`andika` for read/write)
+- [ ] Error handling with try/catch (`jaribu`/`shika`)
+- [ ] Multi-file support and imports
 - [ ] Standard library functions
+- [ ] Floating-point arithmetic
+- [ ] Comments support (`#` or `//`)
+- [ ] Better error messages with line numbers
 
 ## 🤝 Contributing
 
@@ -521,13 +654,41 @@ Contributions are welcome! Areas where help is needed:
 
 This project is open source. Feel free to use, modify, and distribute.
 
+## 📚 Additional Documentation
+
+- **[FUNCTIONS.md](FUNCTIONS.md)**: Comprehensive guide to function parameters and return values
+- **[LOOPS.md](LOOPS.md)**: Detailed documentation on loop constructs and control flow
+- **[BOOLEANS.md](BOOLEANS.md)**: Complete guide to boolean data types and logical operations
+- **[STRINGS.md](STRINGS.md)**: Complete guide to string manipulation and functions
+
+## 🎓 Educational Use
+
+Kwenda is perfect for:
+- Teaching programming concepts in Swahili
+- Computer science education in East Africa
+- Learning programming fundamentals
+- Understanding interpreter design and implementation
+- Cultural preservation through technology
+
+## 🌍 Language Philosophy
+
+Kwenda believes that programming should be accessible in one's native language. By using Swahili keywords and concepts, we aim to:
+- Lower the barrier to entry for programming
+- Preserve and promote local languages in technology
+- Make computer science education more inclusive
+- Demonstrate that programming concepts are universal
+
 ## 🙏 Acknowledgments
 
 - Inspired by the need for programming languages in local languages
 - Built with Go's excellent parsing and compilation tools
 - Designed for educational purposes and community learning
+- Special thanks to the Swahili-speaking developer community
 
 ---
 
 **Karibu kwenye ulimwengu wa programu kwa Kiswahili!** 
 *(Welcome to the world of programming in Swahili!)*
+
+**Lugha Yangu ni zaidi ya lugha ya programu - ni daraja kuelekea teknolojia kwa wote.**
+*(Lugha Yangu is more than a programming language - it's a bridge to technology for everyone.)*

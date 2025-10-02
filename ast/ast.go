@@ -91,3 +91,14 @@ type ContinueNode struct {
 type BooleanNode struct {
     Value bool // true for kweli, false for uwongo
 }
+
+// StringNode represents a string literal
+type StringNode struct {
+    Value string // The string value without quotes
+}
+
+// StringVariableDeclarationNode represents a string variable declaration (e.g., maneno x = "habari")
+type StringVariableDeclarationNode struct {
+    Name  string  // Variable name
+    Value ASTNode // Variable value
+}

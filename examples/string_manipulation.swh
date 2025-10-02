@@ -1,0 +1,56 @@
+kazi kuu() {
+    andika("=== MFANO WA KUBADILISHA MANENO ===")
+    
+    maneno sentensi = "Habari za Asubuhi Dunia"
+    andika("Sentensi asili:", sentensi)
+    
+    # 1. String length
+    namba urefu_sentensi = urefu(sentensi)
+    andika("Urefu wa sentensi:", urefu_sentensi)
+    
+    # 2. Convert to uppercase and lowercase
+    maneno kubwa = herufi_kubwa(sentensi)
+    maneno ndogo = herufi_ndogo(sentensi)
+    andika("Herufi kubwa:", kubwa)
+    andika("Herufi ndogo:", ndogo)
+    
+    # 3. Substring operations
+    maneno sehemu = kata(sentensi, 0, 6)  # "Habari"
+    andika("Sehemu ya kwanza:", sehemu)
+    
+    maneno sehemu_mwisho = kata(sentensi, 16)    # "Dunia"
+    andika("Sehemu ya mwisho:", sehemu_mwisho)
+    
+    # 4. Find substring
+    namba mahali = tafuta(sentensi, "Asubuhi")
+    andika("Mahali pa 'Asubuhi':", mahali)
+    
+    namba hakuna = tafuta(sentensi, "Jioni")
+    andika("Mahali pa 'Jioni':", hakuna)
+    
+    # 5. Replace text
+    maneno mpya = badilisha(sentensi, "Asubuhi", "Jioni")
+    andika("Baada ya kubadilisha:", mpya)
+    
+    # 6. Check prefix and suffix
+    boolean inaanza = awali(sentensi, "Habari")
+    boolean inaishia = mwisho(sentensi, "Dunia")
+    andika("Inaanza na 'Habari':", inaanza)
+    andika("Inaishia na 'Dunia':", inaishia)
+    
+    # 7. Trim whitespace
+    maneno na_nafasi = "   Habari Dunia   "
+    maneno bila_nafasi = ondoa_nafasi(na_nafasi)
+    andika("Kabla ya kuondoa nafasi: '" + na_nafasi + "'")
+    andika("Baada ya kuondoa nafasi: '" + bila_nafasi + "'")
+    
+    # 8. Split string (returns count for now)
+    maneno maneno_mengi = "moja mbili tatu nne"
+    namba idadi = gawanya_maneno(maneno_mengi)
+    andika("Idadi ya maneno:", idadi)
+    
+    namba idadi2 = gawanya_maneno("a,b,c,d", ",")
+    andika("Idadi ya sehemu (kwa koma):", idadi2)
+    
+    andika("=== MWISHO ===")
+}
