@@ -1,6 +1,3 @@
-module github.com/limo39/kwenda
+module lugha-yangu
 
 go 1.23.3
-
-
-

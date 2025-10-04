@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/limo39/kwenda/ast"
-	"github.com/limo39/kwenda/lexer"
+	"lugha-yangu/ast"
+	"lugha-yangu/lexer"
 )
 
 // ProgramNode represents the entire program
@@ -125,6 +125,52 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
+	if tokens[0].Value == "orodha" && len(tokens) >= 5 && tokens[3].Value == "=" {
+		arrayLiteral := ParseArrayLiteral(tokens[4:])
+		var elements []ast.ASTNode
+		if arrayNode, ok := arrayLiteral.(ast.ArrayNode); ok {
+			elements = arrayNode.Elements
+		}
+		return ast.ArrayDeclarationNode{
+			Name:     tokens[2].Value,
+			Type:     tokens[1].Value,
+			Elements: elements,
+		}
+	}
+
+	// Handle array access (e.g., arr[0])
+	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		// Find the closing bracket
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == "]" {
+				return ast.ArrayAccessNode{
+					Array: ast.IdentifierNode{Value: tokens[0].Value},
+					Index: ParseExpression(tokens[2:i]),
+				}
+			}
+		}
+	}
+
+	// Handle array assignment (e.g., arr[0] = 5)
+	if len(tokens) >= 6 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		// Find the closing bracket and equals sign
+		bracketEnd := -1
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == "]" {
+				bracketEnd = i
+				break
+			}
+		}
+		if bracketEnd != -1 && bracketEnd+1 < len(tokens) && tokens[bracketEnd+1].Value == "=" {
+			return ast.ArrayAssignmentNode{
+				Array: ast.IdentifierNode{Value: tokens[0].Value},
+				Index: ParseExpression(tokens[2:bracketEnd]),
+				Value: ParseExpression(tokens[bracketEnd+2:]),
+			}
+		}
+	}
+
 	// Handle assignment statements (e.g., x = 10)
 	if len(tokens) >= 3 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "=" {
 		return ast.VariableDeclarationNode{
@@ -149,8 +195,8 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 	
-	// Handle function calls with keyword (e.g., andika(x, y))
-	if tokens[0].Value == "andika" && len(tokens) > 1 && tokens[1].Value == "(" {
+	// Handle function calls with keyword (e.g., andika(x, y), ongeza(x, y), ondoa(x, y))
+	if (tokens[0].Value == "andika" || tokens[0].Value == "ongeza" || tokens[0].Value == "ondoa" || tokens[0].Value == "urefu_orodha" || tokens[0].Value == "pata") && len(tokens) > 1 && tokens[1].Value == "(" {
 		return ast.FunctionCallNode{
 			Name: tokens[0].Value,
 			Args: ParseArguments(tokens[2:]),
@@ -333,7 +379,7 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					parenCount++
 				} else if tokens[end].Value == ")" {
 					parenCount--
-				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "ongeza" || tokens[end].Value == "ondoa") {
 					break
 				}
 				end++
@@ -381,8 +427,34 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					parenCount++
 				} else if tokens[end].Value == ")" {
 					parenCount--
-				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "maneno" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
+				} else if parenCount == 0 && (tokens[end].Value == "namba" || tokens[end].Value == "boolean" || tokens[end].Value == "maneno" || tokens[end].Value == "orodha" || tokens[end].Value == "andika" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa") {
 					break
+				}
+				end++
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse array declarations (orodha namba x = ...)
+		if tokens[i].Value == "orodha" && i+4 < len(tokens) && tokens[i+3].Value == "=" {
+			// Find the end of this statement (look for closing bracket)
+			end := i + 4
+			bracketCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "[" {
+					bracketCount++
+				} else if tokens[end].Value == "]" {
+					bracketCount--
+					if bracketCount == 0 {
+						end++
+						break
+					}
 				}
 				end++
 			}
@@ -495,6 +567,24 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) == 0 {
 		return nil
+	}
+	
+	// Handle array literals (e.g., [1, 2, 3])
+	if len(tokens) >= 2 && tokens[0].Value == "[" {
+		return ParseArrayLiteral(tokens)
+	}
+
+	// Handle array access (e.g., arr[0])
+	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		// Find the closing bracket
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == "]" {
+				return ast.ArrayAccessNode{
+					Array: ast.IdentifierNode{Value: tokens[0].Value},
+					Index: ParseExpression(tokens[2:i]),
+				}
+			}
+		}
 	}
 	
 	// Handle function calls like ingiza("prompt") or any function call
@@ -966,4 +1056,62 @@ func ParseParameters(tokens []lexer.Token) []ast.Parameter {
 	}
 
 	return parameters
+}
+
+// ParseArrayLiteral parses array literals (e.g., [1, 2, 3])
+func ParseArrayLiteral(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 2 || tokens[0].Value != "[" {
+		return nil
+	}
+
+	// Find the closing bracket
+	closingBracket := -1
+	for i := 1; i < len(tokens); i++ {
+		if tokens[i].Value == "]" {
+			closingBracket = i
+			break
+		}
+	}
+
+	if closingBracket == -1 {
+		return nil
+	}
+
+	// Parse elements between brackets
+	var elements []ast.ASTNode
+	if closingBracket > 1 {
+		elements = ParseArrayElements(tokens[1:closingBracket])
+	}
+
+	return ast.ArrayNode{Elements: elements}
+}
+
+// ParseArrayElements parses comma-separated array elements
+func ParseArrayElements(tokens []lexer.Token) []ast.ASTNode {
+	var elements []ast.ASTNode
+	var currentElement []lexer.Token
+
+	for _, token := range tokens {
+		if token.Value == "," {
+			if len(currentElement) > 0 {
+				element := ParseExpression(currentElement)
+				if element != nil {
+					elements = append(elements, element)
+				}
+				currentElement = nil
+			}
+		} else {
+			currentElement = append(currentElement, token)
+		}
+	}
+
+	// Handle the last element
+	if len(currentElement) > 0 {
+		element := ParseExpression(currentElement)
+		if element != nil {
+			elements = append(elements, element)
+		}
+	}
+
+	return elements
 }

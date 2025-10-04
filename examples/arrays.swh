@@ -1,0 +1,21 @@
+kazi kuu() {
+    # Kuunda orodha ya namba
+    orodha namba namba_za_kwanza = [1, 2, 3, 4, 5]
+    andika("Orodha ya kwanza:", namba_za_kwanza)
+    
+    # Kupata urefu wa orodha
+    namba urefu = urefu_orodha(namba_za_kwanza)
+    andika("Urefu wa orodha:", urefu)
+    
+    # Kupata kipengele cha kwanza
+    namba kipengele_cha_kwanza = pata(namba_za_kwanza, 0)
+    andika("Kipengele cha kwanza:", kipengele_cha_kwanza)
+    
+    # Kuongeza kipengele kipya
+    ongeza(namba_za_kwanza, 6)
+    andika("Baada ya kuongeza 6:", namba_za_kwanza)
+    
+    # Kuondoa kipengele cha pili (index 1)
+    ondoa(namba_za_kwanza, 1)
+    andika("Baada ya kuondoa kipengele cha pili:", namba_za_kwanza)
+}

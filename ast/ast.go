@@ -102,3 +102,28 @@ type StringVariableDeclarationNode struct {
     Name  string  // Variable name
     Value ASTNode // Variable value
 }
+
+// ArrayNode represents an array literal (e.g., [1, 2, 3])
+type ArrayNode struct {
+    Elements []ASTNode // Array elements
+}
+
+// ArrayDeclarationNode represents an array variable declaration (e.g., orodha namba = [1, 2, 3])
+type ArrayDeclarationNode struct {
+    Name     string  // Variable name
+    Type     string  // Element type (namba, maneno, etc.)
+    Elements []ASTNode // Initial elements
+}
+
+// ArrayAccessNode represents array element access (e.g., arr[0])
+type ArrayAccessNode struct {
+    Array ASTNode // The array being accessed
+    Index ASTNode // The index expression
+}
+
+// ArrayAssignmentNode represents array element assignment (e.g., arr[0] = 5)
+type ArrayAssignmentNode struct {
+    Array ASTNode // The array being modified
+    Index ASTNode // The index expression
+    Value ASTNode // The new value
+}

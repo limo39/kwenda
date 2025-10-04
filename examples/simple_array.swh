@@ -1,0 +1,10 @@
+kazi kuu() {
+    orodha namba arr = [1, 2, 3]
+    andika("Awali:", arr)
+    
+    ongeza(arr, 4)
+    andika("Baada ya ongeza:", arr)
+    
+    ondoa(arr, 0)
+    andika("Baada ya ondoa:", arr)
+}

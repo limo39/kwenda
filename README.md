@@ -44,9 +44,14 @@ The interpreter will execute the program specified in `main.go`. You can change 
 | `kazi` | function | Define a function |
 | `kuu` | main | Main function (entry point) |
 | `namba` | number | Declare a number variable |
+| `orodha` | array/list | Declare an array variable |
 | `ingiza` | input | Get user input |
 | `andika` | print | Print output |
 | `rudisha` | return | Return a value |
+| `ongeza` | add | Add element to array |
+| `ondoa` | remove | Remove element from array |
+| `urefu_orodha` | array_length | Get array length |
+| `pata` | get | Get element at index |
 | `kama` | if | Conditional statement |
 | `sivyo` | else | Alternative condition |
 | `wakati` | while | While loop |
@@ -82,6 +87,7 @@ boolean iko_kweli = kweli
 boolean si_kweli = uwongo
 maneno jina = "Amina"
 maneno salamu = "Habari"
+orodha namba namba_za_kwanza = [1, 2, 3, 4, 5]  # Array declaration
 ```
 
 #### Function Definition
@@ -113,6 +119,16 @@ namba jibu = x + y    // Addition
 namba tofauti = x - y // Subtraction
 namba bidhaa = x * y  // Multiplication
 namba mgawanyo = x / y // Division
+```
+
+#### Array Operations
+```swahili
+orodha namba arr = [1, 2, 3]        # Create array
+namba urefu = urefu_orodha(arr)      # Get length
+namba kipengele = pata(arr, 0)       # Get element at index 0
+ongeza(arr, 4)                       # Add element to end
+ondoa(arr, 1)                        # Remove element at index 1
+andika("Orodha:", arr)               # Print array: [1, 3, 4]
 ```
 
 #### Conditional Statements

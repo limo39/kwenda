@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"github.com/limo39/kwenda/ast"
+	"lugha-yangu/ast"
 )
 
 // Special control flow values
@@ -94,6 +94,55 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 
 	case ast.StringNode:
 		return n.Value
+
+	case ast.ArrayNode:
+		// Handle array literals (e.g., [1, 2, 3])
+		var elements []interface{}
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			elements = append(elements, value)
+		}
+		return elements
+
+	case ast.ArrayDeclarationNode:
+		// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
+		var elements []interface{}
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			elements = append(elements, value)
+		}
+		env.Set(n.Name, elements)
+		return elements
+
+	case ast.ArrayAccessNode:
+		// Handle array access (e.g., arr[0])
+		arrayValue := Interpret(n.Array, env)
+		indexValue := Interpret(n.Index, env)
+		
+		if arr, ok := arrayValue.([]interface{}); ok {
+			if idx, ok := indexValue.(int); ok {
+				if idx >= 0 && idx < len(arr) {
+					return arr[idx]
+				}
+			}
+		}
+		return nil
+
+	case ast.ArrayAssignmentNode:
+		// Handle array assignment (e.g., arr[0] = 5)
+		arrayValue := Interpret(n.Array, env)
+		indexValue := Interpret(n.Index, env)
+		newValue := Interpret(n.Value, env)
+		
+		if arr, ok := arrayValue.([]interface{}); ok {
+			if idx, ok := indexValue.(int); ok {
+				if idx >= 0 && idx < len(arr) {
+					arr[idx] = newValue
+					return newValue
+				}
+			}
+		}
+		return nil
 
 	case ast.StringVariableDeclarationNode:
 		// Handle string variable declarations (e.g., maneno x = "habari")
@@ -276,9 +325,83 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if i > 0 {
 					fmt.Print(" ")
 				}
-				fmt.Print(result)
+				// Special formatting for arrays
+				if arr, ok := result.([]interface{}); ok {
+					fmt.Print("[")
+					for j, elem := range arr {
+						if j > 0 {
+							fmt.Print(", ")
+						}
+						fmt.Print(elem)
+					}
+					fmt.Print("]")
+				} else {
+					fmt.Print(result)
+				}
 			}
 			fmt.Println()
+			return nil
+		}
+
+		// Array manipulation functions
+		if n.Name == "ongeza" && len(n.Args) == 2 {
+			// Add element to array: ongeza(array, element)
+			element := Interpret(n.Args[1], env)
+			
+			// Update the original array variable if it's an identifier
+			if arrayNode, ok := n.Args[0].(ast.IdentifierNode); ok {
+				arrayArg := env.Get(arrayNode.Value)
+				if arr, ok := arrayArg.([]interface{}); ok {
+					newArr := append(arr, element)
+					env.Set(arrayNode.Value, newArr)
+					return len(newArr) // Return new length
+				}
+			}
+			return 0
+		}
+
+		if n.Name == "ondoa" && len(n.Args) == 2 {
+			// Remove element at index: ondoa(array, index)
+			indexArg := Interpret(n.Args[1], env)
+			
+			// Update the original array variable if it's an identifier
+			if arrayNode, ok := n.Args[0].(ast.IdentifierNode); ok {
+				arrayArg := env.Get(arrayNode.Value)
+				if arr, ok := arrayArg.([]interface{}); ok {
+					if idx, ok := indexArg.(int); ok {
+						if idx >= 0 && idx < len(arr) {
+							// Remove element at index
+							newArr := append(arr[:idx], arr[idx+1:]...)
+							env.Set(arrayNode.Value, newArr)
+							return len(newArr) // Return new length
+						}
+					}
+				}
+			}
+			return 0
+		}
+
+		if n.Name == "urefu_orodha" && len(n.Args) == 1 {
+			// Get array length: urefu_orodha(array)
+			arrayArg := Interpret(n.Args[0], env)
+			if arr, ok := arrayArg.([]interface{}); ok {
+				return len(arr)
+			}
+			return 0
+		}
+
+		if n.Name == "pata" && len(n.Args) == 2 {
+			// Get element at index: pata(array, index)
+			arrayArg := Interpret(n.Args[0], env)
+			indexArg := Interpret(n.Args[1], env)
+			
+			if arr, ok := arrayArg.([]interface{}); ok {
+				if idx, ok := indexArg.(int); ok {
+					if idx >= 0 && idx < len(arr) {
+						return arr[idx]
+					}
+				}
+			}
 			return nil
 		}
 

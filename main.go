@@ -2,9 +2,9 @@ package main
 
 import (
     "fmt"
-    "github.com/limo39/kwenda/lexer"
-    "github.com/limo39/kwenda/parser"
-    "github.com/limo39/kwenda/interpreter"
+    "lugha-yangu/lexer"
+    "lugha-yangu/parser"
+    "lugha-yangu/interpreter"
     "os"
 )
 
