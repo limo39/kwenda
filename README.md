@@ -647,7 +647,7 @@ The interpreter follows a traditional architecture:
 - [x] String data type and manipulation functions ✅
 
 ### 🚀 Planned Features
-- [ ] Array/list data structures
+- [x] Array/list data structures ✅
 - [ ] File I/O operations (`soma`/`andika` for read/write)
 - [ ] Error handling with try/catch (`jaribu`/`shika`)
 - [ ] Multi-file support and imports

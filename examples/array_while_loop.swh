@@ -1,0 +1,20 @@
+kazi kuu() {
+    # Kuunda orodha ya namba
+    orodha namba namba_zangu = [10, 20, 30, 40, 50]
+    andika("Orodha kamili:", namba_zangu)
+    
+    # Kupata urefu wa orodha
+    namba urefu = urefu_orodha(namba_zangu)
+    andika("Urefu wa orodha:", urefu)
+    
+    # Kutumia while loop kuchapisha kila kipengele
+    andika("Kuchapisha kila kipengele kwa kutumia while loop:")
+    namba i = 0
+    wakati i < urefu {
+        namba kipengele = pata(namba_zangu, i)
+        andika("Kipengele", i, "ni:", kipengele)
+        i = i + 1
+    }
+    
+    andika("Mwisho wa programu!")
+}

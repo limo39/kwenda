@@ -1,0 +1,31 @@
+kazi kuu() {
+    # Kuunda orodha ya namba
+    orodha namba namba_asili = [1, 2, 3, 4, 5]
+    andika("Orodha ya awali:", namba_asili)
+    
+    # Kuhesabu jumla ya vipengele vyote
+    namba jumla = 0
+    namba i = 0
+    namba urefu = urefu_orodha(namba_asili)
+    
+    andika("Kuhesabu jumla...")
+    wakati i < urefu {
+        namba kipengele = pata(namba_asili, i)
+        jumla = jumla + kipengele
+        andika("Kuongeza", kipengele, "- Jumla sasa ni:", jumla)
+        i = i + 1
+    }
+    
+    andika("Jumla ya vipengele vyote ni:", jumla)
+    
+    # Kuongeza vipengele vipya
+    andika("Kuongeza vipengele vipya...")
+    ongeza(namba_asili, 6)
+    ongeza(namba_asili, 7)
+    andika("Orodha baada ya kuongeza:", namba_asili)
+    
+    # Kuchapisha vipengele vya mwisho
+    namba urefu_mpya = urefu_orodha(namba_asili)
+    andika("Urefu mpya:", urefu_mpya)
+    andika("Kipengele cha mwisho:", pata(namba_asili, urefu_mpya - 1))
+}

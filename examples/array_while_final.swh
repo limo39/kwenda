@@ -1,0 +1,33 @@
+kazi kuu() {
+    andika("=== ORODHA NA WHILE LOOP ===")
+    
+    # Kuunda orodha
+    orodha namba namba_zangu = [2, 4, 6, 8, 10]
+    andika("Orodha:", namba_zangu)
+    
+    # Kupata urefu
+    namba urefu = urefu_orodha(namba_zangu)
+    andika("Urefu wa orodha:", urefu)
+    
+    # Kuchapisha kila kipengele kwa kutumia while loop
+    andika("Vipengele vya orodha:")
+    namba i = 0
+    wakati i < urefu {
+        namba kipengele = pata(namba_zangu, i)
+        andika("  ", i, ":", kipengele)
+        i = i + 1
+    }
+    
+    # Kuongeza vipengele vipya
+    andika("Kuongeza 12 na 14...")
+    ongeza(namba_zangu, 12)
+    ongeza(namba_zangu, 14)
+    andika("Orodha mpya:", namba_zangu)
+    
+    # Kuondoa kipengele cha kwanza
+    andika("Kuondoa kipengele cha kwanza...")
+    ondoa(namba_zangu, 0)
+    andika("Orodha ya mwisho:", namba_zangu)
+    
+    andika("=== MWISHO ===")
+}

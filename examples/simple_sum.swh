@@ -1,0 +1,19 @@
+kazi kuu() {
+    orodha namba arr = [1, 2, 3]
+    andika("Orodha:", arr)
+    
+    namba jumla = 0
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba kipengele = pata(arr, i)
+        andika("Kipengele", i, "ni:", kipengele)
+        andika("Jumla kabla:", jumla)
+        jumla = jumla + kipengele
+        andika("Jumla baada:", jumla)
+        i = i + 1
+    }
+    
+    andika("Jumla ya mwisho:", jumla)
+}
