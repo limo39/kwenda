@@ -1,0 +1,60 @@
+kazi kuu() {
+    andika("=== MFANO KAMILI WA LUGHA YANGU ===")
+    
+    # 1. Kuunda orodha ya namba
+    andika("1. ORODHA:")
+    orodha namba namba_zangu = [5, 10, 15, 20]
+    andika("   Orodha ya awali:", namba_zangu)
+    
+    # 2. Kuongeza namba mpya
+    ongeza(namba_zangu, 25)
+    ongeza(namba_zangu, 30)
+    andika("   Baada ya kuongeza:", namba_zangu)
+    
+    # 3. Kuhesabu jumla kwa urahisi
+    andika("2. HESABU:")
+    
+    # Kuhesabu kwa mkono (5+10+15+20+25+30 = 105)
+    namba jumla_kamili = 105
+    andika("   Jumla ya namba zote:", jumla_kamili)
+    
+    # 4. Kuandika matokeo kwenye faili
+    andika("3. FAILI:")
+    maneno jina_faili = "matokeo.txt"
+    unda_faili(jina_faili)
+    andika("   Faili imeundwa:", jina_faili)
+    
+    # Kuandika header
+    andika_faili(jina_faili, "=== RIPOTI YA HESABU ===\n")
+    andika_faili(jina_faili, "Tarehe: Leo\n\n", kweli)
+    
+    # Kuandika orodha kwa urahisi
+    andika_faili(jina_faili, "ORODHA YA NAMBA:\n", kweli)
+    andika_faili(jina_faili, "- Namba 5\n", kweli)
+    andika_faili(jina_faili, "- Namba 10\n", kweli)
+    andika_faili(jina_faili, "- Namba 15\n", kweli)
+    andika_faili(jina_faili, "- Namba 20\n", kweli)
+    andika_faili(jina_faili, "- Namba 25\n", kweli)
+    andika_faili(jina_faili, "- Namba 30\n", kweli)
+    
+    # Kuandika jumla
+    andika_faili(jina_faili, "\nJUMLA YA YOTE: ", kweli)
+    andika_faili(jina_faili, jumla_kamili, kweli)
+    andika_faili(jina_faili, "\n\n=== MWISHO WA RIPOTI ===", kweli)
+    
+    # 5. Kusoma na kuonyesha maudhui ya faili
+    andika("4. MAUDHUI YA FAILI:")
+    maneno maudhui = soma(jina_faili)
+    andika(maudhui)
+    
+    # 6. Kuangalia na kusafisha
+    andika("5. KUSAFISHA:")
+    boolean ipo_kwanza = faili_ipo(jina_faili)
+    andika("   Faili ipo kabla ya kuondoa:", ipo_kwanza)
+    
+    ondoa_faili(jina_faili)
+    boolean ipo_baada = faili_ipo(jina_faili)
+    andika("   Faili ipo baada ya kuondoa:", ipo_baada)
+    
+    andika("=== MWISHO WA MFANO ===")
+}

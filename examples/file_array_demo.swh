@@ -1,0 +1,57 @@
+kazi kuu() {
+    andika("=== FAILI NA ORODHA ===")
+    
+    # Kuunda orodha ya namba
+    orodha namba namba_zangu = [10, 20, 30, 40, 50]
+    andika("Orodha ya awali:", namba_zangu)
+    
+    # Kuunda faili la kuhifadhi data
+    maneno jina_faili = "namba_data.txt"
+    unda_faili(jina_faili)
+    
+    # Kuandika header kwenye faili
+    andika_faili(jina_faili, "=== DATA YA NAMBA ===\n")
+    
+    # Kuandika kila namba kwenye faili
+    andika("Kuandika namba kwenye faili...")
+    namba i = 0
+    namba urefu = urefu_orodha(namba_zangu)
+    
+    wakati i < urefu {
+        namba namba_ya_sasa = pata(namba_zangu, i)
+        maneno mstari = "Namba " + i + ": " + namba_ya_sasa + "\n"
+        andika_faili(jina_faili, mstari, kweli)
+        andika("  Imeandika:", namba_ya_sasa)
+        i = i + 1
+    }
+    
+    # Kuongeza footer
+    andika_faili(jina_faili, "=== MWISHO WA DATA ===\n", kweli)
+    
+    # Kusoma na kuonyesha maudhui ya faili
+    andika("Maudhui ya faili:")
+    maneno maudhui = soma(jina_faili)
+    andika(maudhui)
+    
+    # Kuongeza namba mpya kwenye orodha na faili
+    andika("Kuongeza namba mpya...")
+    ongeza(namba_zangu, 60)
+    ongeza(namba_zangu, 70)
+    
+    maneno data_mpya = "Namba zilizoongezwa: 60, 70\n"
+    andika_faili(jina_faili, data_mpya, kweli)
+    
+    andika("Orodha mpya:", namba_zangu)
+    
+    # Kusoma faili tena
+    andika("Faili baada ya kuongeza:")
+    maneno maudhui_mapya = soma(jina_faili)
+    andika(maudhui_mapya)
+    
+    # Kusafisha - kuondoa faili
+    andika("Kusafisha...")
+    ondoa_faili(jina_faili)
+    andika("Faili imeondolewa")
+    
+    andika("=== MWISHO ===")
+}

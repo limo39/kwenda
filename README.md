@@ -52,6 +52,11 @@ The interpreter will execute the program specified in `main.go`. You can change 
 | `ondoa` | remove | Remove element from array |
 | `urefu_orodha` | array_length | Get array length |
 | `pata` | get | Get element at index |
+| `soma` | read | Read file content |
+| `andika_faili` | write_file | Write content to file |
+| `unda_faili` | create_file | Create empty file |
+| `faili_ipo` | file_exists | Check if file exists |
+| `ondoa_faili` | delete_file | Delete file |
 | `kama` | if | Conditional statement |
 | `sivyo` | else | Alternative condition |
 | `wakati` | while | While loop |
@@ -129,6 +134,22 @@ namba kipengele = pata(arr, 0)       # Get element at index 0
 ongeza(arr, 4)                       # Add element to end
 ondoa(arr, 1)                        # Remove element at index 1
 andika("Orodha:", arr)               # Print array: [1, 3, 4]
+```
+
+#### File I/O Operations
+```swahili
+# File creation and writing
+unda_faili("data.txt")                    # Create empty file
+andika_faili("data.txt", "Hello World")   # Write content (overwrite)
+andika_faili("data.txt", "\nNew line", kweli)  # Append content
+
+# File reading
+maneno maudhui = soma("data.txt")         # Read file content
+andika("Content:", maudhui)               # Display content
+
+# File management
+boolean ipo = faili_ipo("data.txt")       # Check if file exists
+ondoa_faili("data.txt")                   # Delete file
 ```
 
 #### Conditional Statements
@@ -500,7 +521,41 @@ j = 4
 j = 5
 ```
 
-### Example 9: String Manipulation
+### Example 9: File I/O Operations
+```swahili
+kazi kuu() {
+    # Create and manage files
+    maneno jina_faili = "data.txt"
+    unda_faili(jina_faili)
+    
+    # Write data to file
+    orodha namba namba_zangu = [10, 20, 30]
+    andika_faili(jina_faili, "NAMBA ZA MUHIMU:\n")
+    
+    namba i = 0
+    namba urefu = urefu_orodha(namba_zangu)
+    wakati i < urefu {
+        namba namba_ya_sasa = pata(namba_zangu, i)
+        andika_faili(jina_faili, "Namba ", kweli)
+        andika_faili(jina_faili, namba_ya_sasa, kweli)
+        andika_faili(jina_faili, "\n", kweli)
+        i = i + 1
+    }
+    
+    # Read and display file content
+    maneno maudhui = soma(jina_faili)
+    andika("Maudhui ya faili:")
+    andika(maudhui)
+    
+    # Check if file exists and clean up
+    boolean ipo = faili_ipo(jina_faili)
+    andika("Faili ipo:", ipo)
+    ondoa_faili(jina_faili)
+    andika("Faili imeondolewa")
+}
+```
+
+### Example 10: String Manipulation
 ```swahili
 kazi kuu() {
     # Basic string operations
@@ -614,6 +669,8 @@ The interpreter follows a traditional architecture:
 - **Input**: `ingiza()` with optional prompt
 - **Output**: `andika()` with multiple arguments
 - **Assignment**: `=` operator
+- **File I/O**: `soma()`, `andika_faili()`, `unda_faili()`, `faili_ipo()`, `ondoa_faili()`
+- **Array Operations**: `ongeza()`, `ondoa()`, `urefu_orodha()`, `pata()`
 
 ### Control Flow
 - **Functions**: `kazi` keyword for function definitions with parameters and return types
@@ -648,7 +705,7 @@ The interpreter follows a traditional architecture:
 
 ### 🚀 Planned Features
 - [x] Array/list data structures ✅
-- [ ] File I/O operations (`soma`/`andika` for read/write)
+- [x] File I/O operations (`soma`/`andika_faili` for read/write) ✅
 - [ ] Error handling with try/catch (`jaribu`/`shika`)
 - [ ] Multi-file support and imports
 - [ ] Standard library functions

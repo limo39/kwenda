@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"lugha-yangu/ast"
@@ -403,6 +404,108 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 			return nil
+		}
+
+		// File I/O operations
+		if n.Name == "soma" && len(n.Args) == 1 {
+			// Read file: soma("filename.txt")
+			filenameArg := Interpret(n.Args[0], env)
+			if filename, ok := filenameArg.(string); ok {
+				content, err := os.ReadFile(filename)
+				if err != nil {
+					fmt.Printf("Hitilafu ya kusoma faili '%s': %v\n", filename, err)
+					return ""
+				}
+				return string(content)
+			}
+			return ""
+		}
+
+		if n.Name == "andika_faili" && len(n.Args) >= 2 {
+			// Write to file: andika_faili("filename.txt", "content") or andika_faili("filename.txt", "content", kweli) for append
+			filenameArg := Interpret(n.Args[0], env)
+			contentArg := Interpret(n.Args[1], env)
+			
+			if filename, ok := filenameArg.(string); ok {
+				// Convert content to string if it's not already
+				var content string
+				if str, ok := contentArg.(string); ok {
+					content = str
+				} else {
+					content = fmt.Sprintf("%v", contentArg)
+				}
+				
+				// Check if append mode is specified
+				append := false
+				if len(n.Args) >= 3 {
+					appendArg := Interpret(n.Args[2], env)
+					if appendVal, ok := appendArg.(bool); ok {
+						append = appendVal
+					}
+				}
+				
+				var err error
+				if append {
+					// Append to file
+					file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+					if err != nil {
+						fmt.Printf("Hitilafu ya kufungua faili '%s': %v\n", filename, err)
+						return false
+					}
+					defer file.Close()
+					
+					_, err = file.WriteString(content)
+				} else {
+					// Overwrite file
+					err = os.WriteFile(filename, []byte(content), 0644)
+				}
+				
+				if err != nil {
+					fmt.Printf("Hitilafu ya kuandika faili '%s': %v\n", filename, err)
+					return false
+				}
+				return true
+			}
+			return false
+		}
+
+		if n.Name == "unda_faili" && len(n.Args) == 1 {
+			// Create empty file: unda_faili("filename.txt")
+			filenameArg := Interpret(n.Args[0], env)
+			if filename, ok := filenameArg.(string); ok {
+				file, err := os.Create(filename)
+				if err != nil {
+					fmt.Printf("Hitilafu ya kuunda faili '%s': %v\n", filename, err)
+					return false
+				}
+				file.Close()
+				return true
+			}
+			return false
+		}
+
+		if n.Name == "faili_ipo" && len(n.Args) == 1 {
+			// Check if file exists: faili_ipo("filename.txt")
+			filenameArg := Interpret(n.Args[0], env)
+			if filename, ok := filenameArg.(string); ok {
+				_, err := os.Stat(filename)
+				return err == nil
+			}
+			return false
+		}
+
+		if n.Name == "ondoa_faili" && len(n.Args) == 1 {
+			// Delete file: ondoa_faili("filename.txt")
+			filenameArg := Interpret(n.Args[0], env)
+			if filename, ok := filenameArg.(string); ok {
+				err := os.Remove(filename)
+				if err != nil {
+					fmt.Printf("Hitilafu ya kuondoa faili '%s': %v\n", filename, err)
+					return false
+				}
+				return true
+			}
+			return false
 		}
 
 		// String manipulation functions

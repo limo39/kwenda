@@ -1,0 +1,45 @@
+kazi kuu() {
+    andika("=== MFANO RAHISI WA FAILI ===")
+    
+    # Kuunda orodha
+    orodha namba namba_zangu = [100, 200, 300]
+    andika("Orodha:", namba_zangu)
+    
+    # Kuunda faili
+    maneno jina = "simple_data.txt"
+    unda_faili(jina)
+    andika("Faili imeundwa:", jina)
+    
+    # Kuandika header
+    andika_faili(jina, "DATA YA NAMBA:\n")
+    
+    # Kuandika kila namba
+    namba i = 0
+    namba urefu = urefu_orodha(namba_zangu)
+    
+    wakati i < urefu {
+        namba namba_ya_sasa = pata(namba_zangu, i)
+        andika("Kuandika namba:", namba_ya_sasa)
+        
+        # Kuandika namba kwenye faili (kwa urahisi)
+        andika_faili(jina, "Namba: ", kweli)
+        andika_faili(jina, namba_ya_sasa, kweli)
+        andika_faili(jina, "\n", kweli)
+        
+        i = i + 1
+    }
+    
+    # Kuandika footer
+    andika_faili(jina, "MWISHO WA DATA\n", kweli)
+    
+    # Kusoma na kuonyesha
+    andika("Maudhui ya faili:")
+    maneno maudhui = soma(jina)
+    andika(maudhui)
+    
+    # Kusafisha
+    ondoa_faili(jina)
+    andika("Faili imeondolewa")
+    
+    andika("=== MWISHO ===")
+}

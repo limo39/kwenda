@@ -1,0 +1,18 @@
+kazi kuu() {
+    andika("=== FILE I/O DEMO ===")
+    
+    # Create file
+    unda_faili("test.txt")
+    
+    # Write to file
+    andika_faili("test.txt", "Habari dunia!")
+    
+    # Read from file
+    maneno data = soma("test.txt")
+    andika("Data:", data)
+    
+    # Delete file
+    ondoa_faili("test.txt")
+    
+    andika("=== DONE ===")
+}

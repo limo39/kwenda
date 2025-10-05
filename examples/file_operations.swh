@@ -1,0 +1,50 @@
+kazi kuu() {
+    andika("=== OPERESHENI ZA FAILI ===")
+    
+    # Kuunda faili mpya
+    maneno jina = "data.txt"
+    andika("1. Kuunda faili:", jina)
+    boolean imeundwa = unda_faili(jina)
+    andika("   Matokeo:", imeundwa)
+    
+    # Kuandika data
+    maneno ujumbe = "Hii ni line ya kwanza\nHii ni line ya pili\nMwisho wa ujumbe"
+    andika("2. Kuandika data...")
+    boolean imeandikwa = andika_faili(jina, ujumbe)
+    andika("   Matokeo:", imeandikwa)
+    
+    # Kusoma data
+    andika("3. Kusoma data...")
+    maneno data_iliyosomwa = soma(jina)
+    andika("   Maudhui:")
+    andika(data_iliyosomwa)
+    
+    # Kuongeza data
+    andika("4. Kuongeza data mpya...")
+    maneno data_mpya = "\nData iliyoongezwa!"
+    boolean imeongezwa = andika_faili(jina, data_mpya, kweli)
+    andika("   Matokeo:", imeongezwa)
+    
+    # Kusoma tena
+    andika("5. Kusoma data yote...")
+    maneno data_yote = soma(jina)
+    andika("   Maudhui kamili:")
+    andika(data_yote)
+    
+    # Kuangalia ipo
+    andika("6. Kuangalia kama faili ipo...")
+    boolean ipo = faili_ipo(jina)
+    andika("   Faili ipo:", ipo)
+    
+    # Kuondoa faili
+    andika("7. Kuondoa faili...")
+    boolean imeondolewa = ondoa_faili(jina)
+    andika("   Matokeo:", imeondolewa)
+    
+    # Kuangalia tena
+    andika("8. Kuangalia tena...")
+    boolean ipo_tena = faili_ipo(jina)
+    andika("   Faili ipo:", ipo_tena)
+    
+    andika("=== MWISHO ===")
+}

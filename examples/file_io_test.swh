@@ -1,0 +1,47 @@
+kazi kuu() {
+    andika("=== MFANO WA FILE I/O ===")
+    
+    # Kuunda faili mpya
+    maneno jina_faili = "test_file.txt"
+    andika("Kuunda faili:", jina_faili)
+    boolean imeundwa = unda_faili(jina_faili)
+    andika("Faili imeundwa:", imeundwa)
+    
+    # Kuandika data kwenye faili
+    maneno maudhui = "Habari za asubuhi!\nHii ni mstari wa pili.\nNa huu ni wa tatu."
+    andika("Kuandika maudhui kwenye faili...")
+    boolean imeandikwa = andika_faili(jina_faili, maudhui)
+    andika("Maudhui yameandikwa:", imeandikwa)
+    
+    # Kusoma maudhui ya faili
+    andika("Kusoma maudhui ya faili...")
+    maneno maudhui_yaliyosomwa = soma(jina_faili)
+    andika("Maudhui yaliyosomwa:")
+    andika(maudhui_yaliyosomwa)
+    
+    # Kuongeza maudhui kwenye faili (append)
+    andika("Kuongeza maudhui mapya...")
+    maneno maudhui_mapya = "\nMstari wa ziada ulioongezwa!"
+    boolean imeongezwa = andika_faili(jina_faili, maudhui_mapya, kweli)
+    andika("Maudhui yameongezwa:", imeongezwa)
+    
+    # Kusoma faili tena
+    andika("Kusoma faili tena baada ya kuongeza:")
+    maneno maudhui_mapya_yote = soma(jina_faili)
+    andika(maudhui_mapya_yote)
+    
+    # Kuangalia kama faili ipo
+    boolean faili_ipo = faili_ipo(jina_faili)
+    andika("Faili ipo:", faili_ipo)
+    
+    # Kuondoa faili
+    andika("Kuondoa faili...")
+    boolean imeondolewa = ondoa_faili(jina_faili)
+    andika("Faili imeondolewa:", imeondolewa)
+    
+    # Kuangalia tena kama faili ipo
+    boolean faili_ipo_tena = faili_ipo(jina_faili)
+    andika("Faili ipo baada ya kuondoa:", faili_ipo_tena)
+    
+    andika("=== MWISHO ===")
+}

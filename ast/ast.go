@@ -127,3 +127,15 @@ type ArrayAssignmentNode struct {
     Index ASTNode // The index expression
     Value ASTNode // The new value
 }
+
+// FileReadNode represents reading from a file (e.g., soma("file.txt"))
+type FileReadNode struct {
+    Filename ASTNode // The filename to read from
+}
+
+// FileWriteNode represents writing to a file (e.g., andika_faili("file.txt", "content"))
+type FileWriteNode struct {
+    Filename ASTNode // The filename to write to
+    Content  ASTNode // The content to write
+    Append   bool    // Whether to append or overwrite
+}
