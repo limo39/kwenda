@@ -1,0 +1,7 @@
+kazi kuu() {
+    jaribu {
+        andika("In try")
+    } shika (e) {
+        andika("In catch")
+    }
+}

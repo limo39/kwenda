@@ -1,0 +1,52 @@
+kazi kuu() {
+    andika("=== MFANO WA KUSHUGHULIKIA HITILAFU ===")
+    
+    # 1. Mfano wa jaribu/shika wa msingi
+    andika("1. Jaribu kusoma faili lisilo po:")
+    
+    jaribu {
+        maneno maudhui = soma("faili_lisilo_po.txt")
+        andika("Maudhui:", maudhui)
+    } shika (hitilafu) {
+        andika("Hitilafu imeshikwa:", hitilafu)
+    }
+    
+    # 2. Mfano wa kutupa hitilafu mwenyewe
+    andika("2. Kutupa hitilafu:")
+    
+    jaribu {
+        namba x = 10
+        kama x > 5 {
+            tupa "Namba ni kubwa sana!"
+        }
+        andika("Hii haitaonekana")
+    } shika (kosa) {
+        andika("Kosa limeshikwa:", kosa)
+    }
+    
+    # 3. Mfano wa orodha na index mbaya
+    andika("3. Index mbaya ya orodha:")
+    
+    orodha namba namba_zangu = [1, 2, 3]
+    
+    jaribu {
+        namba kipengele = pata(namba_zangu, 10)
+        andika("Kipengele:", kipengele)
+    } shika (hitilafu) {
+        andika("Hitilafu ya orodha:", hitilafu)
+    }
+    
+    # 4. Mfano wa hatimaye
+    andika("4. Mfano wa hatimaye:")
+    
+    jaribu {
+        andika("Ndani ya jaribu")
+        tupa "Hitilafu ya majaribio"
+    } shika (e) {
+        andika("Ndani ya shika:", e)
+    } hatimaye {
+        andika("Hatimaye - hii itatekelezwa kila wakati")
+    }
+    
+    andika("=== MWISHO ===")
+}

@@ -16,11 +16,17 @@ const (
 	ControlBreak
 	ControlContinue
 	ControlReturn
+	ControlThrow
 )
 
 type ControlFlowResult struct {
 	Type  ControlFlow
 	Value interface{}
+}
+
+// ErrorValue represents a runtime error
+type ErrorValue struct {
+	Message string
 }
 
 // Environment stores variables and their values
@@ -400,10 +406,16 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if idx, ok := indexArg.(int); ok {
 					if idx >= 0 && idx < len(arr) {
 						return arr[idx]
+					} else {
+						// Throw error for invalid index
+						errorMsg := fmt.Sprintf("Index %d ni nje ya mipaka ya orodha (urefu: %d)", idx, len(arr))
+						return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
 					}
+				} else {
+					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Index lazima iwe namba"}}
 				}
 			}
-			return nil
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Hii si orodha"}}
 		}
 
 		// File I/O operations
@@ -413,12 +425,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			if filename, ok := filenameArg.(string); ok {
 				content, err := os.ReadFile(filename)
 				if err != nil {
-					fmt.Printf("Hitilafu ya kusoma faili '%s': %v\n", filename, err)
-					return ""
+					// Throw an error instead of just printing
+					errorMsg := fmt.Sprintf("Hitilafu ya kusoma faili '%s': %v", filename, err)
+					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
 				}
 				return string(content)
 			}
-			return ""
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Jina la faili si sahihi"}}
 		}
 
 		if n.Name == "andika_faili" && len(n.Args) >= 2 {
@@ -846,6 +859,87 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle continue statements (endelea)
 		return ControlFlowResult{Type: ControlContinue, Value: nil}
 
+	case ast.TryNode:
+		// Handle try-catch blocks (jaribu ... shika ...)
+		var result interface{}
+		var caughtError interface{}
+		
+		// Execute try block
+		for _, statement := range n.TryBody {
+			result = Interpret(statement, env)
+			
+			// Check for thrown errors or other control flow
+			if cf, ok := result.(ControlFlowResult); ok {
+				if cf.Type == ControlThrow {
+					caughtError = cf.Value
+					break
+				} else if cf.Type == ControlReturn {
+					// Return statements should propagate up
+					if len(n.FinallyBody) > 0 {
+						// Execute finally block before returning
+						for _, statement := range n.FinallyBody {
+							Interpret(statement, env)
+						}
+					}
+					return result
+				}
+			}
+		}
+		
+		// If an error was caught, execute catch block
+		if caughtError != nil && len(n.CatchBody) > 0 {
+			// Create new environment for catch block with error variable
+			catchEnv := NewChildEnvironment(env)
+			if n.CatchVar != "" {
+				catchEnv.Set(n.CatchVar, caughtError)
+			}
+			
+			// Execute catch block
+			for _, statement := range n.CatchBody {
+				result = Interpret(statement, catchEnv)
+				
+				// Handle control flow in catch block
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlReturn {
+						if len(n.FinallyBody) > 0 {
+							// Execute finally block before returning
+							for _, statement := range n.FinallyBody {
+								Interpret(statement, env)
+							}
+						}
+						return result
+					}
+				}
+			}
+		}
+		
+		// Execute finally block if present
+		if len(n.FinallyBody) > 0 {
+			for _, statement := range n.FinallyBody {
+				finallyResult := Interpret(statement, env)
+				
+				// Finally block can override return values
+				if cf, ok := finallyResult.(ControlFlowResult); ok {
+					if cf.Type == ControlReturn {
+						return finallyResult
+					}
+				}
+			}
+		}
+		
+		// If error wasn't caught, re-throw it
+		if caughtError != nil && len(n.CatchBody) == 0 {
+			return ControlFlowResult{Type: ControlThrow, Value: caughtError}
+		}
+		
+		return result
+
+	case ast.ThrowNode:
+		// Handle throw statements (tupa)
+		message := Interpret(n.Message, env)
+		errorMsg := fmt.Sprintf("%v", message)
+		return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
+
 	case ast.FunctionNode:
 		// Handle function definitions
 		if n.Name == "kuu" {
@@ -858,6 +952,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlReturn {
 						return cf.Value
+					} else if cf.Type == ControlThrow {
+						// Unhandled error in main function
+						if err, ok := cf.Value.(ErrorValue); ok {
+							fmt.Printf("Hitilafu isiyoshughulikiwa: %s\n", err.Message)
+						} else {
+							fmt.Printf("Hitilafu isiyoshughulikiwa: %v\n", cf.Value)
+						}
+						return nil
 					}
 					// Other control flow statements outside loops are ignored
 					result = nil

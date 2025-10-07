@@ -96,6 +96,24 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ast.ReturnNode{Value: nil}
 	}
 
+	// Handle try-catch statements (jaribu ... shika ...)
+	if tokens[0].Value == "jaribu" {
+		return ParseTryStatement(tokens)
+	}
+
+	// Handle throw statements (tupa)
+	if tokens[0].Value == "tupa" && len(tokens) > 1 {
+		// Find the end of the throw expression (until end of statement)
+		var endIndex = len(tokens)
+		for i := 1; i < len(tokens); i++ {
+			if tokens[i].Value == "}" || tokens[i].Value == ";" {
+				endIndex = i
+				break
+			}
+		}
+		return ast.ThrowNode{Message: ParseExpression(tokens[1:endIndex])}
+	}
+
 	// Handle function definitions (e.g., kazi kuu() { ... } or kazi hesabu(namba x, namba y) namba { ... })
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" {
 		return ParseFunctionDefinition(tokens)
@@ -259,6 +277,43 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 		
 
 
+		// Parse try-catch statements (jaribu ...)
+		if tokens[i].Value == "jaribu" {
+			// Find the end of the complete try-catch-finally construct
+			end := i
+			braceCount := 0
+			
+			// Skip through the entire try-catch-finally construct
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 {
+						// Check if there's more (shika or hatimaye)
+						if end+1 < len(tokens) && (tokens[end+1].Value == "shika" || tokens[end+1].Value == "hatimaye") {
+							// Continue - there's more to parse
+							end++
+							continue
+						} else {
+							// This is the end of the construct
+							end++
+							break
+						}
+					}
+				}
+				end++
+			}
+			
+			// Call the main Parse function to handle try-catch parsing
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
 		// Parse conditional statements (kama ...)
 		if tokens[i].Value == "kama" {
 			// Find the end of the if statement (including else if present)
@@ -368,6 +423,22 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			i = end
 			continue
 		}
+
+		// Parse try-catch statements (jaribu ...)
+		if tokens[i].Value == "jaribu" {
+			// Find the end of the try-catch statement (including catch and finally)
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+			
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						// Check for ca
 
 		// Parse variable declarations (namba x = ...)
 		if tokens[i].Value == "namba" && i+3 < len(tokens) && tokens[i+2].Value == "=" {
@@ -1114,4 +1185,97 @@ func ParseArrayElements(tokens []lexer.Token) []ast.ASTNode {
 	}
 
 	return elements
+}
+
+// ParseTryStatement parses try-catch statements (jaribu { ... } shika (var) { ... } hatimaye { ... })
+func ParseTryStatement(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "jaribu" {
+		return nil
+	}
+
+	// Simple parsing: find try body, catch body, and finally body
+	var tryBody []ast.ASTNode
+	var catchVar string
+	var catchBody []ast.ASTNode
+	var finallyBody []ast.ASTNode
+
+	i := 1
+	// Parse try block
+	if i < len(tokens) && tokens[i].Value == "{" {
+		i++ // Skip opening brace
+		tryStart := i
+		braceCount := 1
+		for i < len(tokens) && braceCount > 0 {
+			if tokens[i].Value == "{" {
+				braceCount++
+			} else if tokens[i].Value == "}" {
+				braceCount--
+			}
+			i++
+		}
+		tryEnd := i - 1
+		tryBody = ParseBlock(tokens[tryStart:tryEnd])
+	}
+
+	// Parse catch block if present
+	if i < len(tokens) && tokens[i].Value == "shika" {
+		i++ // Skip "shika"
+		
+		// Parse catch variable
+		if i < len(tokens) && tokens[i].Value == "(" {
+			i++ // Skip "("
+			if i < len(tokens) && tokens[i].Type == lexer.TokenIdentifier {
+				catchVar = tokens[i].Value
+				i++
+			}
+			if i < len(tokens) && tokens[i].Value == ")" {
+				i++ // Skip ")"
+			}
+		}
+
+		// Parse catch body
+		if i < len(tokens) && tokens[i].Value == "{" {
+			i++ // Skip opening brace
+			catchStart := i
+			braceCount := 1
+			for i < len(tokens) && braceCount > 0 {
+				if tokens[i].Value == "{" {
+					braceCount++
+				} else if tokens[i].Value == "}" {
+					braceCount--
+				}
+				i++
+			}
+			catchEnd := i - 1
+			catchBody = ParseBlock(tokens[catchStart:catchEnd])
+		}
+	}
+
+	// Parse finally block if present
+	if i < len(tokens) && tokens[i].Value == "hatimaye" {
+		i++ // Skip "hatimaye"
+		
+		if i < len(tokens) && tokens[i].Value == "{" {
+			i++ // Skip opening brace
+			finallyStart := i
+			braceCount := 1
+			for i < len(tokens) && braceCount > 0 {
+				if tokens[i].Value == "{" {
+					braceCount++
+				} else if tokens[i].Value == "}" {
+					braceCount--
+				}
+				i++
+			}
+			finallyEnd := i - 1
+			finallyBody = ParseBlock(tokens[finallyStart:finallyEnd])
+		}
+	}
+
+	return ast.TryNode{
+		TryBody:     tryBody,
+		CatchVar:    catchVar,
+		CatchBody:   catchBody,
+		FinallyBody: finallyBody,
+	}
 }

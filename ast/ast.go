@@ -139,3 +139,16 @@ type FileWriteNode struct {
     Content  ASTNode // The content to write
     Append   bool    // Whether to append or overwrite
 }
+
+// TryNode represents a try-catch block (e.g., jaribu { ... } shika (hitilafu) { ... })
+type TryNode struct {
+    TryBody     []ASTNode // Statements to try executing
+    CatchVar    string    // Variable name for the caught error
+    CatchBody   []ASTNode // Statements to execute if error occurs
+    FinallyBody []ASTNode // Statements to execute regardless (optional)
+}
+
+// ThrowNode represents throwing an error (e.g., tupa "Error message")
+type ThrowNode struct {
+    Message ASTNode // The error message to throw
+}

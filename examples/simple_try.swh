@@ -1,0 +1,11 @@
+kazi kuu() {
+    andika("Testing try-catch")
+    
+    jaribu {
+        tupa "Test error"
+    } shika (e) {
+        andika("Caught:", e)
+    }
+    
+    andika("Done")
+}

@@ -1,0 +1,9 @@
+kazi kuu() {
+    andika("=== MFANO RAHISI WA HITILAFU ===")
+    
+    # Mfano wa kutupa hitilafu
+    andika("Kutupa hitilafu:")
+    tupa "Hii ni hitilafu ya majaribio"
+    
+    andika("Hii haitaonekana")
+}

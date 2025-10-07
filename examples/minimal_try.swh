@@ -1,0 +1,7 @@
+kazi kuu() {
+    jaribu {
+        andika("test")
+    } shika (e) {
+        andika("error")
+    }
+}

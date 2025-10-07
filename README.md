@@ -706,7 +706,7 @@ The interpreter follows a traditional architecture:
 ### 🚀 Planned Features
 - [x] Array/list data structures ✅
 - [x] File I/O operations (`soma`/`andika_faili` for read/write) ✅
-- [ ] Error handling with try/catch (`jaribu`/`shika`)
+- [🔄] Error handling with try/catch (`jaribu`/`shika`) - In Progress
 - [ ] Multi-file support and imports
 - [ ] Standard library functions
 - [ ] Floating-point arithmetic
