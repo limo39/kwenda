@@ -30,6 +30,8 @@ func isSwahiliKeyword(word string) bool {
 		"orodha", "ongeza", "ondoa", "urefu_orodha", "pata",
 		// File I/O keywords
 		"soma", "andika_faili", "unda_faili", "faili_ipo", "ondoa_faili",
+		// Import/Module keywords
+		"leta", "kutoka", "moduli", "umma",
 		// Error handling keywords
 		"jaribu", "shika", "hatimaye", "tupa",
 		// String manipulation functions

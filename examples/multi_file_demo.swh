@@ -1,0 +1,34 @@
+# Multi-file demo - using imports
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+kazi kuu() {
+    andika("=== MFANO WA MULTI-FILE ===")
+    
+    # Use math functions
+    namba a = 10
+    namba b = 5
+    namba jumla = math.ongeza_kubwa(a, b)
+    namba bidhaa = math.zidisha(a, b)
+    
+    andika("Math operations:")
+    andika("  ", a, "+", b, "=", jumla)
+    andika("  ", a, "*", b, "=", bidhaa)
+    andika("  PI =", math.PI)
+    
+    # Use string functions
+    maneno jina = "Mwalimu"
+    maneno salamu = strings.salamu(jina)
+    maneno reversed = strings.rejesha("Hello")
+    
+    andika("String operations:")
+    andika("  ", salamu)
+    andika("  ", reversed)
+    
+    # Test absolute value
+    namba negative = 0 - 7
+    namba absolute = math.kiwango(negative)
+    andika("  Absolute value of", negative, "is", absolute)
+    
+    andika("=== MWISHO ===")
+}

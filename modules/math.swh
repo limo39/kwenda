@@ -1,0 +1,19 @@
+# Math module - Moduli ya hesabu
+
+kazi ongeza_kubwa(namba a, namba b) {
+    rudisha a + b
+}
+
+kazi zidisha(namba a, namba b) {
+    rudisha a * b
+}
+
+kazi kiwango(namba x) {
+    kama x < 0 {
+        rudisha 0 - x
+    }
+    rudisha x
+}
+
+# Module variable
+namba PI = 3

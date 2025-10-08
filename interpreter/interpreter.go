@@ -33,6 +33,7 @@ type ErrorValue struct {
 type Environment struct {
 	Variables map[string]interface{}
 	Functions map[string]ast.FunctionNode
+	Modules   map[string]*Environment // Module namespaces
 	Parent    *Environment // For function scope
 }
 
@@ -40,6 +41,7 @@ func NewEnvironment() *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
 		Functions: make(map[string]ast.FunctionNode),
+		Modules:   make(map[string]*Environment),
 		Parent:    nil,
 	}
 }
@@ -48,6 +50,7 @@ func NewChildEnvironment(parent *Environment) *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
 		Functions: parent.Functions, // Share functions with parent
+		Modules:   parent.Modules,   // Share modules with parent
 		Parent:    parent,
 	}
 }
@@ -162,6 +165,28 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if len(n.Value) >= 2 && n.Value[0] == '"' && n.Value[len(n.Value)-1] == '"' {
 			return n.Value[1 : len(n.Value)-1] // Remove quotes
 		}
+		
+		// Check if it's a module access (e.g., math.PI or math.ongeza_kubwa)
+		if strings.Contains(n.Value, ".") {
+			parts := strings.SplitN(n.Value, ".", 2)
+			moduleName := parts[0]
+			memberName := parts[1]
+			
+			if moduleEnv, exists := env.Modules[moduleName]; exists {
+				// Try to get variable first
+				if value := moduleEnv.Get(memberName); value != nil {
+					return value
+				}
+				// Try to get function
+				if function, exists := moduleEnv.GetFunction(memberName); exists {
+					// Return a callable reference (we'll handle this in FunctionCallNode)
+					return function
+				}
+			}
+			// Module or member not found, return as-is for debugging
+			return n.Value
+		}
+		
 		// Look up the identifier in the environment
 		value := env.Get(n.Value)
 		if value == nil {
@@ -675,6 +700,44 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 			return 0
+		}
+
+		// Check if it's a module function call (e.g., math.ongeza_kubwa)
+		if strings.Contains(n.Name, ".") {
+			parts := strings.SplitN(n.Name, ".", 2)
+			moduleName := parts[0]
+			functionName := parts[1]
+			
+			if moduleEnv, exists := env.Modules[moduleName]; exists {
+				if function, exists := moduleEnv.GetFunction(functionName); exists {
+					// Create new environment for function execution
+					funcEnv := NewChildEnvironment(moduleEnv)
+
+					// Evaluate arguments and bind to parameters
+					for i, param := range function.Parameters {
+						if i < len(n.Args) {
+							argValue := Interpret(n.Args[i], env)
+							funcEnv.Set(param.Name, argValue)
+						}
+					}
+
+					// Execute function body
+					var result interface{}
+					for _, statement := range function.Body {
+						result = Interpret(statement, funcEnv)
+
+						// Check for return statement
+						if cf, ok := result.(ControlFlowResult); ok {
+							if cf.Type == ControlReturn {
+								return cf.Value
+							}
+							// Other control flow (break/continue) should not escape function
+						}
+					}
+
+					return result
+				}
+			}
 		}
 
 		// Handle user-defined function calls

@@ -1,0 +1,7 @@
+kazi kuu() {
+    andika("Testing basic functionality")
+    namba x = 5
+    namba y = 3
+    namba result = x + y
+    andika("Result:", result)
+}

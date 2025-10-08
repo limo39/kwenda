@@ -1,0 +1,14 @@
+# String utilities module - Moduli ya maneno
+
+kazi salamu(maneno jina) {
+    rudisha "Habari " + jina + "!"
+}
+
+kazi rejesha(maneno neno) {
+    # Simple reverse (placeholder implementation)
+    rudisha neno + " (reversed)"
+}
+
+kazi ni_tupu(maneno neno) {
+    rudisha neno == ""
+}

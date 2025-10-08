@@ -152,3 +152,17 @@ type TryNode struct {
 type ThrowNode struct {
     Message ASTNode // The error message to throw
 }
+
+// ImportNode represents an import statement (e.g., leta "math.swh")
+type ImportNode struct {
+    ModulePath string   // Path to the module file
+    ImportName string   // Optional alias name
+    Items      []string // Specific items to import (for selective imports)
+}
+
+// ModuleNode represents a module definition
+type ModuleNode struct {
+    Name      string      // Module name
+    Exports   []string    // List of exported function/variable names
+    Functions []ASTNode   // Functions in this module
+}
