@@ -1,0 +1,22 @@
+kazi kuu() {
+    andika("=== MFANO WA ORODHA NA WHILE LOOP ===")
+    
+    orodha namba namba_zangu = [5, 10, 15, 20, 25]
+    andika("Orodha ya awali:", namba_zangu)
+    andika("Urefu:", urefu_orodha(namba_zangu))
+    
+    andika("\n--- Kuhesabu jumla ---")
+    namba jumla = 0
+    namba j = 0
+    namba urefu = urefu_orodha(namba_zangu)
+    
+    wakati j < urefu {
+        namba num = pata(namba_zangu, j)
+        jumla = jumla + num
+        andika("Kuongeza", num, "-> Jumla =", jumla)
+        j = j + 1
+    }
+    
+    andika("Jumla ya mwisho:", jumla)
+    andika("\n=== MWISHO ===")
+}

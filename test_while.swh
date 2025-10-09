@@ -1,0 +1,34 @@
+kazi kuu() {
+    andika("Testing while loops")
+    
+    andika("1. Basic while loop:")
+    namba i = 1
+    wakati i <= 3 {
+        andika("  i =", i)
+        i = i + 1
+    }
+    
+    andika("2. While with break:")
+    namba j = 1
+    wakati j <= 10 {
+        kama j == 4 {
+            andika("  Breaking at j =", j)
+            vunja
+        }
+        andika("  j =", j)
+        j = j + 1
+    }
+    
+    andika("3. While with continue:")
+    namba k = 0
+    wakati k < 5 {
+        k = k + 1
+        kama k == 3 {
+            andika("  Skipping k =", k)
+            endelea
+        }
+        andika("  k =", k)
+    }
+    
+    andika("Done!")
+}

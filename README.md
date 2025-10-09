@@ -7,7 +7,7 @@
 - **Native Swahili Syntax**: All keywords are in Swahili
 - **Interactive Input/Output**: Built-in support for user interaction
 - **Arithmetic Operations**: Basic mathematical operations
-- **Variable Declarations**: Type-safe variable handling
+- **Variable Declarations**: Type-safe variable handling (numbers, strings, booleans, arrays)
 - **String Manipulation**: Comprehensive string operations and functions
 - **Function Definitions**: Support for custom functions with parameters and return values
 - **Boolean Data Type**: Native boolean support with `kweli`/`uwongo`
@@ -15,6 +15,10 @@
 - **Loop Constructs**: While loops with `wakati` and for loops with `kwa`
 - **Loop Control**: Break and continue statements with `vunja`/`endelea`
 - **Logical Operations**: AND/OR operations with `na`/`au`
+- **Error Handling**: Try/catch/finally blocks with `jaribu`/`shika`/`hatimaye`
+- **Module System**: Multi-file support with imports using `leta`
+- **Array Operations**: Full array support with manipulation functions
+- **File I/O**: Read, write, create, and delete files
 - **Educational Focus**: Perfect for learning programming concepts in Swahili
 
 ## 🚀 Quick Start
@@ -81,6 +85,11 @@ The interpreter will execute the program specified in `main.go`. You can change 
 | `ondoa_nafasi` | trim | Remove whitespace |
 | `gawanya_maneno` | split | Split string into parts |
 | `rudisha` | return | Return a value from function |
+| `leta` | import | Import a module file |
+| `jaribu` | try | Try block for error handling |
+| `shika` | catch | Catch block for handling errors |
+| `hatimaye` | finally | Finally block (always executes) |
+| `tupa` | throw | Throw an error |
 
 ### Basic Syntax
 
@@ -282,6 +291,77 @@ maneno neno1 = "Habari"
 maneno neno2 = "Habari"
 boolean ni_sawa = neno1 == neno2  # kweli
 boolean si_sawa = neno1 != "Mambo"  # kweli
+```
+
+### Module System
+
+#### Importing Modules
+```swahili
+# Import a module file
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+# Use module functions with namespace
+namba result = math.ongeza_kubwa(10, 5)
+maneno greeting = strings.salamu("Amina")
+```
+
+#### Creating Modules
+```swahili
+# File: modules/mymodule.swh
+# Define functions that will be available to importers
+kazi my_function(namba x) {
+    rudisha x * 2
+}
+
+# Module-level variables
+namba MY_CONSTANT = 42
+```
+
+#### Module Namespaces
+- Each module has its own namespace
+- Functions and variables are accessed using dot notation: `module.function()`
+- Module names are derived from the filename (without `.swh` extension)
+- Modules are cached - importing the same module multiple times loads it only once
+
+### Error Handling
+
+#### Try-Catch Blocks
+```swahili
+jaribu {
+    # Code that might throw an error
+    namba x = pata(arr, 100)  # Index out of bounds
+} shika (error) {
+    # Handle the error
+    andika("Error occurred:", error)
+}
+```
+
+#### Try-Catch-Finally
+```swahili
+jaribu {
+    # Try some operation
+    maneno content = soma("file.txt")
+} shika (e) {
+    # Handle error
+    andika("Could not read file:", e)
+} hatimaye {
+    # Always executes, even if no error
+    andika("Cleanup complete")
+}
+```
+
+#### Throwing Errors
+```swahili
+kazi validate(namba age) {
+    kama age < 0 {
+        tupa "Age cannot be negative"
+    }
+    kama age > 150 {
+        tupa "Age is unrealistic"
+    }
+    rudisha kweli
+}
 ```
 
 ## 📚 Examples
@@ -555,7 +635,132 @@ kazi kuu() {
 }
 ```
 
-### Example 10: String Manipulation
+### Example 10: Error Handling
+```swahili
+kazi kuu() {
+    andika("=== Error Handling Demo ===")
+    
+    # Try-catch example
+    jaribu {
+        namba x = 10
+        kama x > 5 {
+            tupa "Number is too large!"
+        }
+        andika("This won't be printed")
+    } shika (error) {
+        andika("Caught error:", error)
+    }
+    
+    # Try-catch-finally example
+    jaribu {
+        andika("Inside try block")
+        tupa "Test error"
+    } shika (e) {
+        andika("Inside catch:", e)
+    } hatimaye {
+        andika("Finally block - always executes")
+    }
+    
+    # File error handling
+    jaribu {
+        maneno content = soma("nonexistent.txt")
+        andika("Content:", content)
+    } shika (error) {
+        andika("File error:", error)
+    }
+    
+    andika("Program continues after error handling")
+}
+```
+
+**Output:**
+```
+=== Error Handling Demo ===
+Caught error: {Number is too large!}
+Inside try block
+Inside catch: {Test error}
+Finally block - always executes
+File error: {Hitilafu ya kusoma faili 'nonexistent.txt': ...}
+Program continues after error handling
+```
+
+### Example 11: Module System (Multi-file Support)
+```swahili
+# File: modules/math.swh
+kazi ongeza_kubwa(namba a, namba b) {
+    rudisha a + b
+}
+
+kazi zidisha(namba a, namba b) {
+    rudisha a * b
+}
+
+kazi kiwango(namba x) {
+    kama x < 0 {
+        rudisha 0 - x
+    }
+    rudisha x
+}
+
+namba PI = 3
+
+# File: modules/strings.swh
+kazi salamu(maneno jina) {
+    rudisha "Habari " + jina + "!"
+}
+
+kazi rejesha(maneno neno) {
+    rudisha neno + " (reversed)"
+}
+
+# File: main.swh
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+kazi kuu() {
+    andika("=== Multi-file Demo ===")
+    
+    # Use math module functions
+    namba a = 10
+    namba b = 5
+    namba jumla = math.ongeza_kubwa(a, b)
+    namba bidhaa = math.zidisha(a, b)
+    
+    andika("Math operations:")
+    andika("  ", a, "+", b, "=", jumla)
+    andika("  ", a, "*", b, "=", bidhaa)
+    andika("  PI =", math.PI)
+    
+    # Use string module functions
+    maneno jina = "Mwalimu"
+    maneno salamu = strings.salamu(jina)
+    maneno reversed = strings.rejesha("Hello")
+    
+    andika("String operations:")
+    andika("  ", salamu)
+    andika("  ", reversed)
+    
+    # Test absolute value
+    namba negative = 0 - 7
+    namba absolute = math.kiwango(negative)
+    andika("  Absolute value of", negative, "is", absolute)
+}
+```
+
+**Output:**
+```
+=== Multi-file Demo ===
+Math operations:
+   10 + 5 = 15
+   10 * 5 = 50
+  PI = 3
+String operations:
+   Habari Mwalimu!
+   Hello (reversed)
+  Absolute value of -7 is 7
+```
+
+### Example 12: String Manipulation
 ```swahili
 kazi kuu() {
     # Basic string operations
@@ -629,6 +834,7 @@ lugha-yangu/
 │   ├── while_loop.swh         # While loop examples
 │   ├── for_loop.swh           # For loop examples
 │   ├── nested_loops.swh       # Nested loop examples
+│   ├── complete_loops_demo.swh # Complete loops with break/continue
 │   ├── break_example.swh      # Break statement examples
 │   ├── continue_example.swh   # Continue statement examples
 │   ├── simple_nested_break.swh # Nested loops with break/continue
@@ -641,7 +847,14 @@ lugha-yangu/
 │   ├── string_basic.swh       # Basic string operations
 │   ├── string_manipulation.swh # String manipulation functions
 │   ├── string_functions.swh   # String functions with user-defined functions
-│   └── string_comprehensive.swh # Comprehensive string demo
+│   ├── string_comprehensive.swh # Comprehensive string demo
+│   ├── error_handling_simple.swh # Simple error handling
+│   ├── error_handling_basic.swh # Basic try/catch examples
+│   ├── simple_try.swh         # Simple try/catch test
+│   └── multi_file_demo.swh    # Multi-file module demo
+├── modules/
+│   ├── math.swh               # Math utility functions
+│   └── strings.swh            # String utility functions
 └── README.md
 ```
 
@@ -685,12 +898,13 @@ The interpreter follows a traditional architecture:
 ## 🚧 Current Limitations
 
 - Only integer arithmetic (no floating-point)
-- No arrays or complex data structures
-- Single-file programs only
 - Limited operator precedence (use parentheses for complex expressions)
 - No function overloading
 - No recursive function optimization
 - No labeled break/continue (only affects innermost loop)
+- Module functions must be called with module prefix (e.g., `math.add()`)
+- No circular import detection
+- Limited standard library (growing)
 
 ## 🔮 Future Enhancements
 
@@ -706,12 +920,17 @@ The interpreter follows a traditional architecture:
 ### 🚀 Planned Features
 - [x] Array/list data structures ✅
 - [x] File I/O operations (`soma`/`andika_faili` for read/write) ✅
-- [🔄] Error handling with try/catch (`jaribu`/`shika`) - In Progress
-- [ ] Multi-file support and imports
-- [ ] Standard library functions
+- [x] Error handling with try/catch (`jaribu`/`shika`/`hatimaye`) ✅
+- [x] Multi-file support and imports (`leta`) ✅
+- [x] Module system with namespaces ✅
+- [ ] Standard library modules (math, strings, etc.)
 - [ ] Floating-point arithmetic
-- [ ] Comments support (`#` or `//`)
+- [ ] Comments support (currently `#` works in some contexts)
 - [ ] Better error messages with line numbers
+- [ ] Object-oriented features (classes, objects)
+- [ ] Dictionary/map data structures
+- [ ] Lambda functions
+- [ ] List comprehensions
 
 ## 🤝 Contributing
 

@@ -1,0 +1,5 @@
+kazi kuu() {
+    namba x = 5
+    x = x + 1
+    andika("x =", x)
+}

@@ -1,0 +1,15 @@
+kazi kuu() {
+    andika("Testing assignments in loops")
+    
+    namba jumla = 0
+    namba i = 0
+    
+    wakati i < 3 {
+        namba num = 5
+        jumla = jumla + num
+        andika("i =", i, "jumla =", jumla)
+        i = i + 1
+    }
+    
+    andika("Final jumla:", jumla)
+}
