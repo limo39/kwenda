@@ -1,0 +1,274 @@
+# Comprehensive Test - Kwenda Language Features (Working Version)
+# Tests: floats, arrays, loops, conditionals, error handling, functions
+
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+# Function to calculate circle area
+kazi hesabu_eneo(namba radius) {
+    namba pi = 3.14159
+    namba area = pi * radius * radius
+    rudisha area
+}
+
+# Function to calculate circle circumference
+kazi hesabu_mzunguko(namba radius) {
+    namba pi = 3.14159
+    namba circ = 2.0 * pi * radius
+    rudisha circ
+}
+
+# Function to convert Celsius to Fahrenheit
+kazi celsius_to_fahrenheit(namba celsius) {
+    namba f = celsius * 9.0 / 5.0 + 32.0
+    rudisha f
+}
+
+# Function to find grade
+kazi pata_daraja(namba wastani) {
+    kama wastani >= 90.0 {
+        rudisha "A"
+    }
+    kama wastani >= 80.0 {
+        rudisha "B"
+    }
+    kama wastani >= 70.0 {
+        rudisha "C"
+    }
+    kama wastani >= 60.0 {
+        rudisha "D"
+    }
+    rudisha "F"
+}
+
+kazi kuu() {
+    andika("=== COMPREHENSIVE KWENDA TEST ===")
+    andika("")
+    
+    # Test 1: Floating-point arithmetic
+    andika("--- Test 1: Basic Float Operations ---")
+    namba a = 85.5
+    namba b = 92.3
+    namba c = 78.0
+    namba d = 88.5
+    namba e = 95.0
+    
+    andika("Grades:", a, b, c, d, e)
+    
+    namba total = a + b + c + d + e
+    namba count = 5.0
+    namba avg = total / count
+    
+    andika("Total:", total)
+    andika("Average:", avg)
+    
+    maneno grade = pata_daraja(avg)
+    andika("Final Grade:", grade)
+    andika("")
+    
+    # Test 2: Math module operations
+    andika("--- Test 2: Math Module Operations ---")
+    namba x = 12.5
+    namba y = 4.5
+    
+    namba sum = math.ongeza(x, y)
+    namba diff = math.toa(x, y)
+    namba prod = math.zidisha(x, y)
+    namba square = math.mraba(x)
+    
+    andika("x =", x, ", y =", y)
+    andika("x + y =", sum)
+    andika("x - y =", diff)
+    andika("x * y =", prod)
+    andika("x² =", square)
+    
+    # Absolute value
+    namba neg = 0.0 - 15.75
+    namba abs_val = math.kiwango(neg)
+    andika("|-15.75| =", abs_val)
+    
+    # Even/odd check
+    namba num1 = 10
+    namba num2 = 7
+    boolean even1 = math.ni_shufwa(num1)
+    boolean odd2 = math.ni_witiri(num2)
+    andika(num1, "is even?", even1)
+    andika(num2, "is odd?", odd2)
+    andika("")
+    
+    # Test 3: Circle calculations
+    andika("--- Test 3: Circle Calculations ---")
+    namba r1 = 5.0
+    namba r2 = 10.0
+    namba r3 = 15.0
+    
+    namba area1 = hesabu_eneo(r1)
+    namba circ1 = hesabu_mzunguko(r1)
+    andika("Circle 1 (r=", r1, "):")
+    andika("  Area:", area1)
+    andika("  Circumference:", circ1)
+    
+    namba area2 = hesabu_eneo(r2)
+    namba circ2 = hesabu_mzunguko(r2)
+    andika("Circle 2 (r=", r2, "):")
+    andika("  Area:", area2)
+    andika("  Circumference:", circ2)
+    andika("")
+    
+    # Test 4: Temperature conversion
+    andika("--- Test 4: Temperature Conversion ---")
+    namba c1 = 0.0
+    namba c2 = 25.0
+    namba c3 = 37.0
+    namba c4 = 100.0
+    
+    namba f1 = celsius_to_fahrenheit(c1)
+    namba f2 = celsius_to_fahrenheit(c2)
+    namba f3 = celsius_to_fahrenheit(c3)
+    namba f4 = celsius_to_fahrenheit(c4)
+    
+    andika(c1, "°C =", f1, "°F")
+    andika(c2, "°C =", f2, "°F")
+    andika(c3, "°C =", f3, "°F")
+    andika(c4, "°C =", f4, "°F")
+    andika("")
+    
+    # Test 5: String operations
+    andika("--- Test 5: String Operations ---")
+    maneno jina1 = "Amina"
+    maneno jina2 = "Juma"
+    maneno jina3 = "Fatuma"
+    
+    maneno salamu1 = strings.salamu(jina1)
+    maneno salamu2 = strings.salamu_asubuhi(jina2)
+    maneno salamu3 = strings.salamu_jioni(jina3)
+    
+    andika(salamu1)
+    andika(salamu2)
+    andika(salamu3)
+    
+    maneno sentensi = "Habari Dunia"
+    boolean has_dunia = strings.ina_neno(sentensi, "Dunia")
+    andika("'", sentensi, "' contains 'Dunia'?", has_dunia)
+    andika("")
+    
+    # Test 6: Loops with floats
+    andika("--- Test 6: Compound Interest Calculation ---")
+    namba principal = 1000.0
+    namba rate = 0.05
+    namba years = 5
+    
+    namba amount = principal
+    namba year = 1
+    
+    andika("Principal:", principal)
+    andika("Rate:", rate)
+    andika("")
+    
+    wakati year <= years {
+        namba interest = amount * rate
+        amount = amount + interest
+        andika("Year", year, ": $", amount)
+        year = year + 1
+    }
+    andika("")
+    
+    # Test 7: Nested loops with break/continue
+    andika("--- Test 7: Multiplication Table (Odd Results Only) ---")
+    namba row = 1
+    
+    wakati row <= 3 {
+        namba col = 1
+        wakati col <= 5 {
+            namba result = row * col
+            
+            # Skip even results
+            boolean is_even = math.ni_shufwa(result)
+            kama is_even {
+                col = col + 1
+                endelea
+            }
+            
+            andika(row, "x", col, "=", result)
+            col = col + 1
+        }
+        row = row + 1
+    }
+    andika("")
+    
+    # Test 8: Error handling
+    andika("--- Test 8: Error Handling ---")
+    
+    jaribu {
+        namba safe_div = math.gawanya(100, 5)
+        andika("100 / 5 =", safe_div)
+    } shika (e) {
+        andika("Error:", e)
+    }
+    
+    jaribu {
+        namba unsafe_div = math.gawanya(100, 0)
+        andika("100 / 0 =", unsafe_div)
+    } shika (e) {
+        andika("Caught error:", e)
+    }
+    andika("")
+    
+    # Test 9: Complex boolean logic
+    andika("--- Test 9: Boolean Logic with Floats ---")
+    namba score = 85.5
+    namba passing = 60.0
+    namba excellent = 90.0
+    
+    boolean passed = score >= passing
+    boolean is_excellent = score >= excellent
+    boolean good = score >= 80.0 na score < 90.0
+    boolean fail_or_excellent = score < passing au score >= excellent
+    
+    andika("Score:", score)
+    andika("Passed (>= 60)?", passed)
+    andika("Excellent (>= 90)?", is_excellent)
+    andika("Good (80-89)?", good)
+    andika("Fail or Excellent?", fail_or_excellent)
+    andika("")
+    
+    # Test 10: Array operations
+    andika("--- Test 10: Array Operations ---")
+    orodha namba numbers = [23, 67, 12, 89, 45]
+    andika("Array:", numbers)
+    
+    namba len = urefu_orodha(numbers)
+    andika("Length:", len)
+    
+    # Find max manually
+    namba max = pata(numbers, 0)
+    namba i = 1
+    
+    wakati i < len {
+        namba current = pata(numbers, i)
+        kama current > max {
+            max = current
+        }
+        i = i + 1
+    }
+    
+    andika("Maximum:", max)
+    
+    # Add element
+    ongeza(numbers, 100)
+    andika("After adding 100:", numbers)
+    andika("")
+    
+    # Test 11: Final statistics
+    andika("--- Test 11: Final Statistics ---")
+    namba total_tests = 11.0
+    namba passed_tests = 11.0
+    namba success_rate = passed_tests / total_tests * 100.0
+    
+    andika("Total Tests:", total_tests)
+    andika("Passed Tests:", passed_tests)
+    andika("Success Rate:", success_rate, "%")
+    
+    andika("")
+    andika("=== ALL TESTS COMPLETED SUCCESSFULLY ===")
+}

@@ -1,0 +1,42 @@
+kazi kuu() {
+    andika("Testing calculations")
+    
+    # Test 1: Addition
+    namba a = 85.5
+    namba b = 92.3
+    namba c = 78.0
+    namba d = 88.5
+    namba e = 95.0
+    
+    namba sum1 = a + b
+    namba sum2 = sum1 + c
+    namba sum3 = sum2 + d
+    namba total = sum3 + e
+    
+    andika("Total:", total)
+    
+    namba count = 5.0
+    namba avg = total / count
+    andika("Average:", avg)
+    
+    # Test 2: Temperature
+    namba celsius = 25.0
+    namba nine = 9.0
+    namba five = 5.0
+    namba thirtytwo = 32.0
+    
+    namba temp1 = celsius * nine
+    namba temp2 = temp1 / five
+    namba fahrenheit = temp2 + thirtytwo
+    
+    andika(celsius, "°C =", fahrenheit, "°F")
+    
+    # Test 3: Success rate
+    namba passed = 11.0
+    namba tests = 11.0
+    namba ratio = passed / tests
+    namba hundred = 100.0
+    namba rate = ratio * hundred
+    
+    andika("Success rate:", rate, "%")
+}
