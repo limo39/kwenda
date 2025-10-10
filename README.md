@@ -923,7 +923,7 @@ The interpreter follows a traditional architecture:
 - [x] Error handling with try/catch (`jaribu`/`shika`/`hatimaye`) ✅
 - [x] Multi-file support and imports (`leta`) ✅
 - [x] Module system with namespaces ✅
-- [ ] Standard library modules (math, strings, etc.)
+- [x] Standard library modules (math, strings, arrays) ✅
 - [ ] Floating-point arithmetic
 - [ ] Comments support (currently `#` works in some contexts)
 - [ ] Better error messages with line numbers

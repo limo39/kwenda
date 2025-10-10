@@ -1,0 +1,11 @@
+leta "modules/arrays.swh"
+
+kazi kuu() {
+    andika("Testing arrays module")
+    
+    orodha namba nums = [5, 10, 15]
+    andika("Array:", nums)
+    
+    namba total = arrays.jumla(nums)
+    andika("Sum:", total)
+}

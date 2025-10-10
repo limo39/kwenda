@@ -1,0 +1,32 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Testing standard library")
+    
+    namba a = 10
+    namba b = 3
+    
+    # Direct function calls
+    namba sum = math.ongeza(a, b)
+    namba diff = math.toa(a, b)
+    namba prod = math.zidisha(a, b)
+    
+    andika("Sum:", sum)
+    andika("Difference:", diff)
+    andika("Product:", prod)
+    
+    # Test power function
+    namba power = math.nguvu(2, 3)
+    andika("2^3 =", power)
+    
+    # Test absolute value
+    namba neg = 0 - 5
+    namba abs_val = math.kiwango(neg)
+    andika("|-5| =", abs_val)
+    
+    # Test even/odd
+    boolean is_even = math.ni_shufwa(10)
+    boolean is_odd = math.ni_witiri(3)
+    andika("10 is even?", is_even)
+    andika("3 is odd?", is_odd)
+}

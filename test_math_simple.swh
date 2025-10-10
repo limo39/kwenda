@@ -1,0 +1,11 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Testing math module")
+    
+    namba a = 10
+    namba b = 3
+    namba sum = math.ongeza(a, b)
+    
+    andika("Result:", sum)
+}

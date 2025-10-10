@@ -1,0 +1,28 @@
+kazi nguvu_test(namba msingi, namba exp) {
+    andika("Starting power function")
+    andika("Base:", msingi, "Exponent:", exp)
+    
+    kama exp == 0 {
+        andika("Exponent is 0, returning 1")
+        rudisha 1
+    }
+    
+    namba jibu = 1
+    namba i = 0
+    
+    andika("Starting loop")
+    wakati i < exp {
+        andika("Loop iteration, i =", i, "jibu =", jibu)
+        jibu = jibu * msingi
+        i = i + 1
+    }
+    
+    andika("Loop done, returning", jibu)
+    rudisha jibu
+}
+
+kazi kuu() {
+    andika("Testing power function")
+    namba result = nguvu_test(2, 3)
+    andika("2^3 =", result)
+}

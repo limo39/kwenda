@@ -1,0 +1,8 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Testing power function")
+    
+    namba result = math.nguvu(2, 3)
+    andika("2^3 =", result)
+}

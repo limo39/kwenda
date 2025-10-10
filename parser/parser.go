@@ -388,7 +388,15 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 		// Parse assignment statements (e.g., i = i + 1)
 		if i+2 < len(tokens) && tokens[i].Type == lexer.TokenIdentifier && tokens[i+1].Value == "=" {
 			end := i + 2
-			for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "boolean" && tokens[end].Value != "andika" && tokens[end].Value != "orodha" && tokens[end].Value != "kama" && tokens[end].Value != "wakati" && tokens[end].Value != "kwa" && tokens[end].Value != "vunja" && tokens[end].Value != "endelea" && tokens[end].Value != "rudisha" {
+			for end < len(tokens) {
+				// Stop at keywords that start new statements
+				if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
+					break
+				}
+				// Stop at another assignment statement (identifier followed by =)
+				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
+					break
+				}
 				end++
 			}
 			stmt := Parse(tokens[i:end])

@@ -1,0 +1,100 @@
+# Standard Library Demo
+# Demonstrates all standard library modules
+
+leta "modules/math.swh"
+leta "modules/strings.swh"
+leta "modules/arrays.swh"
+
+kazi kuu() {
+    andika("=== KWENDA STANDARD LIBRARY DEMO ===")
+    andika("")
+    
+    # Math module demo
+    andika("--- MATH MODULE ---")
+    namba a = 10
+    namba b = 3
+    
+    andika("Basic operations:")
+    andika("  ", a, "+", b, "=", math.ongeza(a, b))
+    andika("  ", a, "-", b, "=", math.toa(a, b))
+    andika("  ", a, "*", b, "=", math.zidisha(a, b))
+    andika("  ", a, "/", b, "=", math.gawanya(a, b))
+    
+    andika("Advanced operations:")
+    andika("  |", 0 - 5, "| =", math.kiwango(0 - 5))
+    andika("  ", a, "^", b, "=", math.nguvu(a, b))
+    andika("  ", a, "² =", math.mraba(a))
+    andika("  ", b, "³ =", math.mchemraba(b))
+    
+    andika("Comparison:")
+    andika("  min(", a, ",", b, ") =", math.ndogo(a, b))
+    andika("  max(", a, ",", b, ") =", math.kubwa(a, b))
+    
+    andika("Number properties:")
+    andika("  ", a, "is even?", math.ni_shufwa(a))
+    andika("  ", b, "is odd?", math.ni_witiri(b))
+    andika("  ", a, "% ", b, "=", math.salio(a, b))
+    
+    andika("Constants:")
+    andika("  PI =", math.PI)
+    andika("  E =", math.E)
+    andika("")
+    
+    # Strings module demo
+    andika("--- STRINGS MODULE ---")
+    maneno jina = "Amina"
+    
+    andika("Greetings:")
+    andika("  ", strings.salamu(jina))
+    andika("  ", strings.salamu_asubuhi(jina))
+    andika("  ", strings.salamu_mchana(jina))
+    andika("  ", strings.salamu_jioni(jina))
+    
+    andika("String operations:")
+    maneno sentensi = "Habari Dunia"
+    andika("  Original:", sentensi)
+    andika("  Reversed:", strings.rejesha(sentensi))
+    andika("  With punctuation:", strings.ongeza_alama(sentensi))
+    
+    andika("String validation:")
+    andika("  Is empty?", strings.ni_tupu(sentensi))
+    andika("  Is long enough (>5)?", strings.ni_ndefu(sentensi, 5))
+    andika("  Is short enough (<20)?", strings.ni_fupi(sentensi, 20))
+    
+    andika("String formatting:")
+    maneno ujumbe = strings.tengeneza_ujumbe(jina, "Karibu!")
+    andika("  ", ujumbe)
+    
+    andika("String search:")
+    andika("  Contains 'Dunia'?", strings.ina_neno(sentensi, "Dunia"))
+    andika("  Contains 'Tanzania'?", strings.ina_neno(sentensi, "Tanzania"))
+    andika("")
+    
+    # Arrays module demo
+    andika("--- ARRAYS MODULE ---")
+    orodha namba namba_zangu = [5, 10, 15, 20, 25]
+    andika("Array:", namba_zangu)
+    
+    andika("Statistics:")
+    andika("  Sum:", arrays.jumla(namba_zangu))
+    andika("  Average:", arrays.wastani(namba_zangu))
+    andika("  Min:", arrays.ndogo_kabisa(namba_zangu))
+    andika("  Max:", arrays.kubwa_kabisa(namba_zangu))
+    
+    andika("Search:")
+    andika("  Find 15:", arrays.tafuta_namba(namba_zangu, 15))
+    andika("  Contains 20?", arrays.ina_namba(namba_zangu, 20))
+    andika("  Contains 100?", arrays.ina_namba(namba_zangu, 100))
+    
+    andika("Validation:")
+    andika("  Is empty?", arrays.ni_tupu(namba_zangu))
+    
+    orodha namba mixed = [0 - 5, 0, 5, 10, 0 - 3]
+    andika("Mixed array:", mixed)
+    andika("  Positive count:", arrays.hesabu_chanya(mixed))
+    andika("  Negative count:", arrays.hesabu_hasi(mixed))
+    andika("  Zero count:", arrays.hesabu_sifuri(mixed))
+    
+    andika("")
+    andika("=== END OF DEMO ===")
+}

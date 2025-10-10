@@ -1,0 +1,135 @@
+# Standard Library Demo - Working Version
+# Uses intermediate variables to avoid nested function call issues
+
+leta "modules/math.swh"
+leta "modules/strings.swh"
+leta "modules/arrays.swh"
+
+kazi kuu() {
+    andika("=== KWENDA STANDARD LIBRARY DEMO ===")
+    andika("")
+    
+    # Math module demo
+    andika("--- MATH MODULE ---")
+    namba a = 10
+    namba b = 3
+    
+    andika("Basic operations:")
+    namba sum = math.ongeza(a, b)
+    namba diff = math.toa(a, b)
+    namba prod = math.zidisha(a, b)
+    namba quot = math.gawanya(a, b)
+    andika("  ", a, "+", b, "=", sum)
+    andika("  ", a, "-", b, "=", diff)
+    andika("  ", a, "*", b, "=", prod)
+    andika("  ", a, "/", b, "=", quot)
+    
+    andika("Advanced operations:")
+    namba abs_val = math.kiwango(0 - 5)
+    namba power = math.nguvu(a, b)
+    namba square = math.mraba(a)
+    namba cube = math.mchemraba(b)
+    andika("  |-5| =", abs_val)
+    andika("  ", a, "^", b, "=", power)
+    andika("  ", a, "² =", square)
+    andika("  ", b, "³ =", cube)
+    
+    andika("Comparison:")
+    namba min_val = math.ndogo(a, b)
+    namba max_val = math.kubwa(a, b)
+    andika("  min(", a, ",", b, ") =", min_val)
+    andika("  max(", a, ",", b, ") =", max_val)
+    
+    andika("Number properties:")
+    boolean is_even = math.ni_shufwa(a)
+    boolean is_odd = math.ni_witiri(b)
+    namba remainder = math.salio(a, b)
+    andika("  ", a, "is even?", is_even)
+    andika("  ", b, "is odd?", is_odd)
+    andika("  ", a, "%", b, "=", remainder)
+    
+    andika("Constants:")
+    andika("  PI =", math.PI)
+    andika("  E =", math.E)
+    andika("")
+    
+    # Strings module demo
+    andika("--- STRINGS MODULE ---")
+    maneno jina = "Amina"
+    
+    andika("Greetings:")
+    maneno greeting1 = strings.salamu(jina)
+    maneno greeting2 = strings.salamu_asubuhi(jina)
+    maneno greeting3 = strings.salamu_mchana(jina)
+    maneno greeting4 = strings.salamu_jioni(jina)
+    andika("  ", greeting1)
+    andika("  ", greeting2)
+    andika("  ", greeting3)
+    andika("  ", greeting4)
+    
+    andika("String operations:")
+    maneno sentensi = "Habari Dunia"
+    andika("  Original:", sentensi)
+    maneno reversed = strings.rejesha(sentensi)
+    maneno with_punct = strings.ongeza_alama(sentensi)
+    andika("  Reversed:", reversed)
+    andika("  With punctuation:", with_punct)
+    
+    andika("String validation:")
+    boolean is_empty = strings.ni_tupu(sentensi)
+    boolean is_long = strings.ni_ndefu(sentensi, 5)
+    boolean is_short = strings.ni_fupi(sentensi, 20)
+    andika("  Is empty?", is_empty)
+    andika("  Is long enough (>5)?", is_long)
+    andika("  Is short enough (<20)?", is_short)
+    
+    andika("String formatting:")
+    maneno ujumbe = strings.tengeneza_ujumbe(jina, "Karibu!")
+    andika("  ", ujumbe)
+    
+    andika("String search:")
+    boolean has_dunia = strings.ina_neno(sentensi, "Dunia")
+    boolean has_tanzania = strings.ina_neno(sentensi, "Tanzania")
+    andika("  Contains 'Dunia'?", has_dunia)
+    andika("  Contains 'Tanzania'?", has_tanzania)
+    andika("")
+    
+    # Arrays module demo
+    andika("--- ARRAYS MODULE ---")
+    orodha namba namba_zangu = [5, 10, 15, 20, 25]
+    andika("Array:", namba_zangu)
+    
+    andika("Statistics:")
+    namba total = arrays.jumla(namba_zangu)
+    namba avg = arrays.wastani(namba_zangu)
+    namba min_num = arrays.ndogo_kabisa(namba_zangu)
+    namba max_num = arrays.kubwa_kabisa(namba_zangu)
+    andika("  Sum:", total)
+    andika("  Average:", avg)
+    andika("  Min:", min_num)
+    andika("  Max:", max_num)
+    
+    andika("Search:")
+    namba index = arrays.tafuta_namba(namba_zangu, 15)
+    boolean has_20 = arrays.ina_namba(namba_zangu, 20)
+    boolean has_100 = arrays.ina_namba(namba_zangu, 100)
+    andika("  Find 15:", index)
+    andika("  Contains 20?", has_20)
+    andika("  Contains 100?", has_100)
+    
+    andika("Validation:")
+    boolean arr_empty = arrays.ni_tupu(namba_zangu)
+    andika("  Is empty?", arr_empty)
+    
+    orodha namba mixed = [0 - 5, 0, 5, 10, 0 - 3]
+    andika("Mixed array:", mixed)
+    namba pos_count = arrays.hesabu_chanya(mixed)
+    namba neg_count = arrays.hesabu_hasi(mixed)
+    namba zero_count = arrays.hesabu_sifuri(mixed)
+    andika("  Positive count:", pos_count)
+    andika("  Negative count:", neg_count)
+    andika("  Zero count:", zero_count)
+    
+    andika("")
+    andika("=== END OF DEMO ===")
+}

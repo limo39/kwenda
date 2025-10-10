@@ -1,9 +1,24 @@
 # String utilities module - Moduli ya maneno
+# Standard library for string operations
 
+# Greeting functions
 kazi salamu(maneno jina) {
     rudisha "Habari " + jina + "!"
 }
 
+kazi salamu_asubuhi(maneno jina) {
+    rudisha "Habari za asubuhi, " + jina + "!"
+}
+
+kazi salamu_mchana(maneno jina) {
+    rudisha "Habari za mchana, " + jina + "!"
+}
+
+kazi salamu_jioni(maneno jina) {
+    rudisha "Habari za jioni, " + jina + "!"
+}
+
+# String manipulation
 kazi rejesha(maneno neno) {
     # Simple reverse (placeholder implementation)
     rudisha neno + " (reversed)"
@@ -11,4 +26,45 @@ kazi rejesha(maneno neno) {
 
 kazi ni_tupu(maneno neno) {
     rudisha neno == ""
+}
+
+kazi ongeza_alama(maneno sentensi) {
+    # Add punctuation if missing
+    boolean ina_alama = mwisho(sentensi, ".")
+    kama ina_alama {
+        rudisha sentensi
+    }
+    rudisha sentensi + "."
+}
+
+# String validation
+kazi ni_ndefu(maneno neno, namba urefu_wa_chini) {
+    namba u = urefu(neno)
+    rudisha u >= urefu_wa_chini
+}
+
+kazi ni_fupi(maneno neno, namba urefu_wa_juu) {
+    namba u = urefu(neno)
+    rudisha u <= urefu_wa_juu
+}
+
+# String formatting
+kazi tengeneza_ujumbe(maneno jina, maneno ujumbe) {
+    rudisha jina + ": " + ujumbe
+}
+
+kazi tengeneza_orodha(maneno kipengele1, maneno kipengele2, maneno kipengele3) {
+    rudisha "1. " + kipengele1 + "\n2. " + kipengele2 + "\n3. " + kipengele3
+}
+
+# String comparison helpers
+kazi ni_sawa_bila_case(maneno a, maneno b) {
+    maneno a_ndogo = herufi_ndogo(a)
+    maneno b_ndogo = herufi_ndogo(b)
+    rudisha a_ndogo == b_ndogo
+}
+
+kazi ina_neno(maneno sentensi, maneno neno) {
+    namba mahali = tafuta(sentensi, neno)
+    rudisha mahali != 0 - 1
 }

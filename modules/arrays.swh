@@ -1,0 +1,149 @@
+# Array utilities module - Moduli ya orodha
+# Standard library for array operations
+
+# Array statistics
+kazi jumla(orodha namba arr) {
+    namba total = 0
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        total = total + num
+        i = i + 1
+    }
+    
+    rudisha total
+}
+
+kazi wastani(orodha namba arr) {
+    namba urefu = urefu_orodha(arr)
+    kama urefu == 0 {
+        tupa "Cannot calculate average of empty array"
+    }
+    
+    namba total = jumla(arr)
+    rudisha total / urefu
+}
+
+kazi ndogo_kabisa(orodha namba arr) {
+    namba urefu = urefu_orodha(arr)
+    kama urefu == 0 {
+        tupa "Cannot find minimum of empty array"
+    }
+    
+    namba min = pata(arr, 0)
+    namba i = 1
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num < min {
+            min = num
+        }
+        i = i + 1
+    }
+    
+    rudisha min
+}
+
+kazi kubwa_kabisa(orodha namba arr) {
+    namba urefu = urefu_orodha(arr)
+    kama urefu == 0 {
+        tupa "Cannot find maximum of empty array"
+    }
+    
+    namba max = pata(arr, 0)
+    namba i = 1
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num > max {
+            max = num
+        }
+        i = i + 1
+    }
+    
+    rudisha max
+}
+
+# Array search
+kazi tafuta_namba(orodha namba arr, namba thamani) {
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num == thamani {
+            rudisha i
+        }
+        i = i + 1
+    }
+    
+    rudisha 0 - 1
+}
+
+kazi ina_namba(orodha namba arr, namba thamani) {
+    namba index = tafuta_namba(arr, thamani)
+    rudisha index != 0 - 1
+}
+
+# Array validation
+kazi ni_tupu(orodha namba arr) {
+    namba urefu = urefu_orodha(arr)
+    rudisha urefu == 0
+}
+
+kazi ni_sawa_urefu(orodha namba arr1, orodha namba arr2) {
+    namba u1 = urefu_orodha(arr1)
+    namba u2 = urefu_orodha(arr2)
+    rudisha u1 == u2
+}
+
+# Array counting
+kazi hesabu_chanya(orodha namba arr) {
+    namba count = 0
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num > 0 {
+            count = count + 1
+        }
+        i = i + 1
+    }
+    
+    rudisha count
+}
+
+kazi hesabu_hasi(orodha namba arr) {
+    namba count = 0
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num < 0 {
+            count = count + 1
+        }
+        i = i + 1
+    }
+    
+    rudisha count
+}
+
+kazi hesabu_sifuri(orodha namba arr) {
+    namba count = 0
+    namba i = 0
+    namba urefu = urefu_orodha(arr)
+    
+    wakati i < urefu {
+        namba num = pata(arr, i)
+        kama num == 0 {
+            count = count + 1
+        }
+        i = i + 1
+    }
+    
+    rudisha count
+}

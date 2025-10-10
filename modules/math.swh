@@ -1,13 +1,31 @@
 # Math module - Moduli ya hesabu
+# Standard library for mathematical operations
 
-kazi ongeza_kubwa(namba a, namba b) {
+# Constants
+namba PI = 3
+namba E = 2
+
+# Basic arithmetic
+kazi ongeza(namba a, namba b) {
     rudisha a + b
+}
+
+kazi toa(namba a, namba b) {
+    rudisha a - b
 }
 
 kazi zidisha(namba a, namba b) {
     rudisha a * b
 }
 
+kazi gawanya(namba a, namba b) {
+    kama b == 0 {
+        tupa "Cannot divide by zero"
+    }
+    rudisha a / b
+}
+
+# Advanced operations
 kazi kiwango(namba x) {
     kama x < 0 {
         rudisha 0 - x
@@ -15,5 +33,79 @@ kazi kiwango(namba x) {
     rudisha x
 }
 
-# Module variable
-namba PI = 3
+kazi nguvu(namba msingi, namba exponent) {
+    # Power function: msingi^exponent
+    kama exponent == 0 {
+        rudisha 1
+    }
+    namba jibu = 1
+    namba i = 0
+    wakati i < exponent {
+        jibu = jibu * msingi
+        i = i + 1
+    }
+    rudisha jibu
+}
+
+kazi mraba(namba x) {
+    rudisha x * x
+}
+
+kazi mchemraba(namba x) {
+    rudisha x * x * x
+}
+
+# Comparison functions
+kazi ndogo(namba a, namba b) {
+    kama a < b {
+        rudisha a
+    }
+    rudisha b
+}
+
+kazi kubwa(namba a, namba b) {
+    kama a > b {
+        rudisha a
+    }
+    rudisha b
+}
+
+# Number properties
+kazi ni_sawa(namba a, namba b) {
+    rudisha a == b
+}
+
+kazi ni_chanya(namba x) {
+    rudisha x > 0
+}
+
+kazi ni_hasi(namba x) {
+    rudisha x < 0
+}
+
+kazi ni_sifuri(namba x) {
+    rudisha x == 0
+}
+
+# Modulo operation
+kazi salio(namba a, namba b) {
+    kama b == 0 {
+        tupa "Cannot calculate modulo with zero"
+    }
+    namba jibu = a
+    wakati jibu >= b {
+        jibu = jibu - b
+    }
+    rudisha jibu
+}
+
+# Check if even or odd
+kazi ni_shufwa(namba x) {
+    namba s = salio(x, 2)
+    rudisha s == 0
+}
+
+kazi ni_witiri(namba x) {
+    namba s = salio(x, 2)
+    rudisha s != 0
+}
