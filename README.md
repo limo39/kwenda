@@ -897,7 +897,6 @@ The interpreter follows a traditional architecture:
 
 ## 🚧 Current Limitations
 
-- Only integer arithmetic (no floating-point)
 - Limited operator precedence (use parentheses for complex expressions)
 - No function overloading
 - No recursive function optimization
@@ -906,6 +905,7 @@ The interpreter follows a traditional architecture:
 - No circular import detection
 - Nested function calls as arguments not fully supported (use intermediate variables)
 - Array parameters to user-defined functions have limited support
+- Floating-point precision follows IEEE 754 standard (may have rounding artifacts)
 - Limited standard library (growing)
 
 ## 🔮 Future Enhancements
@@ -926,7 +926,7 @@ The interpreter follows a traditional architecture:
 - [x] Multi-file support and imports (`leta`) ✅
 - [x] Module system with namespaces ✅
 - [x] Standard library modules (math, strings, arrays) ✅
-- [ ] Floating-point arithmetic
+- [x] Floating-point arithmetic ✅
 - [ ] Comments support (currently `#` works in some contexts)
 - [ ] Better error messages with line numbers
 - [ ] Object-oriented features (classes, objects)

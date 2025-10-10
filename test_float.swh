@@ -1,0 +1,40 @@
+kazi kuu() {
+    andika("=== Testing Floating-Point Arithmetic ===")
+    
+    # Basic float operations
+    namba a = 3.14
+    namba b = 2.5
+    
+    andika("a =", a)
+    andika("b =", b)
+    
+    namba sum = a + b
+    namba diff = a - b
+    namba prod = a * b
+    namba quot = a / b
+    
+    andika("a + b =", sum)
+    andika("a - b =", diff)
+    andika("a * b =", prod)
+    andika("a / b =", quot)
+    
+    # Mixed int and float
+    namba x = 10
+    namba y = 3.0
+    namba mixed = x + y
+    
+    andika("10 + 3.0 =", mixed)
+    
+    # Comparisons
+    boolean greater = a > b
+    boolean equal = a == 3.14
+    
+    andika("3.14 > 2.5?", greater)
+    andika("a == 3.14?", equal)
+    
+    # Float division
+    namba result = 10.0 / 3.0
+    andika("10.0 / 3.0 =", result)
+    
+    andika("=== Test Complete ===")
+}

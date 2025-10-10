@@ -1,0 +1,229 @@
+# Comprehensive Test - Kwenda Language Features
+# Tests: floats, arrays, loops, conditionals, error handling, modules, functions
+
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+# Function to calculate average of array with floats
+kazi hesabu_wastani(orodha namba namba_za_alama) {
+    namba jumla = 0.0
+    namba i = 0
+    namba urefu = urefu_orodha(namba_za_alama)
+    
+    kama urefu == 0 {
+        tupa "Cannot calculate average of empty array"
+    }
+    
+    wakati i < urefu {
+        namba alama = pata(namba_za_alama, i)
+        jumla = jumla + alama
+        i = i + 1
+    }
+    
+    namba wastani = jumla / urefu
+    rudisha wastani
+}
+
+# Function to find grade based on average
+kazi pata_daraja(namba wastani) {
+    kama wastani >= 90.0 {
+        rudisha "A"
+    }
+    kama wastani >= 80.0 {
+        rudisha "B"
+    }
+    kama wastani >= 70.0 {
+        rudisha "C"
+    }
+    kama wastani >= 60.0 {
+        rudisha "D"
+    }
+    rudisha "F"
+}
+
+# Function to calculate circle properties
+kazi hesabu_duara(namba radius) {
+    namba pi = 3.14159
+    namba area = pi * radius * radius
+    namba circumference = 2.0 * pi * radius
+    
+    andika("  Radius:", radius)
+    andika("  Area:", area)
+    andika("  Circumference:", circumference)
+}
+
+kazi kuu() {
+    andika("=== COMPREHENSIVE KWENDA TEST ===")
+    andika("")
+    
+    # Test 1: Floating-point arithmetic with arrays
+    andika("--- Test 1: Student Grades (Floats + Arrays) ---")
+    orodha namba alama = [85.5, 92.3, 78.0, 88.5, 95.0]
+    andika("Grades:", alama)
+    
+    jaribu {
+        namba avg = hesabu_wastani(alama)
+        andika("Average:", avg)
+        
+        maneno grade = pata_daraja(avg)
+        andika("Final Grade:", grade)
+    } shika (error) {
+        andika("Error calculating average:", error)
+    }
+    andika("")
+    
+    # Test 2: Math operations with floats
+    andika("--- Test 2: Math Module with Floats ---")
+    namba x = 12.5
+    namba y = 4.5
+    
+    namba sum = math.ongeza(x, y)
+    namba diff = math.toa(x, y)
+    namba prod = math.zidisha(x, y)
+    
+    andika("x =", x, ", y =", y)
+    andika("Sum:", sum)
+    andika("Difference:", diff)
+    andika("Product:", prod)
+    
+    # Test absolute value with negative float
+    namba neg = 0.0 - 15.75
+    namba abs_val = math.kiwango(neg)
+    andika("|-15.75| =", abs_val)
+    andika("")
+    
+    # Test 3: Circle calculations
+    andika("--- Test 3: Circle Calculations ---")
+    orodha namba radii = [5, 10, 15]
+    namba i = 0
+    namba len = urefu_orodha(radii)
+    
+    wakati i < len {
+        namba r = pata(radii, i)
+        andika("Circle", i + 1, ":")
+        hesabu_duara(r)
+        i = i + 1
+    }
+    andika("")
+    
+    # Test 4: Temperature conversion (Celsius to Fahrenheit)
+    andika("--- Test 4: Temperature Conversion ---")
+    orodha namba celsius = [0.0, 25.0, 37.0, 100.0]
+    andika("Celsius -> Fahrenheit:")
+    
+    namba j = 0
+    namba temp_len = urefu_orodha(celsius)
+    
+    wakati j < temp_len {
+        namba c = pata(celsius, j)
+        namba f = c * 9.0 / 5.0 + 32.0
+        andika("  ", c, "°C =", f, "°F")
+        j = j + 1
+    }
+    andika("")
+    
+    # Test 5: String operations with greetings
+    andika("--- Test 5: String Operations ---")
+    orodha namba majina_list = [1, 2, 3]
+    maneno jina1 = "Amina"
+    maneno jina2 = "Juma"
+    maneno jina3 = "Fatuma"
+    
+    maneno salamu1 = strings.salamu(jina1)
+    maneno salamu2 = strings.salamu_asubuhi(jina2)
+    maneno salamu3 = strings.salamu_jioni(jina3)
+    
+    andika(salamu1)
+    andika(salamu2)
+    andika(salamu3)
+    andika("")
+    
+    # Test 6: Nested loops with conditionals
+    andika("--- Test 6: Multiplication Table (Partial) ---")
+    namba row = 1
+    wakati row <= 3 {
+        namba col = 1
+        wakati col <= 5 {
+            namba result = row * col
+            
+            # Skip even results
+            boolean is_even = math.ni_shufwa(result)
+            kama is_even {
+                col = col + 1
+                endelea
+            }
+            
+            andika("  ", row, "x", col, "=", result)
+            col = col + 1
+        }
+        row = row + 1
+    }
+    andika("")
+    
+    # Test 7: Error handling with division
+    andika("--- Test 7: Safe Division ---")
+    orodha namba divisors = [2, 0, 4]
+    namba dividend = 100.0
+    
+    namba k = 0
+    namba div_len = urefu_orodha(divisors)
+    
+    wakati k < div_len {
+        namba divisor = pata(divisors, k)
+        
+        jaribu {
+            namba quotient = math.gawanya(dividend, divisor)
+            andika("  ", dividend, "/", divisor, "=", quotient)
+        } shika (e) {
+            andika("  Error:", e)
+        }
+        
+        k = k + 1
+    }
+    andika("")
+    
+    # Test 8: Complex boolean logic
+    andika("--- Test 8: Boolean Logic ---")
+    namba score = 85.5
+    boolean passed = score >= 60.0
+    boolean excellent = score >= 90.0
+    boolean good = score >= 80.0 na score < 90.0
+    
+    andika("Score:", score)
+    andika("Passed?", passed)
+    andika("Excellent?", excellent)
+    andika("Good?", good)
+    andika("")
+    
+    # Test 9: Finding maximum in float array
+    andika("--- Test 9: Find Maximum ---")
+    orodha namba values = [23, 67, 12, 89, 45]
+    namba max = pata(values, 0)
+    namba m = 1
+    namba val_len = urefu_orodha(values)
+    
+    wakati m < val_len {
+        namba current = pata(values, m)
+        kama current > max {
+            max = current
+        }
+        m = m + 1
+    }
+    
+    andika("Values:", values)
+    andika("Maximum:", max)
+    andika("")
+    
+    # Test 10: Final statistics
+    andika("--- Test 10: Final Statistics ---")
+    namba total_tests = 10
+    namba passed_tests = 10
+    namba success_rate = passed_tests / total_tests * 100.0
+    
+    andika("Total Tests:", total_tests)
+    andika("Passed Tests:", passed_tests)
+    andika("Success Rate:", success_rate, "%")
+    
+    andika("")
+    andika("=== ALL TESTS COMPLETED SUCCESSFULLY ===")
+}

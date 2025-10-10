@@ -46,6 +46,24 @@ func isSwahiliKeyword(word string) bool {
 	return false
 }
 
+func isNumber(word string) bool {
+	if len(word) == 0 {
+		return false
+	}
+	hasDecimal := false
+	for i, ch := range word {
+		if ch == '.' {
+			if hasDecimal || i == 0 || i == len(word)-1 {
+				return false // Multiple decimals, or decimal at start/end
+			}
+			hasDecimal = true
+		} else if !unicode.IsDigit(ch) {
+			return false
+		}
+	}
+	return true
+}
+
 func Lex(input string) []Token {
 	var tokens []Token
 	var currentToken strings.Builder
@@ -72,7 +90,7 @@ func Lex(input string) []Token {
 				tokenValue := currentToken.String()
 				if isSwahiliKeyword(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
-				} else if unicode.IsDigit(rune(tokenValue[0])) {
+				} else if isNumber(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
 				} else if tokenValue == "kweli" || tokenValue == "uwongo" {
 					tokens = append(tokens, Token{Type: TokenBoolean, Value: tokenValue})
@@ -87,7 +105,7 @@ func Lex(input string) []Token {
 				tokenValue := currentToken.String()
 				if isSwahiliKeyword(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
-				} else if unicode.IsDigit(rune(tokenValue[0])) {
+				} else if isNumber(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
 				} else {
 					tokens = append(tokens, Token{Type: TokenIdentifier, Value: tokenValue})
@@ -117,7 +135,7 @@ func Lex(input string) []Token {
 				tokenValue := currentToken.String()
 				if isSwahiliKeyword(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
-				} else if unicode.IsDigit(rune(tokenValue[0])) {
+				} else if isNumber(tokenValue) {
 					tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
 				} else {
 					tokens = append(tokens, Token{Type: TokenIdentifier, Value: tokenValue})
@@ -130,6 +148,28 @@ func Lex(input string) []Token {
 			for i+1 < len(runes) && runes[i+1] != '\n' {
 				i++
 			}
+		} else if char == '.' {
+			// Handle decimal point - could be part of a number or module access
+			if currentToken.Len() > 0 {
+				tokenValue := currentToken.String()
+				// If current token is a number and next char is a digit, it's a decimal
+				if unicode.IsDigit(rune(tokenValue[0])) && i+1 < len(runes) && unicode.IsDigit(runes[i+1]) {
+					currentToken.WriteRune(char)
+				} else {
+					// Otherwise, end current token and treat . as punctuation
+					if isSwahiliKeyword(tokenValue) {
+						tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
+					} else if isNumber(tokenValue) {
+						tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
+					} else {
+						tokens = append(tokens, Token{Type: TokenIdentifier, Value: tokenValue})
+					}
+					currentToken.Reset()
+					currentToken.WriteRune(char)
+				}
+			} else {
+				currentToken.WriteRune(char)
+			}
 		} else {
 			// Build the current token
 			currentToken.WriteRune(char)
@@ -141,7 +181,7 @@ func Lex(input string) []Token {
 		tokenValue := currentToken.String()
 		if isSwahiliKeyword(tokenValue) {
 			tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
-		} else if unicode.IsDigit(rune(tokenValue[0])) {
+		} else if isNumber(tokenValue) {
 			tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
 		} else if tokenValue == "kweli" || tokenValue == "uwongo" {
 			tokens = append(tokens, Token{Type: TokenBoolean, Value: tokenValue})

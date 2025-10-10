@@ -86,6 +86,8 @@ func toBool(value interface{}) bool {
 		return v
 	case int:
 		return v != 0
+	case float64:
+		return v != 0.0
 	case string:
 		return v != ""
 	default:
@@ -93,9 +95,39 @@ func toBool(value interface{}) bool {
 	}
 }
 
+// toNumber converts a value to float64, returns (value, isFloat)
+func toNumber(value interface{}) (float64, bool) {
+	switch v := value.(type) {
+	case int:
+		return float64(v), false
+	case float64:
+		return v, true
+	case string:
+		if f, err := strconv.ParseFloat(v, 64); err == nil {
+			return f, strings.Contains(v, ".")
+		}
+		return 0, false
+	case bool:
+		if v {
+			return 1, false
+		}
+		return 0, false
+	default:
+		return 0, false
+	}
+}
+
 func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	switch n := node.(type) {
 	case ast.NumberNode:
+		// Try to parse as float first
+		if strings.Contains(n.Value, ".") {
+			value, err := strconv.ParseFloat(n.Value, 64)
+			if err == nil {
+				return value
+			}
+		}
+		// Fall back to integer
 		value, _ := strconv.Atoi(n.Value)
 		return value
 
@@ -227,44 +259,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 		
-		// Convert to integers for arithmetic and numeric comparisons
-		leftInt, leftOk := left.(int)
-		if !leftOk {
-			if str, ok := left.(string); ok {
-				if num, err := strconv.Atoi(str); err == nil {
-					leftInt = num
-				} else {
-					leftInt = 0
-				}
-			} else if b, ok := left.(bool); ok {
-				if b {
-					leftInt = 1
-				} else {
-					leftInt = 0
-				}
-			} else {
-				leftInt = 0
-			}
-		}
+		// Convert to numeric values (int or float64)
+		leftFloat, leftIsFloat := toNumber(left)
+		rightFloat, rightIsFloat := toNumber(right)
 		
-		rightInt, rightOk := right.(int)
-		if !rightOk {
-			if str, ok := right.(string); ok {
-				if num, err := strconv.Atoi(str); err == nil {
-					rightInt = num
-				} else {
-					rightInt = 0
-				}
-			} else if b, ok := right.(bool); ok {
-				if b {
-					rightInt = 1
-				} else {
-					rightInt = 0
-				}
-			} else {
-				rightInt = 0
-			}
-		}
+		// If either is float, use float arithmetic
+		useFloat := leftIsFloat || rightIsFloat
 		
 		switch n.Op {
 		case "+":
@@ -281,15 +281,28 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				return fmt.Sprintf("%v", left) + rightStr
 			}
 			// Numeric addition
-			result := leftInt + rightInt
-			return result
+			if useFloat {
+				return leftFloat + rightFloat
+			}
+			return int(leftFloat) + int(rightFloat)
 		case "-":
-			return leftInt - rightInt
+			if useFloat {
+				return leftFloat - rightFloat
+			}
+			return int(leftFloat) - int(rightFloat)
 		case "*":
-			return leftInt * rightInt
+			if useFloat {
+				return leftFloat * rightFloat
+			}
+			return int(leftFloat) * int(rightFloat)
 		case "/":
-			if rightInt != 0 {
-				return leftInt / rightInt
+			if rightFloat != 0 {
+				// Division always returns float if either operand is float
+				if useFloat {
+					return leftFloat / rightFloat
+				}
+				// Integer division
+				return int(leftFloat) / int(rightFloat)
 			}
 			return 0
 		case "==":
@@ -299,7 +312,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					return leftStr == rightStr
 				}
 			}
-			return leftInt == rightInt
+			return leftFloat == rightFloat
 		case "!=":
 			// Handle string comparison
 			if leftStr, leftIsStr := left.(string); leftIsStr {
@@ -307,15 +320,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					return leftStr != rightStr
 				}
 			}
-			return leftInt != rightInt
+			return leftFloat != rightFloat
 		case "<":
-			return leftInt < rightInt
+			return leftFloat < rightFloat
 		case "<=":
-			return leftInt <= rightInt
+			return leftFloat <= rightFloat
 		case ">":
-			return leftInt > rightInt
+			return leftFloat > rightFloat
 		case ">=":
-			return leftInt >= rightInt
+			return leftFloat >= rightFloat
 		case "=":
 			// This should not happen in binary operations - assignment is handled in VariableDeclarationNode
 			fmt.Println("Operesheni ya assignment haiwezi kuwa katika binary operation")
