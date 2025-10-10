@@ -1,0 +1,24 @@
+kazi test_sum(orodha namba arr) {
+    andika("Inside test_sum")
+    andika("Array:", arr)
+    namba len = urefu_orodha(arr)
+    andika("Length:", len)
+    
+    namba total = 0
+    namba i = 0
+    wakati i < len {
+        namba num = pata(arr, i)
+        andika("Adding:", num)
+        total = total + num
+        i = i + 1
+    }
+    
+    rudisha total
+}
+
+kazi kuu() {
+    andika("Testing array parameter")
+    orodha namba nums = [5, 10, 15]
+    namba result = test_sum(nums)
+    andika("Result:", result)
+}

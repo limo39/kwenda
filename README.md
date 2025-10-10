@@ -904,6 +904,8 @@ The interpreter follows a traditional architecture:
 - No labeled break/continue (only affects innermost loop)
 - Module functions must be called with module prefix (e.g., `math.add()`)
 - No circular import detection
+- Nested function calls as arguments not fully supported (use intermediate variables)
+- Array parameters to user-defined functions have limited support
 - Limited standard library (growing)
 
 ## 🔮 Future Enhancements
