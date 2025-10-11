@@ -1,0 +1,226 @@
+############################################
+# KWENDA LANGUAGE SHOWCASE
+# Demonstrating all major features
+############################################
+
+# Import standard library modules
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+# User-defined function with parameters and return value
+kazi hesabu_eneo_duara(namba radius) {
+    # Calculate circle area using pi
+    namba pi = 3.14159
+    namba eneo = pi * radius * radius
+    rudisha eneo
+}
+
+# Main program
+kazi kuu() {
+    andika("╔════════════════════════════════════╗")
+    andika("║   KWENDA LANGUAGE SHOWCASE         ║")
+    andika("╚════════════════════════════════════╝")
+    andika("")
+    
+    ########################################
+    # 1. VARIABLES & DATA TYPES
+    ########################################
+    andika("1. Variables & Data Types:")
+    
+    namba integer = 42  # Integer
+    namba decimal = 3.14  # Float
+    maneno text = "Habari"  # String
+    boolean flag = kweli  # Boolean
+    orodha namba list = [1, 2, 3, 4, 5]  # Array
+    
+    andika("  Integer:", integer)
+    andika("  Float:", decimal)
+    andika("  String:", text)
+    andika("  Boolean:", flag)
+    andika("  Array:", list)
+    andika("")
+    
+    ########################################
+    # 2. ARITHMETIC OPERATIONS
+    ########################################
+    andika("2. Arithmetic Operations:")
+    
+    namba a = 10.5
+    namba b = 3.5
+    
+    namba sum = a + b
+    namba diff = a - b
+    namba prod = a * b
+    namba quot = a / b
+    
+    andika("  ", a, "+", b, "=", sum)
+    andika("  ", a, "-", b, "=", diff)
+    andika("  ", a, "*", b, "=", prod)
+    andika("  ", a, "/", b, "=", quot)
+    andika("")
+    
+    ########################################
+    # 3. CONDITIONALS
+    ########################################
+    andika("3. Conditional Statements:")
+    
+    namba score = 85.5
+    
+    kama score >= 90.0 {
+        andika("  Grade: A (Excellent!)")
+    } sivyo {
+        kama score >= 80.0 {
+            andika("  Grade: B (Good!)")
+        } sivyo {
+            andika("  Grade: C or below")
+        }
+    }
+    andika("")
+    
+    ########################################
+    # 4. LOOPS
+    ########################################
+    andika("4. Loops:")
+    
+    # While loop
+    andika("  While loop:")
+    namba i = 1
+    wakati i <= 3 {
+        andika("    Iteration", i)
+        i = i + 1
+    }
+    
+    # For loop with break
+    andika("  For loop with break:")
+    namba j = 0
+    kwa j < 10 {
+        kama j == 3 {
+            andika("    Breaking at", j)
+            vunja
+        }
+        andika("    j =", j)
+        j = j + 1
+    }
+    andika("")
+    
+    ########################################
+    # 5. FUNCTIONS
+    ########################################
+    andika("5. User-Defined Functions:")
+    
+    namba r = 5.0
+    namba area = hesabu_eneo_duara(r)
+    andika("  Circle area (r=", r, "):", area)
+    andika("")
+    
+    ########################################
+    # 6. MODULE FUNCTIONS
+    ########################################
+    andika("6. Standard Library Modules:")
+    
+    namba x = 12
+    namba y = 5
+    
+    namba math_sum = math.ongeza(x, y)
+    namba math_prod = math.zidisha(x, y)
+    namba abs_val = math.kiwango(0 - 7)
+    namba squared = math.mraba(4)
+    
+    andika("  Math.ongeza(", x, ",", y, ") =", math_sum)
+    andika("  Math.zidisha(", x, ",", y, ") =", math_prod)
+    andika("  Math.kiwango(-7) =", abs_val)
+    andika("  Math.mraba(4) =", squared)
+    
+    maneno name = "Amina"
+    maneno greeting = strings.salamu(name)
+    andika("  ", greeting)
+    andika("")
+    
+    ########################################
+    # 7. ARRAYS
+    ########################################
+    andika("7. Array Operations:")
+    
+    orodha namba numbers = [10, 20, 30]
+    andika("  Original:", numbers)
+    
+    namba len = urefu_orodha(numbers)
+    andika("  Length:", len)
+    
+    namba first = pata(numbers, 0)
+    andika("  First element:", first)
+    
+    ongeza(numbers, 40)
+    andika("  After adding 40:", numbers)
+    andika("")
+    
+    ########################################
+    # 8. ERROR HANDLING
+    ########################################
+    andika("8. Error Handling:")
+    
+    jaribu {
+        namba safe = math.gawanya(100, 5)
+        andika("  100 / 5 =", safe)
+    } shika (e) {
+        andika("  Error:", e)
+    }
+    
+    jaribu {
+        namba unsafe = math.gawanya(100, 0)
+        andika("  This won't print")
+    } shika (e) {
+        andika("  Caught error:", e)
+    }
+    andika("")
+    
+    ########################################
+    # 9. BOOLEAN LOGIC
+    ########################################
+    andika("9. Boolean Logic:")
+    
+    boolean t = kweli
+    boolean f = uwongo
+    
+    boolean and_result = t na f
+    boolean or_result = t au f
+    
+    andika("  true AND false =", and_result)
+    andika("  true OR false =", or_result)
+    andika("  10 > 5 =", 10 > 5)
+    andika("  3.14 == 3.14 =", 3.14 == 3.14)
+    andika("")
+    
+    ########################################
+    # 10. COMPLEX EXAMPLE
+    ########################################
+    andika("10. Complex Example - Fibonacci:")
+    
+    namba n1 = 0
+    namba n2 = 1
+    namba count = 0
+    namba limit = 7
+    
+    andika("  First", limit, "Fibonacci numbers:")
+    andika("  ", n1)
+    andika("  ", n2)
+    
+    wakati count < limit - 2 {
+        namba n3 = n1 + n2
+        andika("  ", n3)
+        n1 = n2
+        n2 = n3
+        count = count + 1
+    }
+    andika("")
+    
+    ########################################
+    # CONCLUSION
+    ########################################
+    andika("╔════════════════════════════════════╗")
+    andika("║   ALL FEATURES DEMONSTRATED!       ║")
+    andika("╚════════════════════════════════════╝")
+}
+
+# End of showcase
+############################################

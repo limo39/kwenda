@@ -293,6 +293,30 @@ boolean ni_sawa = neno1 == neno2  # kweli
 boolean si_sawa = neno1 != "Mambo"  # kweli
 ```
 
+### Comments
+
+Kwenda supports single-line comments using the `#` character. Comments can appear:
+- At the start of a line
+- At the end of a line (inline comments)
+- Anywhere in your code
+
+```swahili
+# This is a comment at the start of a line
+
+kazi kuu() {
+    # Comment inside a function
+    namba x = 10  # Inline comment after code
+    
+    # Multiple consecutive comments
+    # can be used to create
+    # comment blocks
+    
+    andika("Hello")  # Print greeting
+}
+
+# Comment at the end of the file
+```
+
 ### Module System
 
 #### Importing Modules
@@ -927,10 +951,10 @@ The interpreter follows a traditional architecture:
 - [x] Module system with namespaces ✅
 - [x] Standard library modules (math, strings, arrays) ✅
 - [x] Floating-point arithmetic ✅
-- [ ] Comments support (currently `#` works in some contexts)
+- [x] Comments support with `#` ✅
 - [ ] Better error messages with line numbers
 - [ ] Object-oriented features (classes, objects)
-- [ ] Dictionary/map data structures
+- [ ] Dictionary/map dat a structures
 - [ ] Lambda functions
 - [ ] List comprehensions
 
