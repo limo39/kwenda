@@ -1,0 +1,128 @@
+############################################
+# Kwenda Comments Demo
+# Testing comment support in all contexts
+############################################
+
+leta "modules/math.swh"  # Import math module
+
+# Global comment before function
+
+kazi hesabu(namba x, namba y) {  # Function with parameters
+    # Comment inside function
+    namba result = x + y  # Calculate sum
+    rudisha result  # Return value
+}  # End of function
+
+# Main function
+kazi kuu() {
+    ########################################
+    # Section 1: Basic Comments
+    ########################################
+    
+    andika("=== Comments Demo ===")
+    
+    # Single line comment
+    namba a = 10  # Inline comment
+    
+    # Multiple consecutive comments
+    # Line 1
+    # Line 2
+    # Line 3
+    
+    namba b = 20
+    
+    ########################################
+    # Section 2: Comments in Control Flow
+    ########################################
+    
+    # If statement with comments
+    kama a < b {  # Condition check
+        andika("a < b")  # True branch
+    } sivyo {  # Else branch
+        andika("a >= b")  # False branch
+    }  # End if
+    
+    # While loop with comments
+    namba i = 1  # Counter
+    wakati i <= 3 {  # Loop condition
+        andika("Loop:", i)  # Print
+        i = i + 1  # Increment
+    }  # End while
+    
+    # For loop with comments
+    namba j = 0  # Initialize
+    kwa j < 3 {  # Condition
+        andika("For:", j)  # Body
+        j = j + 1  # Update
+    }  # End for
+    
+    ########################################
+    # Section 3: Comments with Data Types
+    ########################################
+    
+    # Integer
+    namba num = 42  # The answer
+    
+    # Float
+    namba pi = 3.14159  # Pi constant
+    
+    # String
+    maneno msg = "Hello"  # Greeting
+    
+    # Boolean
+    boolean flag = kweli  # True value
+    
+    # Array
+    orodha namba nums = [1, 2, 3]  # Number list
+    
+    ########################################
+    # Section 4: Comments with Functions
+    ########################################
+    
+    # Call user function
+    namba sum = hesabu(a, b)  # Calculate
+    andika("Sum:", sum)  # Display
+    
+    # Call module function
+    namba square = math.mraba(5)  # 5 squared
+    andika("Square:", square)  # Show result
+    
+    ########################################
+    # Section 5: Comments with Error Handling
+    ########################################
+    
+    # Try-catch with comments
+    jaribu {  # Try block
+        namba div = math.gawanya(10, 2)  # Safe division
+        andika("Division:", div)  # Print result
+    } shika (e) {  # Catch block
+        andika("Error:", e)  # Handle error
+    }  # End try-catch
+    
+    ########################################
+    # Section 6: Edge Cases
+    ########################################
+    
+    # Comment with special characters: !@#$%^&*()
+    # Comment with numbers: 123456789
+    # Comment with symbols: +-*/=<>
+    
+    # Empty line after comment
+    
+    namba final = 100  # Last variable
+    
+    # Multiple inline comments on consecutive lines
+    andika("Line 1")  # Comment 1
+    andika("Line 2")  # Comment 2
+    andika("Line 3")  # Comment 3
+    
+    ########################################
+    # End of Demo
+    ########################################
+    
+    andika("=== Comments Work Perfectly ===")
+    
+}  # End of main function
+
+# Final comment at end of file
+############################################

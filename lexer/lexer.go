@@ -145,6 +145,19 @@ func Lex(input string) []Token {
 			tokens = append(tokens, Token{Type: TokenPunctuation, Value: string(char)})
 		} else if char == '#' {
 			// Handle comments (ignore the rest of the line)
+			// First, finalize any current token
+			if currentToken.Len() > 0 {
+				tokenValue := currentToken.String()
+				if isSwahiliKeyword(tokenValue) {
+					tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
+				} else if isNumber(tokenValue) {
+					tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
+				} else {
+					tokens = append(tokens, Token{Type: TokenIdentifier, Value: tokenValue})
+				}
+				currentToken.Reset()
+			}
+			// Skip the rest of the line
 			for i+1 < len(runes) && runes[i+1] != '\n' {
 				i++
 			}

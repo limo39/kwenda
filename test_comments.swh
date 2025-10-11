@@ -1,0 +1,67 @@
+# This is a comment at the start of the file
+# Multiple comment lines
+# Testing comment support
+
+# Function with comments
+kazi hesabu_jumla(namba a, namba b) {
+    # This is a comment inside a function
+    namba jibu = a + b  # Inline comment after code
+    rudisha jibu  # Return the result
+}
+
+kazi kuu() {
+    # Main function starts here
+    andika("=== Testing Comments ===")
+    andika("")
+    
+    # Variable declarations with comments
+    namba x = 10  # First number
+    namba y = 20  # Second number
+    
+    # Call function
+    namba sum = hesabu_jumla(x, y)  # Calculate sum
+    andika("Sum:", sum)  # Print result
+    
+    # Conditional with comments
+    kama x < y {  # Check if x is less than y
+        andika("x is less than y")  # True branch
+    } sivyo {  # Otherwise
+        andika("x is not less than y")  # False branch
+    }
+    
+    # Loop with comments
+    namba i = 1  # Initialize counter
+    wakati i <= 3 {  # Loop 3 times
+        andika("Iteration:", i)  # Print iteration
+        i = i + 1  # Increment counter
+    }
+    
+    # Array with comments
+    orodha namba numbers = [1, 2, 3, 4, 5]  # Create array
+    namba len = urefu_orodha(numbers)  # Get length
+    andika("Array length:", len)  # Print length
+    
+    # String with comments
+    maneno message = "Hello"  # Create string
+    andika("Message:", message)  # Print message
+    
+    # Boolean with comments
+    boolean flag = kweli  # Set flag to true
+    andika("Flag:", flag)  # Print flag
+    
+    # Float with comments
+    namba pi = 3.14159  # Pi constant
+    andika("Pi:", pi)  # Print pi
+    
+    # Multi-line comment block
+    # This is a longer comment
+    # that spans multiple lines
+    # to test comment handling
+    
+    andika("")
+    andika("=== All Comments Tested ===")
+    
+    # Comment at the end of the function
+}
+
+# Comment at the end of the file

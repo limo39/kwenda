@@ -472,6 +472,14 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle boolean literals
+	if tokens[0].Value == "kweli" {
+		return ast.BooleanNode{Value: true}
+	}
+	if tokens[0].Value == "uwongo" {
+		return ast.BooleanNode{Value: false}
+	}
+
 	// Handle string literals
 	if tokens[0].Type == lexer.TokenString {
 		return ast.IdentifierNode{Value: tokens[0].Value}
