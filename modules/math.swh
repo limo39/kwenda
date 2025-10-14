@@ -20,7 +20,7 @@ kazi zidisha(namba a, namba b) {
 
 kazi gawanya(namba a, namba b) {
     kama b == 0 {
-        tupa "Cannot divide by zero"
+        tupa "Haiwezekani kugawanya na sifuri (Cannot divide by zero)"
     }
     rudisha a / b
 }
@@ -90,7 +90,7 @@ kazi ni_sifuri(namba x) {
 # Modulo operation
 kazi salio(namba a, namba b) {
     kama b == 0 {
-        tupa "Cannot calculate modulo with zero"
+        tupa "Haiwezekani kuhesabu salio na sifuri (Cannot calculate modulo with zero)"
     }
     namba jibu = a
     wakati jibu >= b {

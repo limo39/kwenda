@@ -20,6 +20,7 @@ const (
 type Token struct {
 	Type  TokenType
 	Value string
+	Line  int // Line number where token appears
 }
 
 func isSwahiliKeyword(word string) bool {
@@ -64,19 +65,30 @@ func isNumber(word string) bool {
 	return true
 }
 
+// Helper function to create token with line number
+func makeToken(tokenType TokenType, value string, line int) Token {
+	return Token{Type: tokenType, Value: value, Line: line}
+}
+
 func Lex(input string) []Token {
 	var tokens []Token
 	var currentToken strings.Builder
 	var inString bool
 	runes := []rune(input)
+	lineNumber := 1 // Track current line number
 
 	for i := 0; i < len(runes); i++ {
 		char := runes[i]
 		
+		// Track line numbers
+		if char == '\n' {
+			lineNumber++
+		}
+		
 		if char == '"' {
 			// Handle string literals
 			if inString {
-				tokens = append(tokens, Token{Type: TokenString, Value: currentToken.String()})
+				tokens = append(tokens, makeToken(TokenString, currentToken.String(), lineNumber))
 				currentToken.Reset()
 				inString = false
 			} else {
@@ -169,15 +181,7 @@ func Lex(input string) []Token {
 				if unicode.IsDigit(rune(tokenValue[0])) && i+1 < len(runes) && unicode.IsDigit(runes[i+1]) {
 					currentToken.WriteRune(char)
 				} else {
-					// Otherwise, end current token and treat . as punctuation
-					if isSwahiliKeyword(tokenValue) {
-						tokens = append(tokens, Token{Type: TokenKeyword, Value: tokenValue})
-					} else if isNumber(tokenValue) {
-						tokens = append(tokens, Token{Type: TokenNumber, Value: tokenValue})
-					} else {
-						tokens = append(tokens, Token{Type: TokenIdentifier, Value: tokenValue})
-					}
-					currentToken.Reset()
+					// Otherwise, it's module access - keep dot with identifier
 					currentToken.WriteRune(char)
 				}
 			} else {

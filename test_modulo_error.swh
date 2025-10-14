@@ -1,0 +1,17 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Testing modulo by zero...")
+    
+    jaribu {
+        namba result = math.salio(50, 0)
+        andika("Result:", result)
+    } shika (error) {
+        andika("Caught error:", error)
+    }
+    
+    andika("")
+    andika("Now testing unhandled modulo error...")
+    namba bad = math.salio(100, 0)
+    andika("This won't print")
+}

@@ -26,7 +26,8 @@ type ControlFlowResult struct {
 
 // ErrorValue represents a runtime error
 type ErrorValue struct {
-	Message string
+	Message  string
+	Context  string // Additional context about where the error occurred
 }
 
 // Environment stores variables and their values
@@ -447,13 +448,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					} else {
 						// Throw error for invalid index
 						errorMsg := fmt.Sprintf("Index %d ni nje ya mipaka ya orodha (urefu: %d)", idx, len(arr))
-						return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
+						context := fmt.Sprintf("Katika kazi 'pata': Jaribu kutumia index kati ya 0 na %d", len(arr)-1)
+						return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg, Context: context}}
 					}
 				} else {
-					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Index lazima iwe namba"}}
+					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Index lazima iwe namba", Context: "Katika kazi 'pata'"}}
 				}
 			}
-			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Hii si orodha"}}
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Hii si orodha", Context: "Katika kazi 'pata': Argument ya kwanza lazima iwe orodha"}}
 		}
 
 		// File I/O operations
@@ -465,11 +467,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if err != nil {
 					// Throw an error instead of just printing
 					errorMsg := fmt.Sprintf("Hitilafu ya kusoma faili '%s': %v", filename, err)
-					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
+					context := "Katika kazi 'soma': Hakikisha faili ipo na una ruhusa ya kusoma"
+					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg, Context: context}}
 				}
 				return string(content)
 			}
-			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Jina la faili si sahihi"}}
+			context := "Katika kazi 'soma': Argument lazima iwe jina la faili (maneno)"
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Jina la faili si sahihi", Context: context}}
 		}
 
 		if n.Name == "andika_faili" && len(n.Args) >= 2 {
@@ -739,10 +743,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					for _, statement := range function.Body {
 						result = Interpret(statement, funcEnv)
 
-						// Check for return statement
+						// Check for return statement or throw
 						if cf, ok := result.(ControlFlowResult); ok {
 							if cf.Type == ControlReturn {
 								return cf.Value
+							} else if cf.Type == ControlThrow {
+								// Propagate throw from module function
+								return cf
 							}
 							// Other control flow (break/continue) should not escape function
 						}
@@ -771,10 +778,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			for _, statement := range function.Body {
 				result = Interpret(statement, funcEnv)
 
-				// Check for return statement
+				// Check for return statement or throw
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlReturn {
 						return cf.Value
+					} else if cf.Type == ControlThrow {
+						// Propagate throw from user-defined function
+						return cf
 					}
 					// Other control flow (break/continue) should not escape function
 				}
@@ -1031,7 +1041,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					} else if cf.Type == ControlThrow {
 						// Unhandled error in main function
 						if err, ok := cf.Value.(ErrorValue); ok {
-							fmt.Printf("Hitilafu isiyoshughulikiwa: %s\n", err.Message)
+							fmt.Printf("\n╔═══════════════════════════════════════════════════════════╗\n")
+							fmt.Printf("║ HITILAFU (ERROR)                                          ║\n")
+							fmt.Printf("╚═══════════════════════════════════════════════════════════╝\n")
+							fmt.Printf("Ujumbe: %s\n", err.Message)
+							if err.Context != "" {
+								fmt.Printf("Muktadha: %s\n", err.Context)
+							}
+							fmt.Printf("\n")
 						} else {
 							fmt.Printf("Hitilafu isiyoshughulikiwa: %v\n", cf.Value)
 						}

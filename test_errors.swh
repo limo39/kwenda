@@ -1,0 +1,65 @@
+# Testing improved error messages
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Testing Error Messages ===")
+    andika("")
+    
+    # Test 1: Array index out of bounds
+    andika("Test 1: Array index error")
+    orodha namba nums = [10, 20, 30]
+    
+    jaribu {
+        namba value = pata(nums, 10)
+        andika("Value:", value)
+    } shika (error) {
+        andika("Caught error:")
+        andika("  ", error)
+    }
+    andika("")
+    
+    # Test 2: Division by zero
+    andika("Test 2: Division by zero")
+    
+    jaribu {
+        namba result = math.gawanya(100, 0)
+        andika("Result:", result)
+    } shika (error) {
+        andika("Caught error:")
+        andika("  ", error)
+    }
+    andika("")
+    
+    # Test 3: File not found
+    andika("Test 3: File not found")
+    
+    jaribu {
+        maneno content = soma("nonexistent_file.txt")
+        andika("Content:", content)
+    } shika (error) {
+        andika("Caught error:")
+        andika("  ", error)
+    }
+    andika("")
+    
+    # Test 4: Invalid array operation
+    andika("Test 4: Invalid array operation")
+    
+    jaribu {
+        maneno not_array = "This is not an array"
+        namba value = pata(not_array, 0)
+        andika("Value:", value)
+    } shika (error) {
+        andika("Caught error:")
+        andika("  ", error)
+    }
+    andika("")
+    
+    # Test 5: Unhandled error (will crash)
+    andika("Test 5: Unhandled error (will terminate)")
+    andika("Attempting division by zero without try-catch...")
+    
+    namba bad_result = math.gawanya(50, 0)
+    andika("This line will not execute")
+}

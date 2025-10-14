@@ -1,0 +1,8 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Testing division by zero")
+    namba result = math.gawanya(100, 0)
+    andika("Result:", result)
+    andika("Done")
+}

@@ -1,0 +1,10 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Starting program...")
+    andika("About to divide by zero without try-catch...")
+    
+    namba result = math.gawanya(100, 0)
+    
+    andika("This line will never execute")
+}

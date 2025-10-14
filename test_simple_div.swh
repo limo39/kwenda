@@ -1,0 +1,7 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("Before division")
+    namba result = math.gawanya(10, 0)
+    andika("After division:", result)
+}

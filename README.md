@@ -388,6 +388,99 @@ kazi validate(namba age) {
 }
 ```
 
+### Improved Error Messages
+
+Kwenda provides detailed, bilingual error messages with context to help you debug your programs quickly:
+
+#### Error Message Features
+- **Bilingual Messages**: Errors shown in both Swahili and English
+- **Contextual Information**: Detailed explanation of what went wrong
+- **Helpful Suggestions**: Guidance on how to fix the error
+- **Beautiful Formatting**: Professional error display with Unicode box drawing
+
+#### Common Error Types
+
+**Array Index Out of Bounds:**
+```swahili
+orodha namba nums = [1, 2, 3]
+namba value = pata(nums, 10)  # Index 10 is out of bounds
+```
+Error output:
+```
+Index 10 ni nje ya mipaka ya orodha (urefu: 3)
+Katika kazi 'pata': Jaribu kutumia index kati ya 0 na 2
+```
+
+**Division by Zero:**
+```swahili
+leta "modules/math.swh"
+namba result = math.gawanya(100, 0)  # Cannot divide by zero
+```
+Error output:
+```
+╔═══════════════════════════════════════════════════════════╗
+║ HITILAFU (ERROR)                                          ║
+╚═══════════════════════════════════════════════════════════╝
+Ujumbe: Haiwezekani kugawanya na sifuri (Cannot divide by zero)
+```
+
+**File Not Found:**
+```swahili
+maneno content = soma("missing.txt")  # File doesn't exist
+```
+Error output:
+```
+Hitilafu ya kusoma faili 'missing.txt': open missing.txt: no such file or directory
+Katika kazi 'soma': Hakikisha faili ipo na una ruhusa ya kusoma
+```
+
+**Type Mismatch:**
+```swahili
+maneno not_array = "This is a string"
+namba value = pata(not_array, 0)  # Wrong type
+```
+Error output:
+```
+Hii si orodha
+Katika kazi 'pata': Argument ya kwanza lazima iwe orodha
+```
+
+#### Error Handling Best Practices
+
+1. **Use try-catch for expected errors:**
+```swahili
+jaribu {
+    maneno content = soma("config.txt")
+    andika("Config loaded:", content)
+} shika (error) {
+    andika("Using default config due to error:", error)
+    # Provide fallback behavior
+}
+```
+
+2. **Validate input before operations:**
+```swahili
+kazi safe_divide(namba a, namba b) {
+    kama b == 0 {
+        tupa "Haiwezekani kugawanya na sifuri"
+    }
+    rudisha a / b
+}
+```
+
+3. **Use finally for cleanup:**
+```swahili
+jaribu {
+    # Open resources
+    maneno data = soma("data.txt")
+} shika (error) {
+    andika("Error reading file:", error)
+} hatimaye {
+    # Always cleanup, even if error occurred
+    andika("Cleanup complete")
+}
+```
+
 ## 📚 Examples
 
 > **Note**: All examples are available in the `examples/` directory. You can run any example by changing the file path in `main.go`.
@@ -661,21 +754,35 @@ kazi kuu() {
 
 ### Example 10: Error Handling
 ```swahili
+leta "modules/math.swh"
+
 kazi kuu() {
     andika("=== Error Handling Demo ===")
+    andika("")
     
-    # Try-catch example
+    # Test 1: Caught division by zero
+    andika("Test 1: Division by zero (caught)")
     jaribu {
-        namba x = 10
-        kama x > 5 {
-            tupa "Number is too large!"
-        }
-        andika("This won't be printed")
+        namba result = math.gawanya(100, 0)
+        andika("Result:", result)
     } shika (error) {
-        andika("Caught error:", error)
+        andika("✓ Error caught:", error)
     }
+    andika("")
     
-    # Try-catch-finally example
+    # Test 2: Caught array index error
+    andika("Test 2: Array index error (caught)")
+    orodha namba nums = [10, 20, 30]
+    jaribu {
+        namba value = pata(nums, 10)
+        andika("Value:", value)
+    } shika (error) {
+        andika("✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 3: Try-catch-finally
+    andika("Test 3: Try-catch-finally")
     jaribu {
         andika("Inside try block")
         tupa "Test error"
@@ -684,14 +791,17 @@ kazi kuu() {
     } hatimaye {
         andika("Finally block - always executes")
     }
+    andika("")
     
-    # File error handling
+    # Test 4: File error handling
+    andika("Test 4: File not found (caught)")
     jaribu {
         maneno content = soma("nonexistent.txt")
         andika("Content:", content)
     } shika (error) {
-        andika("File error:", error)
+        andika("✓ Error caught:", error)
     }
+    andika("")
     
     andika("Program continues after error handling")
 }
@@ -700,11 +810,21 @@ kazi kuu() {
 **Output:**
 ```
 === Error Handling Demo ===
-Caught error: {Number is too large!}
+
+Test 1: Division by zero (caught)
+✓ Error caught: {Haiwezekani kugawanya na sifuri (Cannot divide by zero) }
+
+Test 2: Array index error (caught)
+✓ Error caught: {Index 10 ni nje ya mipaka ya orodha (urefu: 3) Katika kazi 'pata': Jaribu kutumia index kati ya 0 na 2}
+
+Test 3: Try-catch-finally
 Inside try block
 Inside catch: {Test error}
 Finally block - always executes
-File error: {Hitilafu ya kusoma faili 'nonexistent.txt': ...}
+
+Test 4: File not found (caught)
+✓ Error caught: {Hitilafu ya kusoma faili 'nonexistent.txt': open nonexistent.txt: no such file or directory Katika kazi 'soma': Hakikisha faili ipo na una ruhusa ya kusoma}
+
 Program continues after error handling
 ```
 
@@ -952,7 +1072,7 @@ The interpreter follows a traditional architecture:
 - [x] Standard library modules (math, strings, arrays) ✅
 - [x] Floating-point arithmetic ✅
 - [x] Comments support with `#` ✅
-- [ ] Better error messages with line numbers
+- [x] Improved error messages with context ✅
 - [ ] Object-oriented features (classes, objects)
 - [ ] Dictionary/map dat a structures
 - [ ] Lambda functions

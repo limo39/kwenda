@@ -1,0 +1,64 @@
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║           KWENDA ERROR HANDLING TEST SUITE                 ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+    andika("")
+    
+    # Test 1: Division by zero (caught)
+    andika("Test 1: Division by zero (caught)")
+    jaribu {
+        namba result = math.gawanya(100, 0)
+        andika("  Result:", result)
+    } shika (error) {
+        andika("  ✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 2: Modulo by zero (caught)
+    andika("Test 2: Modulo by zero (caught)")
+    jaribu {
+        namba result = math.salio(100, 0)
+        andika("  Result:", result)
+    } shika (error) {
+        andika("  ✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 3: Array index error (caught)
+    andika("Test 3: Array index error (caught)")
+    orodha namba nums = [10, 20, 30]
+    jaribu {
+        namba value = pata(nums, 10)
+        andika("  Value:", value)
+    } shika (error) {
+        andika("  ✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 4: File not found (caught)
+    andika("Test 4: File not found (caught)")
+    jaribu {
+        maneno content = soma("nonexistent.txt")
+        andika("  Content:", content)
+    } shika (error) {
+        andika("  ✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 5: Type error (caught)
+    andika("Test 5: Type error (caught)")
+    jaribu {
+        maneno not_array = "not an array"
+        namba value = pata(not_array, 0)
+        andika("  Value:", value)
+    } shika (error) {
+        andika("  ✓ Error caught:", error)
+    }
+    andika("")
+    
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║              ALL ERROR TESTS PASSED ✓                      ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+}

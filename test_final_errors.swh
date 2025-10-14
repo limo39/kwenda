@@ -1,0 +1,23 @@
+# Final error handling test
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Final Error Handling Test ===")
+    andika("")
+    
+    # Test 1: Module function error (caught)
+    andika("1. Module function error (caught):")
+    jaribu {
+        namba result = math.gawanya(100, 0)
+    } shika (error) {
+        andika("   ✓ Caught:", error)
+    }
+    andika("")
+    
+    # Test 2: Module function error (unhandled)
+    andika("2. Module function error (unhandled):")
+    andika("   Attempting modulo by zero...")
+    namba bad = math.salio(10, 0)
+    andika("   This will not print")
+}
