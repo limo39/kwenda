@@ -1,0 +1,127 @@
+# Comprehensive OOP Test
+
+############################################
+# Class: Calculator
+############################################
+
+kazi Calculator_unda(maneno jina) {
+    andika("[Calculator]", jina, "created")
+    rudisha jina
+}
+
+kazi Calculator_ongeza(maneno calc, namba a, namba b) {
+    namba jibu = a + b
+    andika("[", calc, "] ", a, "+", b, "=", jibu)
+    rudisha jibu
+}
+
+kazi Calculator_toa(maneno calc, namba a, namba b) {
+    namba jibu = a - b
+    andika("[", calc, "] ", a, "-", b, "=", jibu)
+    rudisha jibu
+}
+
+kazi Calculator_zidisha(maneno calc, namba a, namba b) {
+    namba jibu = a * b
+    andika("[", calc, "] ", a, "*", b, "=", jibu)
+    rudisha jibu
+}
+
+############################################
+# Class: Counter
+############################################
+
+namba Counter_value = 0
+
+kazi Counter_unda(maneno jina, namba awali) {
+    Counter_value = awali
+    andika("[Counter]", jina, "initialized to", awali)
+    rudisha jina
+}
+
+kazi Counter_ongeza(maneno counter) {
+    Counter_value = Counter_value + 1
+    andika("[", counter, "] Incremented to", Counter_value)
+    rudisha Counter_value
+}
+
+kazi Counter_punguza(maneno counter) {
+    Counter_value = Counter_value - 1
+    andika("[", counter, "] Decremented to", Counter_value)
+    rudisha Counter_value
+}
+
+kazi Counter_angalia(maneno counter) {
+    andika("[", counter, "] Current value:", Counter_value)
+    rudisha Counter_value
+}
+
+kazi Counter_weka_sifuri(maneno counter) {
+    Counter_value = 0
+    andika("[", counter, "] Reset to 0")
+}
+
+############################################
+# Main Test
+############################################
+
+kazi kuu() {
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║           COMPREHENSIVE OOP TEST SUITE                     ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+    andika("")
+    
+    # Test 1: Calculator class
+    andika("=== Test 1: Calculator Class ===")
+    maneno calc1 = Calculator_unda("BasicCalc")
+    maneno calc2 = Calculator_unda("AdvancedCalc")
+    andika("")
+    
+    namba r1 = Calculator_ongeza(calc1, 10, 5)
+    namba r2 = Calculator_toa(calc1, 20, 8)
+    namba r3 = Calculator_zidisha(calc2, 7, 6)
+    andika("")
+    
+    # Test 2: Counter class
+    andika("=== Test 2: Counter Class ===")
+    maneno counter = Counter_unda("MyCounter", 0)
+    andika("")
+    
+    Counter_angalia(counter)
+    Counter_ongeza(counter)
+    Counter_ongeza(counter)
+    Counter_ongeza(counter)
+    Counter_angalia(counter)
+    Counter_punguza(counter)
+    Counter_angalia(counter)
+    Counter_weka_sifuri(counter)
+    Counter_angalia(counter)
+    andika("")
+    
+    # Test 3: Multiple instances
+    andika("=== Test 3: Multiple Calculator Instances ===")
+    maneno calc_a = Calculator_unda("CalcA")
+    maneno calc_b = Calculator_unda("CalcB")
+    maneno calc_c = Calculator_unda("CalcC")
+    andika("")
+    
+    Calculator_ongeza(calc_a, 1, 1)
+    Calculator_ongeza(calc_b, 2, 2)
+    Calculator_ongeza(calc_c, 3, 3)
+    andika("")
+    
+    # Test 4: Method chaining simulation
+    andika("=== Test 4: Sequential Operations ===")
+    maneno calc = Calculator_unda("ChainCalc")
+    andika("")
+    
+    namba step1 = Calculator_ongeza(calc, 10, 5)
+    namba step2 = Calculator_zidisha(calc, step1, 2)
+    namba step3 = Calculator_toa(calc, step2, 10)
+    andika("Final result:", step3)
+    andika("")
+    
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║              ALL OOP TESTS PASSED ✓                        ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+}

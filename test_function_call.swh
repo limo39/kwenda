@@ -1,0 +1,9 @@
+kazi salamu(maneno jina) {
+    andika("Habari", jina)
+}
+
+kazi kuu() {
+    andika("Test 1")
+    salamu("Amina")
+    andika("Test 2")
+}

@@ -166,3 +166,49 @@ type ModuleNode struct {
     Exports   []string    // List of exported function/variable names
     Functions []ASTNode   // Functions in this module
 }
+
+// ClassNode represents a class definition (e.g., darasa Mtu { ... })
+type ClassNode struct {
+    Name       string         // Class name
+    Properties []PropertyNode // Class properties
+    Methods    []FunctionNode // Class methods
+    Constructor *FunctionNode // Constructor method (optional)
+}
+
+// PropertyNode represents a class property
+type PropertyNode struct {
+    Name  string  // Property name
+    Type  string  // Property type (namba, maneno, boolean, etc.)
+    Value ASTNode // Default value (optional)
+}
+
+// NewInstanceNode represents creating a new instance (e.g., unda Mtu("Amina", 25))
+type NewInstanceNode struct {
+    ClassName string    // Name of the class to instantiate
+    Args      []ASTNode // Constructor arguments
+}
+
+// MemberAccessNode represents accessing a member (e.g., mtu.jina or mtu.salamu())
+type MemberAccessNode struct {
+    Object ASTNode // The object being accessed
+    Member string  // The member name
+}
+
+// MemberAssignmentNode represents assigning to a member (e.g., mtu.jina = "Fatuma")
+type MemberAssignmentNode struct {
+    Object ASTNode // The object being modified
+    Member string  // The member name
+    Value  ASTNode // The new value
+}
+
+// ThisNode represents the 'hii' keyword (this/self)
+type ThisNode struct {
+    // No additional fields needed
+}
+
+// ClassVariableDeclarationNode represents a class instance variable (e.g., Mtu mtu1 = unda Mtu())
+type ClassVariableDeclarationNode struct {
+    ClassName string  // Class name (type)
+    VarName   string  // Variable name
+    Value     ASTNode // Initialization value (NewInstanceNode)
+}

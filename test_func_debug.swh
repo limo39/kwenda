@@ -1,0 +1,10 @@
+kazi test() {
+    andika("Inside test function")
+    rudisha 42
+}
+
+kazi kuu() {
+    andika("Before call")
+    namba x = test()
+    andika("After call, x =", x)
+}

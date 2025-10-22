@@ -235,7 +235,15 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle function calls
+	// Handle function calls (built-in and user-defined)
+	if tokens[0].Type == lexer.TokenIdentifier && len(tokens) > 1 && tokens[1].Value == "(" {
+		return ast.FunctionCallNode{
+			Name: tokens[0].Value,
+			Args: ParseArguments(tokens[2:]),
+		}
+	}
+	
+	// Legacy: Handle specific built-in function calls
 	if (tokens[0].Value == "andika" || tokens[0].Value == "ongeza" || tokens[0].Value == "ondoa" || tokens[0].Value == "urefu_orodha" || tokens[0].Value == "pata" || tokens[0].Value == "soma" || tokens[0].Value == "andika_faili" || tokens[0].Value == "unda_faili" || tokens[0].Value == "faili_ipo" || tokens[0].Value == "ondoa_faili") && len(tokens) > 1 && tokens[1].Value == "(" {
 		return ast.FunctionCallNode{
 			Name: tokens[0].Value,

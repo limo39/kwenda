@@ -1,0 +1,29 @@
+# Simple OOP test - using structs/records approach
+# This is a simplified OOP that uses functions to simulate classes
+
+# "Class" as a collection of related functions
+# Person "constructor"
+kazi Mtu_unda(maneno jina, namba umri) {
+    # Return a "record" (using array to simulate object)
+    # [jina, umri]
+    orodha maneno data = [jina]
+    # For now, we'll use a simple approach
+    andika("Created person:", jina, "age:", umri)
+    rudisha jina
+}
+
+kazi Mtu_salamu(maneno jina) {
+    andika("Habari, jina langu ni", jina)
+}
+
+kazi kuu() {
+    andika("=== Simple OOP Demo ===")
+    
+    # Create "instances"
+    maneno mtu1 = Mtu_unda("Amina", 25)
+    maneno mtu2 = Mtu_unda("Juma", 30)
+    
+    # Call "methods"
+    Mtu_salamu(mtu1)
+    Mtu_salamu(mtu2)
+}

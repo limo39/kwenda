@@ -1,0 +1,170 @@
+# Object-Oriented Programming Demo
+# Using function-based OOP pattern
+
+############################################
+# "Class": Mtu (Person)
+############################################
+
+# Constructor - creates a new person
+kazi Mtu_unda(maneno jina, namba umri, maneno mji) {
+    andika("[Mtu] Created:", jina, "age:", umri, "from:", mji)
+    # In a full OOP system, this would return an object
+    # For now, we return the name as an identifier
+    rudisha jina
+}
+
+# Method - greet
+kazi Mtu_salamu(maneno jina) {
+    andika("Habari! Jina langu ni", jina)
+}
+
+# Method - celebrate birthday
+kazi Mtu_siku_ya_kuzaliwa(maneno jina) {
+    andika("🎉", jina, "ana sherehe ya siku ya kuzaliwa!")
+}
+
+# Method - introduce with details
+kazi Mtu_jitambulishe(maneno jina, namba umri, maneno mji) {
+    andika("Jina langu ni", jina)
+    andika("Nina umri wa miaka", umri)
+    andika("Ninatoka", mji)
+}
+
+############################################
+# "Class": Gari (Car)
+############################################
+
+# Constructor
+kazi Gari_unda(maneno aina, namba mwaka, maneno rangi) {
+    andika("[Gari] Created:", aina, "year:", mwaka, "color:", rangi)
+    rudisha aina
+}
+
+# Method - start engine
+kazi Gari_washa(maneno aina) {
+    andika("🚗", aina, "- Injini imewashwa! Vroom vroom!")
+}
+
+# Method - drive
+kazi Gari_endesha(maneno aina, namba umbali) {
+    andika("🚗", aina, "- Inaendesha kilomita", umbali)
+}
+
+# Method - stop
+kazi Gari_simama(maneno aina) {
+    andika("🚗", aina, "- Imesimama. Injini imezimwa.")
+}
+
+############################################
+# "Class": Akaunti (Bank Account)
+############################################
+
+# We'll use a simple approach with global state
+# In a real OOP system, each instance would have its own state
+namba Akaunti_salio_global = 0
+
+# Constructor
+kazi Akaunti_unda(maneno jina, namba salio_awali) {
+    Akaunti_salio_global = salio_awali
+    andika("[Akaunti] Created account for:", jina)
+    andika("[Akaunti] Initial balance:", salio_awali)
+    rudisha jina
+}
+
+# Method - deposit
+kazi Akaunti_weka(maneno jina, namba kiasi) {
+    Akaunti_salio_global = Akaunti_salio_global + kiasi
+    andika("💰", jina, "deposited:", kiasi)
+    andika("💰 New balance:", Akaunti_salio_global)
+}
+
+# Method - withdraw
+kazi Akaunti_toa(maneno jina, namba kiasi) {
+    kama kiasi > Akaunti_salio_global {
+        andika("❌ Insufficient funds! Balance:", Akaunti_salio_global)
+        rudisha uwongo
+    }
+    Akaunti_salio_global = Akaunti_salio_global - kiasi
+    andika("💰", jina, "withdrew:", kiasi)
+    andika("💰 New balance:", Akaunti_salio_global)
+    rudisha kweli
+}
+
+# Method - check balance
+kazi Akaunti_angalia(maneno jina) {
+    andika("💰", jina, "- Current balance:", Akaunti_salio_global)
+    rudisha Akaunti_salio_global
+}
+
+############################################
+# Main Program - Demonstrating OOP
+############################################
+
+kazi kuu() {
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║         KWENDA OBJECT-ORIENTED PROGRAMMING DEMO            ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+    andika("")
+    
+    # Demo 1: Person Objects
+    andika("=== Demo 1: Person Objects ===")
+    andika("")
+    
+    maneno mtu1 = Mtu_unda("Amina", 25, "Dar es Salaam")
+    maneno mtu2 = Mtu_unda("Juma", 30, "Arusha")
+    andika("")
+    
+    Mtu_salamu(mtu1)
+    Mtu_salamu(mtu2)
+    andika("")
+    
+    Mtu_jitambulishe(mtu1, 25, "Dar es Salaam")
+    andika("")
+    
+    Mtu_siku_ya_kuzaliwa(mtu2)
+    andika("")
+    
+    # Demo 2: Car Objects
+    andika("=== Demo 2: Car Objects ===")
+    andika("")
+    
+    maneno gari1 = Gari_unda("Toyota", 2020, "Nyekundu")
+    maneno gari2 = Gari_unda("Honda", 2022, "Bluu")
+    andika("")
+    
+    Gari_washa(gari1)
+    Gari_endesha(gari1, 50)
+    Gari_simama(gari1)
+    andika("")
+    
+    Gari_washa(gari2)
+    Gari_endesha(gari2, 100)
+    Gari_simama(gari2)
+    andika("")
+    
+    # Demo 3: Bank Account Object
+    andika("=== Demo 3: Bank Account Object ===")
+    andika("")
+    
+    maneno akaunti = Akaunti_unda("Amina", 1000)
+    andika("")
+    
+    Akaunti_angalia(akaunti)
+    andika("")
+    
+    Akaunti_weka(akaunti, 500)
+    andika("")
+    
+    Akaunti_toa(akaunti, 300)
+    andika("")
+    
+    Akaunti_toa(akaunti, 2000)  # This should fail
+    andika("")
+    
+    Akaunti_angalia(akaunti)
+    andika("")
+    
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║                    OOP DEMO COMPLETE                       ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+}

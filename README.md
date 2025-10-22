@@ -19,6 +19,7 @@
 - **Module System**: Multi-file support with imports using `leta`
 - **Array Operations**: Full array support with manipulation functions
 - **File I/O**: Read, write, create, and delete files
+- **Object-Oriented Programming**: Function-based OOP with constructor and method patterns
 - **Educational Focus**: Perfect for learning programming concepts in Swahili
 
 ## 🚀 Quick Start
@@ -953,6 +954,119 @@ After replacement: Habari Fatuma kutoka Dar es Salaam
 Complex greeting: Habari za asubuhi, Amina!
 ```
 
+### Example 13: Object-Oriented Programming
+
+Kwenda supports OOP using a function-based pattern with constructor and method functions:
+
+```swahili
+############################################
+# "Class": Mtu (Person)
+############################################
+
+# Constructor
+kazi Mtu_unda(maneno jina, namba umri, maneno mji) {
+    andika("[Mtu] Created:", jina, "age:", umri, "from:", mji)
+    rudisha jina
+}
+
+# Method: Greet
+kazi Mtu_salamu(maneno jina) {
+    andika("Habari! Jina langu ni", jina)
+}
+
+# Method: Introduce
+kazi Mtu_jitambulishe(maneno jina, namba umri, maneno mji) {
+    andika("Jina langu ni", jina)
+    andika("Nina umri wa miaka", umri)
+    andika("Ninatoka", mji)
+}
+
+############################################
+# "Class": Gari (Car)
+############################################
+
+# Constructor
+kazi Gari_unda(maneno aina, namba mwaka) {
+    andika("[Gari] Created:", aina, "year:", mwaka)
+    rudisha aina
+}
+
+# Method: Start engine
+kazi Gari_washa(maneno aina) {
+    andika("🚗", aina, "- Injini imewashwa!")
+}
+
+# Method: Drive
+kazi Gari_endesha(maneno aina, namba umbali) {
+    andika("🚗", aina, "- Inaendesha kilomita", umbali)
+}
+
+############################################
+# Main Program
+############################################
+
+kazi kuu() {
+    andika("=== OOP Demo ===")
+    andika("")
+    
+    # Create person instances
+    maneno mtu1 = Mtu_unda("Amina", 25, "Dar es Salaam")
+    maneno mtu2 = Mtu_unda("Juma", 30, "Arusha")
+    andika("")
+    
+    # Call person methods
+    Mtu_salamu(mtu1)
+    Mtu_salamu(mtu2)
+    andika("")
+    
+    Mtu_jitambulishe(mtu1, 25, "Dar es Salaam")
+    andika("")
+    
+    # Create car instances
+    maneno gari1 = Gari_unda("Toyota", 2020)
+    maneno gari2 = Gari_unda("Honda", 2022)
+    andika("")
+    
+    # Call car methods
+    Gari_washa(gari1)
+    Gari_endesha(gari1, 50)
+    andika("")
+    
+    Gari_washa(gari2)
+    Gari_endesha(gari2, 100)
+}
+```
+
+**Output:**
+```
+=== OOP Demo ===
+
+[Mtu] Created: Amina age: 25 from: Dar es Salaam
+[Mtu] Created: Juma age: 30 from: Arusha
+
+Habari! Jina langu ni Amina
+Habari! Jina langu ni Juma
+
+Jina langu ni Amina
+Nina umri wa miaka 25
+Ninatoka Dar es Salaam
+
+[Gari] Created: Toyota year: 2020
+[Gari] Created: Honda year: 2022
+
+🚗 Toyota - Injini imewashwa!
+🚗 Toyota - Inaendesha kilomita 50
+
+🚗 Honda - Injini imewashwa!
+🚗 Honda - Inaendesha kilomita 100
+```
+
+**OOP Pattern:**
+- Constructor functions: `ClassName_unda(params)`
+- Method functions: `ClassName_methodName(instance, params)`
+- Naming convention groups related functions together
+- See `OOP.md` for comprehensive documentation
+
 ## 🏗️ Project Structure
 
 ```
@@ -1073,7 +1187,9 @@ The interpreter follows a traditional architecture:
 - [x] Floating-point arithmetic ✅
 - [x] Comments support with `#` ✅
 - [x] Improved error messages with context ✅
-- [ ] Object-oriented features (classes, objects)
+- [x] Object-oriented programming (function-based pattern) ✅
+- [ ] Dictionary/map data structures (for full OOP support)
+- [ ] Class syntax with `darasa` keyword
 - [ ] Dictionary/map dat a structures
 - [ ] Lambda functions
 - [ ] List comprehensions
@@ -1098,6 +1214,7 @@ This project is open source. Feel free to use, modify, and distribute.
 - **[LOOPS.md](LOOPS.md)**: Detailed documentation on loop constructs and control flow
 - **[BOOLEANS.md](BOOLEANS.md)**: Complete guide to boolean data types and logical operations
 - **[STRINGS.md](STRINGS.md)**: Complete guide to string manipulation and functions
+- **[OOP.md](OOP.md)**: Complete guide to object-oriented programming patterns
 
 ## 🎓 Educational Use
 

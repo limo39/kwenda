@@ -38,6 +38,8 @@ func isSwahiliKeyword(word string) bool {
 		// String manipulation functions
 		"unganisha", "kata", "badilisha", "tafuta", "awali", "mwisho",
 		"herufi_kubwa", "herufi_ndogo", "ondoa_nafasi", "gawanya_maneno",
+		// OOP keywords
+		"darasa", "unda", "hii",
 	}
 	for _, kw := range keywords {
 		if kw == word {
