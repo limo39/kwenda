@@ -212,3 +212,34 @@ type ClassVariableDeclarationNode struct {
     VarName   string  // Variable name
     Value     ASTNode // Initialization value (NewInstanceNode)
 }
+
+
+// DictionaryNode represents a dictionary/map literal (e.g., {"key": "value", "age": 25})
+type DictionaryNode struct {
+	Pairs []DictionaryPair // Key-value pairs
+}
+
+// DictionaryPair represents a key-value pair in a dictionary
+type DictionaryPair struct {
+	Key   ASTNode // Key (usually string)
+	Value ASTNode // Value (any type)
+}
+
+// DictionaryDeclarationNode represents a dictionary variable declaration (e.g., kamusi data = {})
+type DictionaryDeclarationNode struct {
+	Name  string  // Variable name
+	Value ASTNode // Dictionary value
+}
+
+// DictionaryAccessNode represents accessing a dictionary value (e.g., dict["key"])
+type DictionaryAccessNode struct {
+	Dictionary ASTNode // The dictionary being accessed
+	Key        ASTNode // The key expression
+}
+
+// DictionaryAssignmentNode represents assigning to a dictionary (e.g., dict["key"] = value)
+type DictionaryAssignmentNode struct {
+	Dictionary ASTNode // The dictionary being modified
+	Key        ASTNode // The key expression
+	Value      ASTNode // The new value
+}

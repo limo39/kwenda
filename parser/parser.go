@@ -169,6 +169,20 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle dictionary declarations (kamusi name = {...} or kamusi name = func())
+	if tokens[0].Value == "kamusi" && len(tokens) >= 4 && tokens[2].Value == "=" {
+		var value ast.ASTNode
+		if tokens[3].Value == "{" {
+			value = ParseDictionaryLiteral(tokens[3:])
+		} else {
+			value = ParseExpression(tokens[3:])
+		}
+		return ast.DictionaryDeclarationNode{
+			Name:  tokens[1].Value,
+			Value: value,
+		}
+	}
+
 	// Handle array declarations
 	if tokens[0].Value == "orodha" && len(tokens) >= 5 && tokens[3].Value == "=" {
 		arrayLiteral := ParseArrayLiteral(tokens[4:])
@@ -183,19 +197,7 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle array access
-	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
-		for i := 2; i < len(tokens); i++ {
-			if tokens[i].Value == "]" {
-				return ast.ArrayAccessNode{
-					Array: ast.IdentifierNode{Value: tokens[0].Value},
-					Index: ParseExpression(tokens[2:i]),
-				}
-			}
-		}
-	}
-
-	// Handle array assignment
+	// Handle array/dictionary assignment (must come before array access!)
 	if len(tokens) >= 6 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
 		bracketEnd := -1
 		for i := 2; i < len(tokens); i++ {
@@ -209,6 +211,18 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 				Array: ast.IdentifierNode{Value: tokens[0].Value},
 				Index: ParseExpression(tokens[2:bracketEnd]),
 				Value: ParseExpression(tokens[bracketEnd+2:]),
+			}
+		}
+	}
+
+	// Handle array/dictionary access
+	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == "]" {
+				return ast.ArrayAccessNode{
+					Array: ast.IdentifierNode{Value: tokens[0].Value},
+					Index: ParseExpression(tokens[2:i]),
+				}
 			}
 		}
 	}
@@ -369,6 +383,45 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
+		// Parse dictionary declarations
+		if tokens[i].Value == "kamusi" && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+			end := i + 3
+			// Check if it's a dictionary literal or function call
+			if tokens[end].Value == "{" {
+				// Dictionary literal
+				braceCount := 0
+				for end < len(tokens) {
+					if tokens[end].Value == "{" {
+						braceCount++
+					} else if tokens[end].Value == "}" {
+						braceCount--
+						if braceCount == 0 {
+							end++
+							break
+						}
+					}
+					end++
+				}
+			} else {
+				// Function call or expression
+				for end < len(tokens) {
+					if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
+						break
+					}
+					if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
+						break
+					}
+					end++
+				}
+			}
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
 		// Parse array declarations
 		if tokens[i].Value == "orodha" && i+4 < len(tokens) && tokens[i+3].Value == "=" {
 			end := i + 4
@@ -391,6 +444,35 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			}
 			i = end
 			continue
+		}
+
+		// Parse array/dictionary assignment (e.g., arr[0] = 5 or dict["key"] = value)
+		if i+3 < len(tokens) && tokens[i].Type == lexer.TokenIdentifier && tokens[i+1].Value == "[" {
+			bracketEnd := -1
+			for j := i + 2; j < len(tokens); j++ {
+				if tokens[j].Value == "]" {
+					bracketEnd = j
+					break
+				}
+			}
+			if bracketEnd != -1 && bracketEnd+1 < len(tokens) && tokens[bracketEnd+1].Value == "=" {
+				end := bracketEnd + 2
+				for end < len(tokens) {
+					if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kamusi" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
+						break
+					}
+					if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
+						break
+					}
+					end++
+				}
+				stmt := Parse(tokens[i:end])
+				if stmt != nil {
+					statements = append(statements, stmt)
+				}
+				i = end
+				continue
+			}
 		}
 
 		// Parse assignment statements (e.g., i = i + 1)
@@ -490,12 +572,24 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 
 	// Handle string literals
 	if tokens[0].Type == lexer.TokenString {
-		return ast.IdentifierNode{Value: tokens[0].Value}
+		return ast.StringNode{Value: tokens[0].Value}
 	}
 
 	// Handle numbers
 	if tokens[0].Type == lexer.TokenNumber {
 		return ast.NumberNode{Value: tokens[0].Value}
+	}
+
+	// Handle array/dictionary access (e.g., arr[0] or dict["key"])
+	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == "]" {
+				return ast.ArrayAccessNode{
+					Array: ast.IdentifierNode{Value: tokens[0].Value},
+					Index: ParseExpression(tokens[2:i]),
+				}
+			}
+		}
 	}
 
 	// Handle identifiers
@@ -1025,5 +1119,112 @@ func ParseTryStatement(tokens []lexer.Token) ast.ASTNode {
 		CatchVar:    catchVar,
 		CatchBody:   catchBody,
 		FinallyBody: finallyBody,
+	}
+}
+
+// ParseDictionaryLiteral parses dictionary literals like {key: value, key2: value2}
+func ParseDictionaryLiteral(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) == 0 {
+		return nil
+	}
+	
+	// Handle empty dictionary {}
+	if len(tokens) == 2 && tokens[0].Value == "{" && tokens[1].Value == "}" {
+		return ast.DictionaryNode{Pairs: []ast.DictionaryPair{}}
+	}
+	
+	if tokens[0].Value != "{" {
+		return nil
+	}
+
+	closingBrace := -1
+	braceCount := 1
+	for i := 1; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				closingBrace = i
+				break
+			}
+		}
+	}
+
+	if closingBrace == -1 {
+		return nil
+	}
+
+	var pairs []ast.DictionaryPair
+	if closingBrace > 1 {
+		pairs = ParseDictionaryPairs(tokens[1:closingBrace])
+	}
+
+	return ast.DictionaryNode{Pairs: pairs}
+}
+
+// ParseDictionaryPairs parses comma-separated key:value pairs
+func ParseDictionaryPairs(tokens []lexer.Token) []ast.DictionaryPair {
+	var pairs []ast.DictionaryPair
+	var currentPair []lexer.Token
+
+	for _, token := range tokens {
+		if token.Value == "," {
+			if len(currentPair) > 0 {
+				pair := ParseDictionaryPair(currentPair)
+				if pair != nil {
+					pairs = append(pairs, *pair)
+				}
+				currentPair = nil
+			}
+		} else {
+			currentPair = append(currentPair, token)
+		}
+	}
+
+	if len(currentPair) > 0 {
+		pair := ParseDictionaryPair(currentPair)
+		if pair != nil {
+			pairs = append(pairs, *pair)
+		}
+	}
+
+	return pairs
+}
+
+// ParseDictionaryPair parses a single key:value pair
+func ParseDictionaryPair(tokens []lexer.Token) *ast.DictionaryPair {
+	// Find the colon separator
+	colonIndex := -1
+	for i, token := range tokens {
+		if token.Value == ":" {
+			colonIndex = i
+			break
+		}
+	}
+
+	if colonIndex == -1 || colonIndex == 0 || colonIndex == len(tokens)-1 {
+		return nil
+	}
+
+	// Parse key - if it's a single string token, treat it as a string literal
+	var key ast.ASTNode
+	if colonIndex == 1 && tokens[0].Type == lexer.TokenString {
+		// String literal key
+		key = ast.StringNode{Value: tokens[0].Value}
+	} else {
+		// Expression key
+		key = ParseExpression(tokens[:colonIndex])
+	}
+	
+	value := ParseExpression(tokens[colonIndex+1:])
+
+	if key == nil || value == nil {
+		return nil
+	}
+
+	return &ast.DictionaryPair{
+		Key:   key,
+		Value: value,
 	}
 }

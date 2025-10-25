@@ -40,6 +40,8 @@ func isSwahiliKeyword(word string) bool {
 		"herufi_kubwa", "herufi_ndogo", "ondoa_nafasi", "gawanya_maneno",
 		// OOP keywords
 		"darasa", "unda", "hii",
+		// Dictionary/Map keywords
+		"kamusi",
 	}
 	for _, kw := range keywords {
 		if kw == word {
@@ -143,7 +145,7 @@ func Lex(input string) []Token {
 			} else {
 				tokens = append(tokens, Token{Type: TokenOperator, Value: string(char)})
 			}
-		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' {
+		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' || char == ':' {
 			// Handle punctuation
 			if currentToken.Len() > 0 {
 				tokenValue := currentToken.String()

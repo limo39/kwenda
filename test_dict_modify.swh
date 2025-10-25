@@ -1,0 +1,8 @@
+kazi kuu() {
+    kamusi d = {"x": 10}
+    andika("Before:", d)
+    d["x"] = 20
+    andika("After:", d)
+    d["y"] = 30
+    andika("After adding y:", d)
+}

@@ -1,0 +1,8 @@
+kazi kuu() {
+    kamusi p = {"jina": "Amina"}
+    andika("p:", p)
+    andika("p[jina]:", p["jina"])
+    
+    maneno name = p["jina"]
+    andika("name:", name)
+}

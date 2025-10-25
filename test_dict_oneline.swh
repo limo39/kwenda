@@ -1,0 +1,5 @@
+kazi kuu() {
+    kamusi mtu = {"jina": "Amina", "umri": 25}
+    andika("Person:", mtu)
+    andika("Name:", mtu["jina"])
+}

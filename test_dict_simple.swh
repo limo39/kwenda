@@ -1,0 +1,9 @@
+kazi kuu() {
+    andika("Test 1: Empty dict")
+    kamusi d1 = {}
+    andika("d1:", d1)
+    
+    andika("Test 2: Dict with one item")
+    kamusi d2 = {"name": "Amina"}
+    andika("d2:", d2)
+}

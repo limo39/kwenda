@@ -1,0 +1,4 @@
+kazi kuu() {
+    kamusi d = {}
+    andika("Done")
+}

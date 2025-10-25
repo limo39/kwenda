@@ -1,0 +1,45 @@
+# Test dictionary/map functionality
+
+kazi kuu() {
+    andika("=== Dictionary Test ===")
+    andika("")
+    
+    # Test 1: Create empty dictionary
+    andika("Test 1: Empty dictionary")
+    kamusi data = {}
+    andika("Empty dict:", data)
+    andika("")
+    
+    # Test 2: Create dictionary with values
+    andika("Test 2: Dictionary with values")
+    kamusi mtu = {"jina": "Amina", "umri": 25, "mji": "Dar es Salaam"}
+    andika("Person dict:", mtu)
+    andika("")
+    
+    # Test 3: Access dictionary values
+    andika("Test 3: Access values")
+    maneno jina = mtu["jina"]
+    andika("Name:", jina)
+    andika("")
+    
+    # Test 4: Modify dictionary values
+    andika("Test 4: Modify values")
+    mtu["umri"] = 26
+    andika("After birthday:", mtu)
+    andika("")
+    
+    # Test 5: Add new key
+    andika("Test 5: Add new key")
+    mtu["kazi"] = "Mwalimu"
+    andika("After adding job:", mtu)
+    andika("")
+    
+    # Test 6: Dictionary with numbers
+    andika("Test 6: Dictionary with numbers")
+    kamusi alama = {"hesabu": 95, "sayansi": 88, "kiswahili": 92}
+    andika("Grades:", alama)
+    andika("Math grade:", alama["hesabu"])
+    andika("")
+    
+    andika("=== All Dictionary Tests Complete ===")
+}

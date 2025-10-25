@@ -138,6 +138,24 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.StringNode:
 		return n.Value
 
+	case ast.DictionaryNode:
+		// Handle dictionary literals (e.g., {"key": "value", "age": 25})
+		dict := make(map[string]interface{})
+		for _, pair := range n.Pairs {
+			key := Interpret(pair.Key, env)
+			value := Interpret(pair.Value, env)
+			// Convert key to string
+			keyStr := fmt.Sprintf("%v", key)
+			dict[keyStr] = value
+		}
+		return dict
+
+	case ast.DictionaryDeclarationNode:
+		// Handle dictionary declarations (e.g., kamusi data = {})
+		dictValue := Interpret(n.Value, env)
+		env.Set(n.Name, dictValue)
+		return dictValue
+
 	case ast.ArrayNode:
 		// Handle array literals (e.g., [1, 2, 3])
 		var elements []interface{}
@@ -158,10 +176,20 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return elements
 
 	case ast.ArrayAccessNode:
-		// Handle array access (e.g., arr[0])
+		// Handle array access (e.g., arr[0]) or dictionary access (e.g., dict["key"])
 		arrayValue := Interpret(n.Array, env)
 		indexValue := Interpret(n.Index, env)
 		
+		// Check if it's a dictionary
+		if dict, ok := arrayValue.(map[string]interface{}); ok {
+			keyStr := fmt.Sprintf("%v", indexValue)
+			if value, exists := dict[keyStr]; exists {
+				return value
+			}
+			return nil
+		}
+		
+		// Otherwise treat as array
 		if arr, ok := arrayValue.([]interface{}); ok {
 			if idx, ok := indexValue.(int); ok {
 				if idx >= 0 && idx < len(arr) {
@@ -172,11 +200,19 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return nil
 
 	case ast.ArrayAssignmentNode:
-		// Handle array assignment (e.g., arr[0] = 5)
+		// Handle array assignment (e.g., arr[0] = 5) or dictionary assignment (e.g., dict["key"] = value)
 		arrayValue := Interpret(n.Array, env)
 		indexValue := Interpret(n.Index, env)
 		newValue := Interpret(n.Value, env)
 		
+		// Check if it's a dictionary
+		if dict, ok := arrayValue.(map[string]interface{}); ok {
+			keyStr := fmt.Sprintf("%v", indexValue)
+			dict[keyStr] = newValue
+			return newValue
+		}
+		
+		// Otherwise treat as array
 		if arr, ok := arrayValue.([]interface{}); ok {
 			if idx, ok := indexValue.(int); ok {
 				if idx >= 0 && idx < len(arr) {
@@ -371,8 +407,20 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if i > 0 {
 					fmt.Print(" ")
 				}
-				// Special formatting for arrays
-				if arr, ok := result.([]interface{}); ok {
+				// Special formatting for dictionaries
+				if dict, ok := result.(map[string]interface{}); ok {
+					fmt.Print("{")
+					first := true
+					for key, value := range dict {
+						if !first {
+							fmt.Print(", ")
+						}
+						fmt.Printf("%q: %v", key, value)
+						first = false
+					}
+					fmt.Print("}")
+				} else if arr, ok := result.([]interface{}); ok {
+					// Special formatting for arrays
 					fmt.Print("[")
 					for j, elem := range arr {
 						if j > 0 {

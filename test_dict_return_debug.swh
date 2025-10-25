@@ -1,0 +1,13 @@
+kazi make_person(maneno jina) {
+    kamusi p = {"jina": jina}
+    andika("Inside function, p:", p)
+    andika("Inside function, p[jina]:", p["jina"])
+    rudisha p
+}
+
+kazi kuu() {
+    andika("Calling make_person...")
+    kamusi mtu = make_person("Amina")
+    andika("After call, mtu:", mtu)
+    andika("After call, mtu[jina]:", mtu["jina"])
+}

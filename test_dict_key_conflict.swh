@@ -1,0 +1,9 @@
+kazi test(maneno jina) {
+    kamusi p = {"name": jina}
+    andika("p:", p)
+    andika("p[name]:", p["name"])
+}
+
+kazi kuu() {
+    test("Amina")
+}

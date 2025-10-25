@@ -1,0 +1,14 @@
+kazi make_person(maneno jina) {
+    kamusi p = {"jina": jina}
+    rudisha p
+}
+
+kazi print_name(kamusi person) {
+    andika("Name:", person["jina"])
+}
+
+kazi kuu() {
+    kamusi mtu = make_person("Amina")
+    andika("Direct:", mtu["jina"])
+    print_name(mtu)
+}

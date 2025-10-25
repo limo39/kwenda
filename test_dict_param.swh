@@ -1,0 +1,9 @@
+kazi print_name(kamusi person) {
+    andika("Name:", person["jina"])
+}
+
+kazi kuu() {
+    kamusi p = {"jina": "Amina"}
+    andika("Direct access:", p["jina"])
+    print_name(p)
+}

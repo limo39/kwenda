@@ -1,0 +1,9 @@
+kazi make_dict() {
+    kamusi d = {"x": 10}
+    rudisha d
+}
+
+kazi kuu() {
+    kamusi result = make_dict()
+    andika("Result:", result)
+}

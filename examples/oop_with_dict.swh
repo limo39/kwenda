@@ -1,0 +1,137 @@
+# Object-Oriented Programming with Dictionaries
+# Using dictionaries to create true objects with properties
+
+############################################
+# "Class": Mtu (Person) with Dictionary
+############################################
+
+# Constructor - creates a person object
+kazi Mtu_unda(maneno jina, namba umri, maneno mji) {
+    kamusi mtu = {"jina": jina, "umri": umri, "mji": mji}
+    andika("[Mtu] Created:", jina, "age:", umri, "from:", mji)
+    rudisha mtu
+}
+
+# Method: Greet
+kazi Mtu_salamu(kamusi mtu) {
+    andika("Habari! Jina langu ni", mtu["jina"])
+}
+
+# Method: Introduce
+kazi Mtu_jitambulishe(kamusi mtu) {
+    andika("Jina langu ni", mtu["jina"])
+    andika("Nina umri wa miaka", mtu["umri"])
+    andika("Ninatoka", mtu["mji"])
+}
+
+# Method: Celebrate birthday
+kazi Mtu_siku_ya_kuzaliwa(kamusi mtu) {
+    mtu["umri"] = mtu["umri"] + 1
+    andika("🎉 Happy Birthday", mtu["jina"], "! You are now", mtu["umri"], "years old")
+}
+
+# Method: Move to new city
+kazi Mtu_hamia(kamusi mtu, maneno mji_mpya) {
+    maneno mji_zamani = mtu["mji"]
+    mtu["mji"] = mji_mpya
+    andika(mtu["jina"], "moved from", mji_zamani, "to", mji_mpya)
+}
+
+############################################
+# "Class": Gari (Car) with Dictionary
+############################################
+
+# Constructor
+kazi Gari_unda(maneno aina, namba mwaka, maneno rangi) {
+    kamusi gari = {"aina": aina, "mwaka": mwaka, "rangi": rangi, "kilomita": 0}
+    andika("[Gari] Created:", aina, "year:", mwaka, "color:", rangi)
+    rudisha gari
+}
+
+# Method: Drive
+kazi Gari_endesha(kamusi gari, namba umbali) {
+    gari["kilomita"] = gari["kilomita"] + umbali
+    andika("🚗", gari["aina"], "drove", umbali, "km. Total:", gari["kilomita"], "km")
+}
+
+# Method: Repaint
+kazi Gari_paka_rangi(kamusi gari, maneno rangi_mpya) {
+    maneno rangi_zamani = gari["rangi"]
+    gari["rangi"] = rangi_mpya
+    andika("🎨", gari["aina"], "repainted from", rangi_zamani, "to", rangi_mpya)
+}
+
+# Method: Get info
+kazi Gari_maelezo(kamusi gari) {
+    andika("Car:", gari["aina"])
+    andika("  Year:", gari["mwaka"])
+    andika("  Color:", gari["rangi"])
+    andika("  Mileage:", gari["kilomita"], "km")
+}
+
+############################################
+# Main Program
+############################################
+
+kazi kuu() {
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║         OOP WITH DICTIONARIES - FULL DEMO                  ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+    andika("")
+    
+    # Demo 1: Person Objects with State
+    andika("=== Demo 1: Person Objects with State ===")
+    andika("")
+    
+    kamusi mtu1 = Mtu_unda("Amina", 25, "Dar es Salaam")
+    kamusi mtu2 = Mtu_unda("Juma", 30, "Arusha")
+    andika("")
+    
+    Mtu_salamu(mtu1)
+    Mtu_salamu(mtu2)
+    andika("")
+    
+    Mtu_jitambulishe(mtu1)
+    andika("")
+    
+    Mtu_siku_ya_kuzaliwa(mtu1)
+    andika("")
+    
+    Mtu_hamia(mtu2, "Mwanza")
+    andika("")
+    
+    # Demo 2: Car Objects with State
+    andika("=== Demo 2: Car Objects with State ===")
+    andika("")
+    
+    kamusi gari1 = Gari_unda("Toyota", 2020, "Nyekundu")
+    kamusi gari2 = Gari_unda("Honda", 2022, "Bluu")
+    andika("")
+    
+    Gari_endesha(gari1, 50)
+    Gari_endesha(gari1, 30)
+    Gari_endesha(gari1, 20)
+    andika("")
+    
+    Gari_paka_rangi(gari1, "Kijani")
+    andika("")
+    
+    Gari_maelezo(gari1)
+    andika("")
+    
+    Gari_endesha(gari2, 100)
+    Gari_maelezo(gari2)
+    andika("")
+    
+    # Demo 3: Accessing Object Properties
+    andika("=== Demo 3: Direct Property Access ===")
+    andika("")
+    
+    andika(mtu1["jina"], "is", mtu1["umri"], "years old")
+    andika(gari1["aina"], "has driven", gari1["kilomita"], "km")
+    andika("")
+    
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║              OOP WITH DICTIONARIES COMPLETE                ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+}
