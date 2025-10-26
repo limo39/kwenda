@@ -12,6 +12,6 @@ darasa Mtu {
 }
 
 kazi kuu() {
-    kamusi mtu1 = unda Mtu("Amina", 25, "Dar")
+    kamusi mtu1 = unda Mtu("Amina", "25", "Dar")
     andika("Result:", mtu1)
 }

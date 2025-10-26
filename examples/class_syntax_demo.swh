@@ -1,0 +1,89 @@
+# Class Syntax Demo - Using darasa keyword
+
+darasa Mtu {
+    maneno jina
+    namba umri
+    maneno mji
+    
+    kazi unda(maneno j, namba u, maneno m) {
+        hii.jina = j
+        hii.umri = u
+        hii.mji = m
+    }
+    
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+        andika("Nina umri wa miaka", hii.umri)
+    }
+    
+    kazi siku_ya_kuzaliwa() {
+        hii.umri = hii.umri + 1
+        andika("🎉 Happy Birthday", hii.jina, "! You are now", hii.umri)
+    }
+}
+
+darasa Gari {
+    maneno aina
+    namba mwaka
+    maneno rangi
+    namba kilomita
+    
+    kazi unda(maneno a, namba m, maneno r) {
+        hii.aina = a
+        hii.mwaka = m
+        hii.rangi = r
+        hii.kilomita = 0
+    }
+    
+    kazi endesha(namba umbali) {
+        hii.kilomita = hii.kilomita + umbali
+        andika("🚗", hii.aina, "drove", umbali, "km. Total:", hii.kilomita, "km")
+    }
+    
+    kazi paka_rangi(maneno rangi_mpya) {
+        andika("🎨 Repainting", hii.aina, "from", hii.rangi, "to", rangi_mpya)
+        hii.rangi = rangi_mpya
+    }
+}
+
+kazi kuu() {
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║              CLASS SYNTAX DEMO (darasa)                    ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+    andika("")
+    
+    # Create person instances
+    andika("=== Creating Person Objects ===")
+    kamusi mtu1 = unda Mtu("Amina", 25, "Dar es Salaam")
+    kamusi mtu2 = unda Mtu("Juma", 30, "Arusha")
+    andika("")
+    
+    # Call methods - Note: methods still need object passed explicitly
+    andika("=== Person Methods ===")
+    andika("Person 1:")
+    andika("  Name:", mtu1["jina"])
+    andika("  Age:", mtu1["umri"])
+    andika("  City:", mtu1["mji"])
+    andika("")
+    
+    andika("Person 2:")
+    andika("  Name:", mtu2["jina"])
+    andika("  Age:", mtu2["umri"])
+    andika("  City:", mtu2["mji"])
+    andika("")
+    
+    # Create car instances
+    andika("=== Creating Car Objects ===")
+    kamusi gari1 = unda Gari("Toyota", 2020, "Nyekundu")
+    kamusi gari2 = unda Gari("Honda", 2022, "Bluu")
+    andika("")
+    
+    andika("=== Car Properties ===")
+    andika("Car 1:", gari1["aina"], "-", gari1["rangi"], "(", gari1["mwaka"], ")")
+    andika("Car 2:", gari2["aina"], "-", gari2["rangi"], "(", gari2["mwaka"], ")")
+    andika("")
+    
+    andika("╔════════════════════════════════════════════════════════════╗")
+    andika("║                  CLASS DEMO COMPLETE                       ║")
+    andika("╚════════════════════════════════════════════════════════════╝")
+}

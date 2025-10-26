@@ -509,7 +509,7 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 					break
 				}
 				// Check for next member assignment or regular assignment
-				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && (tokens[end+1].Value == "=" || tokens[end+1].Value == ".") {
+				if end+1 < len(tokens) && (tokens[end].Type == lexer.TokenIdentifier || tokens[end].Value == "hii") && (tokens[end+1].Value == "=" || tokens[end+1].Value == ".") {
 					break
 				}
 				end++
