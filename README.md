@@ -18,8 +18,11 @@
 - **Error Handling**: Try/catch/finally blocks with `jaribu`/`shika`/`hatimaye`
 - **Module System**: Multi-file support with imports using `leta`
 - **Array Operations**: Full array support with manipulation functions
+- **Dictionary/Map Data Structures**: Key-value storage with `kamusi` keyword
 - **File I/O**: Read, write, create, and delete files
-- **Object-Oriented Programming**: Function-based OOP with constructor and method patterns
+- **Object-Oriented Programming**: Full OOP support with classes, objects, and inheritance
+- **Class Syntax**: Define classes with `darasa` keyword, create instances with `unda`
+- **Member Access**: Dot notation for properties (`hii.property`)
 - **Educational Focus**: Perfect for learning programming concepts in Swahili
 
 ## 🚀 Quick Start
@@ -91,6 +94,10 @@ The interpreter will execute the program specified in `main.go`. You can change 
 | `shika` | catch | Catch block for handling errors |
 | `hatimaye` | finally | Finally block (always executes) |
 | `tupa` | throw | Throw an error |
+| `kamusi` | dictionary/map | Declare a dictionary variable |
+| `darasa` | class | Define a class |
+| `unda` | new/create | Create a class instance |
+| `hii` | this/self | Reference to current instance |
 
 ### Basic Syntax
 
@@ -103,6 +110,7 @@ boolean si_kweli = uwongo
 maneno jina = "Amina"
 maneno salamu = "Habari"
 orodha namba namba_za_kwanza = [1, 2, 3, 4, 5]  # Array declaration
+kamusi person = {"jina": "Amina", "umri": 25}    # Dictionary declaration
 ```
 
 #### Function Definition
@@ -316,6 +324,99 @@ kazi kuu() {
 }
 
 # Comment at the end of the file
+```
+
+### Dictionaries (Maps)
+
+Kwenda supports dictionary/map data structures for key-value storage:
+
+```swahili
+# Create dictionary
+kamusi person = {"jina": "Amina", "umri": 25, "mji": "Dar es Salaam"}
+
+# Access values
+maneno name = person["jina"]
+namba age = person["umri"]
+
+# Modify values
+person["umri"] = 26
+
+# Add new keys
+person["kazi"] = "Mwalimu"
+
+# Iterate through properties (access by key)
+andika("Name:", person["jina"])
+andika("Age:", person["umri"])
+andika("City:", person["mji"])
+andika("Job:", person["kazi"])
+```
+
+### Object-Oriented Programming
+
+#### Class Syntax
+
+Define classes using the `darasa` keyword:
+
+```swahili
+darasa Mtu {
+    # Property declarations
+    maneno jina
+    namba umri
+    maneno mji
+    
+    # Constructor (special method named 'unda')
+    kazi unda(maneno j, namba u, maneno m) {
+        hii.jina = j      # 'hii' refers to current instance (this/self)
+        hii.umri = u
+        hii.mji = m
+    }
+    
+    # Methods
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+    }
+    
+    kazi siku_ya_kuzaliwa() {
+        hii.umri = hii.umri + 1
+        andika("Happy Birthday! You are now", hii.umri)
+    }
+}
+```
+
+#### Creating Instances
+
+Use the `unda` keyword to create class instances:
+
+```swahili
+# Create instances
+kamusi mtu1 = unda Mtu("Amina", 25, "Dar es Salaam")
+kamusi mtu2 = unda Mtu("Juma", 30, "Arusha")
+
+# Access properties
+andika("Name:", mtu1["jina"])
+andika("Age:", mtu1["umri"])
+
+# Modify properties
+mtu1["umri"] = 26
+```
+
+#### The `hii` Keyword
+
+Inside class methods, use `hii` to reference the current instance:
+
+```swahili
+darasa Counter {
+    namba count
+    
+    kazi unda() {
+        hii.count = 0
+    }
+    
+    kazi ongeza() {
+        hii.count = hii.count + 1
+        andika("Count:", hii.count)
+    }
+}
 ```
 
 ### Module System
@@ -954,111 +1055,99 @@ After replacement: Habari Fatuma kutoka Dar es Salaam
 Complex greeting: Habari za asubuhi, Amina!
 ```
 
-### Example 13: Object-Oriented Programming
+### Example 13: Dictionaries (Maps)
 
-Kwenda supports OOP using a function-based pattern with constructor and method functions:
+Kwenda supports dictionary/map data structures for key-value storage:
 
 ```swahili
-############################################
-# "Class": Mtu (Person)
-############################################
-
-# Constructor
-kazi Mtu_unda(maneno jina, namba umri, maneno mji) {
-    andika("[Mtu] Created:", jina, "age:", umri, "from:", mji)
-    rudisha jina
-}
-
-# Method: Greet
-kazi Mtu_salamu(maneno jina) {
-    andika("Habari! Jina langu ni", jina)
-}
-
-# Method: Introduce
-kazi Mtu_jitambulishe(maneno jina, namba umri, maneno mji) {
-    andika("Jina langu ni", jina)
-    andika("Nina umri wa miaka", umri)
-    andika("Ninatoka", mji)
-}
-
-############################################
-# "Class": Gari (Car)
-############################################
-
-# Constructor
-kazi Gari_unda(maneno aina, namba mwaka) {
-    andika("[Gari] Created:", aina, "year:", mwaka)
-    rudisha aina
-}
-
-# Method: Start engine
-kazi Gari_washa(maneno aina) {
-    andika("🚗", aina, "- Injini imewashwa!")
-}
-
-# Method: Drive
-kazi Gari_endesha(maneno aina, namba umbali) {
-    andika("🚗", aina, "- Inaendesha kilomita", umbali)
-}
-
-############################################
-# Main Program
-############################################
-
 kazi kuu() {
-    andika("=== OOP Demo ===")
-    andika("")
+    # Create dictionary
+    kamusi person = {"jina": "Amina", "umri": 25, "mji": "Dar es Salaam"}
     
-    # Create person instances
-    maneno mtu1 = Mtu_unda("Amina", 25, "Dar es Salaam")
-    maneno mtu2 = Mtu_unda("Juma", 30, "Arusha")
-    andika("")
+    # Access values
+    andika("Name:", person["jina"])
+    andika("Age:", person["umri"])
     
-    # Call person methods
-    Mtu_salamu(mtu1)
-    Mtu_salamu(mtu2)
-    andika("")
+    # Modify values
+    person["umri"] = 26
     
-    Mtu_jitambulishe(mtu1, 25, "Dar es Salaam")
-    andika("")
+    # Add new keys
+    person["kazi"] = "Mwalimu"
     
-    # Create car instances
-    maneno gari1 = Gari_unda("Toyota", 2020)
-    maneno gari2 = Gari_unda("Honda", 2022)
-    andika("")
-    
-    # Call car methods
-    Gari_washa(gari1)
-    Gari_endesha(gari1, 50)
-    andika("")
-    
-    Gari_washa(gari2)
-    Gari_endesha(gari2, 100)
+    # Print dictionary
+    andika("Person:", person)
 }
 ```
 
 **Output:**
 ```
-=== OOP Demo ===
+Name: Amina
+Age: 25
+Person: {"jina": Amina, "umri": 26, "mji": Dar es Salaam, "kazi": Mwalimu}
+```
 
-[Mtu] Created: Amina age: 25 from: Dar es Salaam
-[Mtu] Created: Juma age: 30 from: Arusha
+### Example 14: Object-Oriented Programming with Classes
 
-Habari! Jina langu ni Amina
-Habari! Jina langu ni Juma
+Kwenda supports full OOP with class syntax using the `darasa` keyword:
 
-Jina langu ni Amina
-Nina umri wa miaka 25
-Ninatoka Dar es Salaam
+```swahili
+# Define a class with darasa keyword
+darasa Mtu {
+    maneno jina
+    namba umri
+    maneno mji
+    
+    # Constructor method
+    kazi unda(maneno j, namba u, maneno m) {
+        hii.jina = j
+        hii.umri = u
+        hii.mji = m
+    }
+    
+    # Method
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+        andika("Nina umri wa miaka", hii.umri)
+    }
+}
 
-[Gari] Created: Toyota year: 2020
-[Gari] Created: Honda year: 2022
+# Define another class
+darasa Gari {
+    maneno aina
+    namba mwaka
+    maneno rangi
+    
+    kazi unda(maneno a, namba m, maneno r) {
+        hii.aina = a
+        hii.mwaka = m
+        hii.rangi = r
+    }
+}
 
-🚗 Toyota - Injini imewashwa!
-🚗 Toyota - Inaendesha kilomita 50
+kazi kuu() {
+    # Create instances using unda keyword
+    kamusi mtu1 = unda Mtu("Amina", 25, "Dar es Salaam")
+    kamusi mtu2 = unda Mtu("Juma", 30, "Arusha")
+    
+    # Access properties
+    andika("Person 1:", mtu1["jina"], "-", mtu1["umri"], "years old")
+    andika("Person 2:", mtu2["jina"], "-", mtu2["umri"], "years old")
+    
+    # Create car instances
+    kamusi gari1 = unda Gari("Toyota", 2020, "Nyekundu")
+    kamusi gari2 = unda Gari("Honda", 2022, "Bluu")
+    
+    andika("Car 1:", gari1["aina"], "(", gari1["mwaka"], ")")
+    andika("Car 2:", gari2["aina"], "(", gari2["mwaka"], ")")
+}
+```
 
-🚗 Honda - Injini imewashwa!
-🚗 Honda - Inaendesha kilomita 100
+**Output:**
+```
+Person 1: Amina - 25 years old
+Person 2: Juma - 30 years old
+Car 1: Toyota ( 2020 )
+Car 2: Honda ( 2022 )
 ```
 
 **OOP Pattern:**
@@ -1188,9 +1277,13 @@ The interpreter follows a traditional architecture:
 - [x] Comments support with `#` ✅
 - [x] Improved error messages with context ✅
 - [x] Object-oriented programming (function-based pattern) ✅
-- [ ] Dictionary/map data structures (for full OOP support)
-- [ ] Class syntax with `darasa` keyword
-- [ ] Dictionary/map dat a structures
+- [x] Dictionary/map data structures (`kamusi` keyword) ✅
+- [x] Class syntax with `darasa` keyword ✅
+- [x] Instance creation with `unda` keyword ✅
+- [x] Self-reference with `hii` keyword ✅
+- [x] Dot notation for member access ✅
+- [ ] Method calls with dot notation (e.g., `object.method()`)
+- [ ] Class inheritance
 - [ ] Lambda functions
 - [ ] List comprehensions
 
@@ -1215,6 +1308,8 @@ This project is open source. Feel free to use, modify, and distribute.
 - **[BOOLEANS.md](BOOLEANS.md)**: Complete guide to boolean data types and logical operations
 - **[STRINGS.md](STRINGS.md)**: Complete guide to string manipulation and functions
 - **[OOP.md](OOP.md)**: Complete guide to object-oriented programming patterns
+- **[DICTIONARY_SUMMARY.md](DICTIONARY_SUMMARY.md)**: Dictionary/map implementation details
+- **[OOP_SUMMARY.md](OOP_SUMMARY.md)**: OOP implementation summary and examples
 
 ## 🎓 Educational Use
 
