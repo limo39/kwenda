@@ -1,0 +1,17 @@
+darasa Mtu {
+    maneno jina
+    namba umri
+    maneno mji
+    
+    kazi unda(maneno j, maneno u, maneno m) {
+        hii.jina = j
+        hii.umri = u
+        hii.mji = m
+        andika("[Mtu] Created:", hii.jina)
+    }
+}
+
+kazi kuu() {
+    kamusi mtu1 = unda Mtu("Amina", 25, "Dar")
+    andika("Result:", mtu1)
+}

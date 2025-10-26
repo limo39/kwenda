@@ -1,0 +1,15 @@
+darasa Test {
+    maneno name
+    
+    kazi unda(maneno n) {
+        hii.name = n
+        andika("hii:", hii)
+        andika("hii.name:", hii.name)
+        maneno x = hii.name
+        andika("x:", x)
+    }
+}
+
+kazi kuu() {
+    kamusi obj = unda Test("Hello")
+}

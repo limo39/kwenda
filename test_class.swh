@@ -1,0 +1,46 @@
+# Test class syntax with darasa keyword
+
+darasa Mtu {
+    maneno jina
+    namba umri
+    maneno mji
+    
+    kazi unda(maneno j, namba u, maneno m) {
+        hii.jina = j
+        hii.umri = u
+        hii.mji = m
+        andika("[Mtu] Created:", hii.jina)
+    }
+    
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+    }
+    
+    kazi jitambulishe() {
+        andika("Jina:", hii.jina)
+        andika("Umri:", hii.umri)
+        andika("Mji:", hii.mji)
+    }
+}
+
+kazi kuu() {
+    andika("=== Class Syntax Test ===")
+    andika("")
+    
+    # Create instances using unda keyword
+    kamusi mtu1 = unda Mtu("Amina", 25, "Dar es Salaam")
+    kamusi mtu2 = unda Mtu("Juma", 30, "Arusha")
+    andika("")
+    
+    # Access properties
+    andika("Person 1:", mtu1)
+    andika("Person 2:", mtu2)
+    andika("")
+    
+    andika("Person 1 name:", mtu1["jina"])
+    andika("Person 1 age:", mtu1["umri"])
+    andika("Person 1 city:", mtu1["mji"])
+    andika("")
+    
+    andika("=== Test Complete ===")
+}

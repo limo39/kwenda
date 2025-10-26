@@ -145,7 +145,7 @@ func Lex(input string) []Token {
 			} else {
 				tokens = append(tokens, Token{Type: TokenOperator, Value: string(char)})
 			}
-		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' || char == ':' {
+		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' || char == ':' || char == '.' {
 			// Handle punctuation
 			if currentToken.Len() > 0 {
 				tokenValue := currentToken.String()

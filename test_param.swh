@@ -1,0 +1,7 @@
+kazi test(maneno x) {
+    andika("Parameter x:", x)
+}
+
+kazi kuu() {
+    test("Hello")
+}

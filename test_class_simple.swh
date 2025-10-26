@@ -1,0 +1,16 @@
+darasa Test {
+    maneno name
+    
+    kazi unda(maneno n) {
+        andika("Constructor called with:", n)
+        andika("hii is:", hii)
+        hii.name = n
+        andika("After assignment, hii is:", hii)
+    }
+}
+
+kazi kuu() {
+    kamusi obj = unda Test("Hello")
+    andika("Final object:", obj)
+    andika("Name:", obj["name"])
+}

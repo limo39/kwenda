@@ -1,0 +1,20 @@
+darasa Test {
+    maneno a
+    maneno b
+    maneno c
+    
+    kazi unda(maneno x, maneno y, maneno z) {
+        andika("Setting a")
+        hii.a = x
+        andika("Setting b")
+        hii.b = y
+        andika("Setting c")
+        hii.c = z
+        andika("Done")
+    }
+}
+
+kazi kuu() {
+    kamusi obj = unda Test("A", "B", "C")
+    andika("Final:", obj)
+}

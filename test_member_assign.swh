@@ -1,0 +1,6 @@
+kazi kuu() {
+    kamusi obj = {"x": 10}
+    andika("Before:", obj)
+    obj.x = 20
+    andika("After:", obj)
+}

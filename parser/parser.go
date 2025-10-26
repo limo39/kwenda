@@ -47,6 +47,36 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			continue
 		}
 
+		// Handle class definitions
+		if tokens[i].Value == "darasa" {
+			// Find the end of this class
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+
+			// Parse this class
+			class := Parse(tokens[i:end])
+			if class != nil {
+				functions = append(functions, class)
+			}
+			i = end
+			continue
+		}
+
 		// Find the end of the current function
 		if tokens[i].Value == "kazi" {
 			// Find the end of this function
@@ -140,6 +170,16 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ast.ThrowNode{Message: ParseExpression(tokens[1:endIndex])}
 	}
 
+	// Handle class definitions
+	if tokens[0].Value == "darasa" {
+		return ParseClassDefinition(tokens)
+	}
+
+	// Handle class instantiation (unda ClassName(args))
+	if tokens[0].Value == "unda" && len(tokens) >= 3 {
+		return ParseNewInstance(tokens)
+	}
+
 	// Handle function definitions
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" {
 		return ParseFunctionDefinition(tokens)
@@ -194,6 +234,21 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 			Name:     tokens[2].Value,
 			Type:     tokens[1].Value,
 			Elements: elements,
+		}
+	}
+
+	// Handle member assignment (e.g., hii.jina = "Amina")
+	if len(tokens) >= 5 && tokens[1].Value == "." && tokens[3].Value == "=" {
+		var object ast.ASTNode
+		if tokens[0].Value == "hii" {
+			object = ast.ThisNode{}
+		} else {
+			object = ast.IdentifierNode{Value: tokens[0].Value}
+		}
+		return ast.MemberAssignmentNode{
+			Object: object,
+			Member: tokens[2].Value,
+			Value:  ParseExpression(tokens[4:]),
 		}
 	}
 
@@ -446,6 +501,27 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
+		// Parse member assignment (e.g., obj.property = value or hii.property = value)
+		if i+4 < len(tokens) && tokens[i+1].Value == "." && tokens[i+3].Value == "=" {
+			end := i + 4
+			for end < len(tokens) {
+				if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
+					break
+				}
+				// Check for next member assignment or regular assignment
+				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && (tokens[end+1].Value == "=" || tokens[end+1].Value == ".") {
+					break
+				}
+				end++
+			}
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
 		// Parse array/dictionary assignment (e.g., arr[0] = 5 or dict["key"] = value)
 		if i+3 < len(tokens) && tokens[i].Type == lexer.TokenIdentifier && tokens[i+1].Value == "[" {
 			bracketEnd := -1
@@ -529,6 +605,11 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Handle class instantiation (unda ClassName(args))
+	if tokens[0].Value == "unda" && len(tokens) >= 3 {
+		return ParseNewInstance(tokens)
+	}
+
 	// Handle array literals
 	if len(tokens) >= 2 && tokens[0].Value == "[" {
 		return ParseArrayLiteral(tokens)
@@ -562,6 +643,25 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle member access with dot notation (e.g., hii.jina) - MUST come before 'hii' keyword check!
+	if len(tokens) >= 3 && tokens[1].Value == "." {
+		var object ast.ASTNode
+		if tokens[0].Value == "hii" {
+			object = ast.ThisNode{}
+		} else {
+			object = ast.IdentifierNode{Value: tokens[0].Value}
+		}
+		return ast.MemberAccessNode{
+			Object: object,
+			Member: tokens[2].Value,
+		}
+	}
+
+	// Handle 'hii' keyword (this/self)
+	if tokens[0].Value == "hii" {
+		return ast.ThisNode{}
+	}
+
 	// Handle boolean literals
 	if tokens[0].Value == "kweli" {
 		return ast.BooleanNode{Value: true}
@@ -579,6 +679,8 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 	if tokens[0].Type == lexer.TokenNumber {
 		return ast.NumberNode{Value: tokens[0].Value}
 	}
+
+
 
 	// Handle array/dictionary access (e.g., arr[0] or dict["key"])
 	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
@@ -609,7 +711,7 @@ func ParseArguments(tokens []lexer.Token) []ast.ASTNode {
 		if token.Value == "," || token.Value == ")" {
 			if len(currentArg) > 0 {
 				if len(currentArg) == 1 && currentArg[0].Type == lexer.TokenString {
-					args = append(args, ast.IdentifierNode{Value: currentArg[0].Value})
+					args = append(args, ast.StringNode{Value: currentArg[0].Value})
 				} else {
 					args = append(args, ParseExpression(currentArg))
 				}
@@ -1227,4 +1329,142 @@ func ParseDictionaryPair(tokens []lexer.Token) *ast.DictionaryPair {
 		Key:   key,
 		Value: value,
 	}
+}
+
+
+// ParseClassDefinition parses class definitions (darasa ClassName { ... })
+func ParseClassDefinition(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 3 || tokens[0].Value != "darasa" {
+		return nil
+	}
+
+	className := tokens[1].Value
+
+	// Find the class body
+	braceStart := -1
+	braceEnd := -1
+	braceCount := 0
+
+	for i := 2; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			if braceCount == 0 {
+				braceStart = i + 1
+			}
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				braceEnd = i
+				break
+			}
+		}
+	}
+
+	if braceStart == -1 || braceEnd == -1 {
+		return nil
+	}
+
+	// Parse class body (properties and methods)
+	var properties []ast.PropertyNode
+	var methods []ast.FunctionNode
+	var constructor *ast.FunctionNode
+
+	bodyTokens := tokens[braceStart:braceEnd]
+	i := 0
+
+	for i < len(bodyTokens) {
+		if bodyTokens[i].Value == "" {
+			i++
+			continue
+		}
+
+		// Parse property declarations (type name)
+		if (bodyTokens[i].Value == "namba" || bodyTokens[i].Value == "maneno" || bodyTokens[i].Value == "boolean" || bodyTokens[i].Value == "kamusi" || bodyTokens[i].Value == "orodha") && i+1 < len(bodyTokens) {
+			propType := bodyTokens[i].Value
+			propName := bodyTokens[i+1].Value
+			properties = append(properties, ast.PropertyNode{
+				Name: propName,
+				Type: propType,
+			})
+			i += 2
+			continue
+		}
+
+		// Parse method definitions
+		if bodyTokens[i].Value == "kazi" {
+			// Find the end of this method
+			end := i + 1
+			methodBraceCount := 0
+			foundFirstBrace := false
+
+			for end < len(bodyTokens) {
+				if bodyTokens[end].Value == "{" {
+					methodBraceCount++
+					foundFirstBrace = true
+				} else if bodyTokens[end].Value == "}" {
+					methodBraceCount--
+					if methodBraceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+
+			// Parse this method
+			method := ParseFunctionDefinition(bodyTokens[i:end])
+			if funcNode, ok := method.(ast.FunctionNode); ok {
+				// Check if it's a constructor (named "unda")
+				if funcNode.Name == "unda" {
+					constructor = &funcNode
+				} else {
+					methods = append(methods, funcNode)
+				}
+			}
+			i = end
+		} else {
+			i++
+		}
+	}
+
+	return ast.ClassNode{
+		Name:        className,
+		Properties:  properties,
+		Methods:     methods,
+		Constructor: constructor,
+	}
+}
+
+
+// ParseNewInstance parses class instantiation (unda ClassName(args))
+func ParseNewInstance(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 3 || tokens[0].Value != "unda" {
+		return nil
+	}
+
+	className := tokens[1].Value
+
+	// Find arguments
+	if tokens[2].Value == "(" {
+		// Find closing parenthesis
+		parenEnd := -1
+		for i := 3; i < len(tokens); i++ {
+			if tokens[i].Value == ")" {
+				parenEnd = i
+				break
+			}
+		}
+
+		var args []ast.ASTNode
+		if parenEnd > 3 {
+			args = ParseArguments(tokens[3 : parenEnd+1]) // Include closing paren
+		}
+
+		return ast.NewInstanceNode{
+			ClassName: className,
+			Args:      args,
+		}
+	}
+
+	return nil
 }

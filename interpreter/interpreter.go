@@ -34,6 +34,7 @@ type ErrorValue struct {
 type Environment struct {
 	Variables map[string]interface{}
 	Functions map[string]ast.FunctionNode
+	Classes   map[string]ast.ClassNode // Class definitions
 	Modules   map[string]*Environment // Module namespaces
 	Parent    *Environment // For function scope
 }
@@ -42,6 +43,7 @@ func NewEnvironment() *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
 		Functions: make(map[string]ast.FunctionNode),
+		Classes:   make(map[string]ast.ClassNode),
 		Modules:   make(map[string]*Environment),
 		Parent:    nil,
 	}
@@ -51,6 +53,7 @@ func NewChildEnvironment(parent *Environment) *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
 		Functions: parent.Functions, // Share functions with parent
+		Classes:   parent.Classes,   // Share classes with parent
 		Modules:   parent.Modules,   // Share modules with parent
 		Parent:    parent,
 	}
@@ -78,6 +81,15 @@ func (env *Environment) SetFunction(name string, function ast.FunctionNode) {
 func (env *Environment) GetFunction(name string) (ast.FunctionNode, bool) {
 	function, exists := env.Functions[name]
 	return function, exists
+}
+
+func (env *Environment) SetClass(name string, class ast.ClassNode) {
+	env.Classes[name] = class
+}
+
+func (env *Environment) GetClass(name string) (ast.ClassNode, bool) {
+	class, exists := env.Classes[name]
+	return class, exists
 }
 
 // toBool converts a value to boolean following Kwenda's rules
@@ -228,6 +240,35 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		value := Interpret(n.Value, env)
 		env.Set(n.Name, value)
 		return value
+
+	case ast.ThisNode:
+		// Handle 'hii' keyword (this/self)
+		value := env.Get("hii")
+		if value == nil {
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "'hii' inaweza kutumika tu ndani ya darasa (this can only be used inside a class)"}}
+		}
+		return value
+
+	case ast.MemberAccessNode:
+		// Handle member access (e.g., hii.jina or object.property)
+		objectValue := Interpret(n.Object, env)
+		if dict, ok := objectValue.(map[string]interface{}); ok {
+			if value, exists := dict[n.Member]; exists {
+				return value
+			}
+			return nil
+		}
+		return nil
+
+	case ast.MemberAssignmentNode:
+		// Handle member assignment (e.g., hii.jina = "Amina")
+		objectValue := Interpret(n.Object, env)
+		newValue := Interpret(n.Value, env)
+		if dict, ok := objectValue.(map[string]interface{}); ok {
+			dict[n.Member] = newValue
+			return newValue
+		}
+		return nil
 
 	case ast.IdentifierNode:
 		// Check if it's a string literal (starts and ends with quotes)
@@ -1073,6 +1114,59 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		message := Interpret(n.Message, env)
 		errorMsg := fmt.Sprintf("%v", message)
 		return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg}}
+
+	case ast.ClassNode:
+		// Handle class definitions
+		// Store class definition in environment
+		env.SetClass(n.Name, n)
+		return nil
+
+	case ast.NewInstanceNode:
+		// Handle class instantiation (unda ClassName(args))
+		classDef, exists := env.GetClass(n.ClassName)
+		if !exists {
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: fmt.Sprintf("Darasa '%s' halijulikani (Class '%s' not found)", n.ClassName, n.ClassName)}}
+		}
+
+		// Create new instance as a dictionary
+		instance := make(map[string]interface{})
+
+		// Initialize properties with default values
+		for _, prop := range classDef.Properties {
+			instance[prop.Name] = nil
+		}
+
+		// Call constructor if it exists
+		if classDef.Constructor != nil {
+			// Create environment for constructor
+			constructorEnv := NewChildEnvironment(env)
+			
+			// Set 'hii' to refer to the instance
+			constructorEnv.Set("hii", instance)
+
+			// Bind constructor parameters
+			for i, param := range classDef.Constructor.Parameters {
+				if i < len(n.Args) {
+					argValue := Interpret(n.Args[i], env)
+					constructorEnv.Set(param.Name, argValue)
+				}
+			}
+
+			// Execute constructor body
+			for _, statement := range classDef.Constructor.Body {
+				result := Interpret(statement, constructorEnv)
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlThrow {
+						return cf
+					}
+				}
+			}
+		}
+
+		// Store class name in instance for method calls
+		instance["__class__"] = n.ClassName
+
+		return instance
 
 	case ast.FunctionNode:
 		// Handle function definitions

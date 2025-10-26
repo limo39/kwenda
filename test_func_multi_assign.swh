@@ -1,0 +1,13 @@
+kazi test(maneno a, maneno b, maneno c) {
+    kamusi obj = {"x": 1, "y": 2, "z": 3}
+    obj.x = a
+    obj.y = b
+    obj.z = c
+    andika("Object:", obj)
+    rudisha obj
+}
+
+kazi kuu() {
+    kamusi result = test("A", "B", "C")
+    andika("Result:", result)
+}
