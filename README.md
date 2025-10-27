@@ -583,9 +583,11 @@ jaribu {
 }
 ```
 
-## 📚 Examples
+## 📚 Quick Examples
 
-> **Note**: All examples are available in the `examples/` directory. You can run any example by changing the file path in `main.go`.
+> **For comprehensive examples, see [EXAMPLES.md](EXAMPLES.md)**
+> 
+> All example files are in the `examples/` directory. Run with: `go run main.go examples/filename.swh`
 
 ### Example 1: Simple Calculator
 ```swahili
