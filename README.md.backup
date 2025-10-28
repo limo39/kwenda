@@ -592,43 +592,571 @@ jaribu {
 ### Hello World
 ```swahili
 kazi kuu() {
-    andika("Habari Dunia!")
+    namba x = ingiza("Ingiza namba ya kwanza:")
+    namba y = ingiza("Ingiza namba ya pili:")
+    
+    namba jibu = x + y
+    andika("Jibu ni:", jibu)
 }
 ```
 
-### Variables and Functions
+**Output:**
+```
+Ingiza namba ya kwanza: 10
+Ingiza namba ya pili: 15
+Jibu ni: 25
+```
+
+### Example 2: Conditional Logic
+```swahili
+kazi kuu() {
+    namba umri = ingiza("Ingiza umri wako:")
+    
+    kama umri >= 18 {
+        andika("Wewe ni mtu mzima")
+    } sivyo {
+        andika("Wewe ni mtoto")
+    }
+    
+    kama umri == 21 {
+        andika("Hongera! Umefika umri wa miaka 21!")
+    }
+}
+```
+
+**Output:**
+```
+Ingiza umri wako: 25
+Wewe ni mtu mzima
+```
+
+### Example 3: Nested Conditionals
+```swahili
+kazi kuu() {
+    namba alama = ingiza("Ingiza alama yako:")
+    
+    kama alama >= 90 {
+        andika("A - Bora sana!")
+    } sivyo {
+        kama alama >= 80 {
+            andika("B - Nzuri")
+        } sivyo {
+            kama alama >= 70 {
+                andika("C - Wastani")
+            } sivyo {
+                andika("D au F - Jitahidi zaidi")
+            }
+        }
+    }
+}
+```
+
+### Example 4: While Loop
+```swahili
+kazi kuu() {
+    namba i = 1
+    
+    andika("Mfuatano wa namba kutoka 1 hadi 5:")
+    
+    wakati i <= 5 {
+        andika("Namba:", i)
+        i = i + 1
+    }
+    
+    andika("Mwisho wa loop!")
+}
+```
+
+**Output:**
+```
+Mfuatano wa namba kutoka 1 hadi 5:
+Namba: 1
+Namba: 2
+Namba: 3
+Namba: 4
+Namba: 5
+Mwisho wa loop!
+```
+
+### Example 5: For Loop
+```swahili
+kazi kuu() {
+    andika("For loop kutoka 0 hadi 4:")
+    
+    kwa i = 0; i < 5; i = i + 1 {
+        andika("Iteration:", i)
+    }
+    
+    andika("For loop simple:")
+    namba j = 3
+    
+    kwa j > 0 {
+        andika("j ni:", j)
+        j = j - 1
+    }
+}
+```
+
+**Output:**
+```
+For loop kutoka 0 hadi 4:
+Iteration: 0
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+For loop simple:
+j ni: 3
+j ni: 2
+j ni: 1
+```
+
+### Example 8: Functions with Parameters and Return Values
 ```swahili
 kazi jumla(namba a, namba b) namba {
-    rudisha a + b
+    namba jibu = a + b
+    rudisha jibu
+}
+
+kazi salamu(namba umri) {
+    kama umri >= 18 {
+        andika("Habari za asubuhi, mtu mzima!")
+    } sivyo {
+        andika("Habari za asubuhi, kijana!")
+    }
+}
+
+kazi ni_kubwa(namba x, namba y) boolean {
+    rudisha x > y
 }
 
 kazi kuu() {
-    namba x = 10
-    namba y = 5
-    namba jibu = jumla(x, y)
+    namba jibu = jumla(10, 5)
     andika("10 + 5 =", jibu)
+    
+    salamu(25)
+    
+    boolean kubwa = ni_kubwa(8, 3)
+    andika("8 > 3:", kubwa)
 }
 ```
 
-### Classes and Objects
+**Output:**
+```
+10 + 5 = 15
+Habari za asubuhi, mtu mzima!
+8 > 3: true
+```
+
+### Example 7: Boolean Data Type
 ```swahili
+kazi kuu() {
+    boolean iko_jua = kweli
+    boolean mvua = uwongo
+    namba joto = 25
+    
+    andika("Hali ya hewa:")
+    andika("Jua:", iko_jua)
+    andika("Mvua:", mvua)
+    
+    kama iko_jua na joto > 20 {
+        andika("Siku nzuri!")
+    } sivyo {
+        andika("Hali mbaya")
+    }
+    
+    boolean hali_nzuri = iko_jua au joto > 30
+    andika("Hali nzuri:", hali_nzuri)
+}
+```
+
+**Output:**
+```
+Hali ya hewa:
+Jua: true
+Mvua: false
+Siku nzuri!
+Hali nzuri: true
+```
+
+### Example 6: Break and Continue
+```swahili
+kazi kuu() {
+    andika("Break example:")
+    namba i = 1
+    wakati i <= 10 {
+        kama i == 5 {
+            andika("Breaking at i =", i)
+            vunja
+        }
+        andika("i =", i)
+        i = i + 1
+    }
+    
+    andika("Continue example:")
+    namba j = 0
+    wakati j < 5 {
+        j = j + 1
+        kama j == 3 {
+            andika("Skipping j =", j)
+            endelea
+        }
+        andika("j =", j)
+    }
+}
+```
+
+**Output:**
+```
+Break example:
+i = 1
+i = 2
+i = 3
+i = 4
+Breaking at i = 5
+Continue example:
+j = 1
+j = 2
+Skipping j = 3
+j = 4
+j = 5
+```
+
+### Example 9: File I/O Operations
+```swahili
+kazi kuu() {
+    # Create and manage files
+    maneno jina_faili = "data.txt"
+    unda_faili(jina_faili)
+    
+    # Write data to file
+    orodha namba namba_zangu = [10, 20, 30]
+    andika_faili(jina_faili, "NAMBA ZA MUHIMU:\n")
+    
+    namba i = 0
+    namba urefu = urefu_orodha(namba_zangu)
+    wakati i < urefu {
+        namba namba_ya_sasa = pata(namba_zangu, i)
+        andika_faili(jina_faili, "Namba ", kweli)
+        andika_faili(jina_faili, namba_ya_sasa, kweli)
+        andika_faili(jina_faili, "\n", kweli)
+        i = i + 1
+    }
+    
+    # Read and display file content
+    maneno maudhui = soma(jina_faili)
+    andika("Maudhui ya faili:")
+    andika(maudhui)
+    
+    # Check if file exists and clean up
+    boolean ipo = faili_ipo(jina_faili)
+    andika("Faili ipo:", ipo)
+    ondoa_faili(jina_faili)
+    andika("Faili imeondolewa")
+}
+```
+
+### Example 10: Error Handling
+```swahili
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Error Handling Demo ===")
+    andika("")
+    
+    # Test 1: Caught division by zero
+    andika("Test 1: Division by zero (caught)")
+    jaribu {
+        namba result = math.gawanya(100, 0)
+        andika("Result:", result)
+    } shika (error) {
+        andika("✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 2: Caught array index error
+    andika("Test 2: Array index error (caught)")
+    orodha namba nums = [10, 20, 30]
+    jaribu {
+        namba value = pata(nums, 10)
+        andika("Value:", value)
+    } shika (error) {
+        andika("✓ Error caught:", error)
+    }
+    andika("")
+    
+    # Test 3: Try-catch-finally
+    andika("Test 3: Try-catch-finally")
+    jaribu {
+        andika("Inside try block")
+        tupa "Test error"
+    } shika (e) {
+        andika("Inside catch:", e)
+    } hatimaye {
+        andika("Finally block - always executes")
+    }
+    andika("")
+    
+    # Test 4: File error handling
+    andika("Test 4: File not found (caught)")
+    jaribu {
+        maneno content = soma("nonexistent.txt")
+        andika("Content:", content)
+    } shika (error) {
+        andika("✓ Error caught:", error)
+    }
+    andika("")
+    
+    andika("Program continues after error handling")
+}
+```
+
+**Output:**
+```
+=== Error Handling Demo ===
+
+Test 1: Division by zero (caught)
+✓ Error caught: {Haiwezekani kugawanya na sifuri (Cannot divide by zero) }
+
+Test 2: Array index error (caught)
+✓ Error caught: {Index 10 ni nje ya mipaka ya orodha (urefu: 3) Katika kazi 'pata': Jaribu kutumia index kati ya 0 na 2}
+
+Test 3: Try-catch-finally
+Inside try block
+Inside catch: {Test error}
+Finally block - always executes
+
+Test 4: File not found (caught)
+✓ Error caught: {Hitilafu ya kusoma faili 'nonexistent.txt': open nonexistent.txt: no such file or directory Katika kazi 'soma': Hakikisha faili ipo na una ruhusa ya kusoma}
+
+Program continues after error handling
+```
+
+### Example 11: Module System (Multi-file Support)
+```swahili
+# File: modules/math.swh
+kazi ongeza_kubwa(namba a, namba b) {
+    rudisha a + b
+}
+
+kazi zidisha(namba a, namba b) {
+    rudisha a * b
+}
+
+kazi kiwango(namba x) {
+    kama x < 0 {
+        rudisha 0 - x
+    }
+    rudisha x
+}
+
+namba PI = 3
+
+# File: modules/strings.swh
+kazi salamu(maneno jina) {
+    rudisha "Habari " + jina + "!"
+}
+
+kazi rejesha(maneno neno) {
+    rudisha neno + " (reversed)"
+}
+
+# File: main.swh
+leta "modules/math.swh"
+leta "modules/strings.swh"
+
+kazi kuu() {
+    andika("=== Multi-file Demo ===")
+    
+    # Use math module functions
+    namba a = 10
+    namba b = 5
+    namba jumla = math.ongeza_kubwa(a, b)
+    namba bidhaa = math.zidisha(a, b)
+    
+    andika("Math operations:")
+    andika("  ", a, "+", b, "=", jumla)
+    andika("  ", a, "*", b, "=", bidhaa)
+    andika("  PI =", math.PI)
+    
+    # Use string module functions
+    maneno jina = "Mwalimu"
+    maneno salamu = strings.salamu(jina)
+    maneno reversed = strings.rejesha("Hello")
+    
+    andika("String operations:")
+    andika("  ", salamu)
+    andika("  ", reversed)
+    
+    # Test absolute value
+    namba negative = 0 - 7
+    namba absolute = math.kiwango(negative)
+    andika("  Absolute value of", negative, "is", absolute)
+}
+```
+
+**Output:**
+```
+=== Multi-file Demo ===
+Math operations:
+   10 + 5 = 15
+   10 * 5 = 50
+  PI = 3
+String operations:
+   Habari Mwalimu!
+   Hello (reversed)
+  Absolute value of -7 is 7
+```
+
+### Example 12: String Manipulation
+```swahili
+kazi kuu() {
+    # Basic string operations
+    maneno jina = "Amina"
+    maneno mji = "Dar es Salaam"
+    maneno ujumbe = "Habari " + jina + " kutoka " + mji
+    
+    andika("Basic concatenation:", ujumbe)
+    
+    namba urefu_ujumbe = urefu(ujumbe)
+    andika("Length of message:", urefu_ujumbe)
+    
+    # String manipulation functions
+    maneno kubwa = herufi_kubwa(ujumbe)
+    maneno ndogo = herufi_ndogo(ujumbe)
+    
+    andika("Uppercase:", kubwa)
+    andika("Lowercase:", ndogo)
+    
+    # Substring operations
+    maneno sehemu = kata(ujumbe, 0, 6)
+    andika("First 6 characters:", sehemu)
+    
+    # Find and replace
+    namba mahali = tafuta(ujumbe, "Amina")
+    andika("Position of 'Amina':", mahali)
+    
+    maneno mpya = badilisha(ujumbe, "Amina", "Fatuma")
+    andika("After replacement:", mpya)
+    
+    # Complex string building
+    maneno salamu_kamili = unganisha("Habari za ", "asubuhi", ", ", jina, "!")
+    andika("Complex greeting:", salamu_kamili)
+}
+```
+
+**Output:**
+```
+Basic concatenation: Habari Amina kutoka Dar es Salaam
+Length of message: 33
+Uppercase: HABARI AMINA KUTOKA DAR ES SALAAM
+Lowercase: habari amina kutoka dar es salaam
+First 6 characters: Habari
+Position of 'Amina': 7
+After replacement: Habari Fatuma kutoka Dar es Salaam
+Complex greeting: Habari za asubuhi, Amina!
+```
+
+### Example 13: Dictionaries (Maps)
+
+Kwenda supports dictionary/map data structures for key-value storage:
+
+```swahili
+kazi kuu() {
+    # Create dictionary
+    kamusi person = {"jina": "Amina", "umri": 25, "mji": "Dar es Salaam"}
+    
+    # Access values
+    andika("Name:", person["jina"])
+    andika("Age:", person["umri"])
+    
+    # Modify values
+    person["umri"] = 26
+    
+    # Add new keys
+    person["kazi"] = "Mwalimu"
+    
+    # Print dictionary
+    andika("Person:", person)
+}
+```
+
+**Output:**
+```
+Name: Amina
+Age: 25
+Person: {"jina": Amina, "umri": 26, "mji": Dar es Salaam, "kazi": Mwalimu}
+```
+
+### Example 14: Object-Oriented Programming with Classes
+
+Kwenda supports full OOP with class syntax using the `darasa` keyword:
+
+```swahili
+# Define a class with darasa keyword
 darasa Mtu {
     maneno jina
     namba umri
+    maneno mji
     
-    kazi unda(maneno j, namba u) {
+    # Constructor method
+    kazi unda(maneno j, namba u, maneno m) {
         hii.jina = j
         hii.umri = u
+        hii.mji = m
+    }
+    
+    # Method
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+        andika("Nina umri wa miaka", hii.umri)
+    }
+}
+
+# Define another class
+darasa Gari {
+    maneno aina
+    namba mwaka
+    maneno rangi
+    
+    kazi unda(maneno a, namba m, maneno r) {
+        hii.aina = a
+        hii.mwaka = m
+        hii.rangi = r
     }
 }
 
 kazi kuu() {
-    kamusi mtu = unda Mtu("Amina", 25)
-    andika("Name:", mtu["jina"])
+    # Create instances using unda keyword
+    kamusi mtu1 = unda Mtu("Amina", 25, "Dar es Salaam")
+    kamusi mtu2 = unda Mtu("Juma", 30, "Arusha")
+    
+    # Access properties
+    andika("Person 1:", mtu1["jina"], "-", mtu1["umri"], "years old")
+    andika("Person 2:", mtu2["jina"], "-", mtu2["umri"], "years old")
+    
+    # Create car instances
+    kamusi gari1 = unda Gari("Toyota", 2020, "Nyekundu")
+    kamusi gari2 = unda Gari("Honda", 2022, "Bluu")
+    
+    andika("Car 1:", gari1["aina"], "(", gari1["mwaka"], ")")
+    andika("Car 2:", gari2["aina"], "(", gari2["mwaka"], ")")
 }
 ```
 
-**For more examples, see [EXAMPLES.md](EXAMPLES.md)**
+**Output:**
+```
+Person 1: Amina - 25 years old
+Person 2: Juma - 30 years old
+Car 1: Toyota ( 2020 )
+Car 2: Honda ( 2022 )
+```
+
+**OOP Pattern:**
+- Constructor functions: `ClassName_unda(params)`
+- Method functions: `ClassName_methodName(instance, params)`
+- Naming convention groups related functions together
+- See `OOP.md` for comprehensive documentation
 
 ## 🏗️ Project Structure
 
