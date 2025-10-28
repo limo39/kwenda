@@ -34,3 +34,5 @@ Thumbs.db
 *.tmp
 *.temp
 *.log
+*.backup
+.*.backup
