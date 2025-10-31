@@ -1,0 +1,21 @@
+# Simple member assignment test
+
+darasa Test {
+    namba x
+    
+    kazi unda() {
+        hii.x = 5
+    }
+    
+    kazi set_x(namba val) {
+        hii.x = val
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test()
+    andika("Initial x:", t["x"])
+    
+    t.set_x(10)
+    andika("After set_x(10):", t["x"])
+}

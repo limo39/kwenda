@@ -180,6 +180,22 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ParseNewInstance(tokens)
 	}
 
+	// Handle method calls as statements (e.g., object.method(args))
+	// Must check before regular function calls
+	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "." && tokens[3].Value == "(" {
+		var object ast.ASTNode
+		if tokens[0].Value == "hii" {
+			object = ast.ThisNode{}
+		} else {
+			object = ast.IdentifierNode{Value: tokens[0].Value}
+		}
+		return ast.MethodCallNode{
+			Object: object,
+			Method: tokens[2].Value,
+			Args:   ParseArguments(tokens[4:]),
+		}
+	}
+
 	// Handle function definitions
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "(" {
 		return ParseFunctionDefinition(tokens)
@@ -301,6 +317,22 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 			Name:     tokens[2].Value,
 			Type:     tokens[1].Value,
 			Elements: elements,
+		}
+	}
+
+	// Handle method calls with dot notation (e.g., object.method(args))
+	// Must check before regular function calls
+	if len(tokens) >= 4 && tokens[1].Value == "." && tokens[3].Value == "(" {
+		var object ast.ASTNode
+		if tokens[0].Value == "hii" {
+			object = ast.ThisNode{}
+		} else {
+			object = ast.IdentifierNode{Value: tokens[0].Value}
+		}
+		return ast.MethodCallNode{
+			Object: object,
+			Method: tokens[2].Value,
+			Args:   ParseArguments(tokens[4:]),
 		}
 	}
 
@@ -502,14 +534,15 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 		}
 
 		// Parse member assignment (e.g., obj.property = value or hii.property = value)
-		if i+4 < len(tokens) && tokens[i+1].Value == "." && tokens[i+3].Value == "=" {
+		if i+4 < len(tokens) && (tokens[i].Type == lexer.TokenIdentifier || tokens[i].Value == "hii") && tokens[i+1].Value == "." && tokens[i+3].Value == "=" {
 			end := i + 4
 			for end < len(tokens) {
 				if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
 					break
 				}
-				// Check for next member assignment or regular assignment
-				if end+1 < len(tokens) && (tokens[end].Type == lexer.TokenIdentifier || tokens[end].Value == "hii") && (tokens[end+1].Value == "=" || tokens[end+1].Value == ".") {
+				// Check for next statement that starts with identifier/hii followed by = (but not .)
+				// This allows member access in expressions (e.g., hii.count = hii.count + 1)
+				if end+1 < len(tokens) && (tokens[end].Type == lexer.TokenIdentifier || tokens[end].Value == "hii") && tokens[end+1].Value == "=" && end+2 < len(tokens) && tokens[end+2].Value != "=" {
 					break
 				}
 				end++
@@ -562,6 +595,26 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 				// Stop at another assignment statement (identifier followed by =)
 				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
 					break
+				}
+				end++
+			}
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse method calls (e.g., object.method(args))
+		if i+3 < len(tokens) && tokens[i].Type == lexer.TokenIdentifier && tokens[i+1].Value == "." && tokens[i+3].Value == "(" {
+			end := i + 4
+			parenCount := 1
+			for end < len(tokens) && parenCount > 0 {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
 				}
 				end++
 			}
@@ -634,12 +687,32 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle binary operations
-	if len(tokens) >= 3 && tokens[1].Type == lexer.TokenOperator && tokens[1].Value != "=" {
+	// Handle binary operations - need to find the operator position
+	// Skip over complex expressions like array access, member access, function calls
+	opIndex := -1
+	parenDepth := 0
+	bracketDepth := 0
+	
+	for i := 0; i < len(tokens); i++ {
+		if tokens[i].Value == "(" {
+			parenDepth++
+		} else if tokens[i].Value == ")" {
+			parenDepth--
+		} else if tokens[i].Value == "[" {
+			bracketDepth++
+		} else if tokens[i].Value == "]" {
+			bracketDepth--
+		} else if parenDepth == 0 && bracketDepth == 0 && tokens[i].Type == lexer.TokenOperator && tokens[i].Value != "=" {
+			opIndex = i
+			break
+		}
+	}
+	
+	if opIndex > 0 && opIndex < len(tokens)-1 {
 		return ast.BinaryOpNode{
-			Left:  ParseExpression(tokens[:1]),
-			Op:    tokens[1].Value,
-			Right: ParseExpression(tokens[2:3]),
+			Left:  ParseExpression(tokens[:opIndex]),
+			Op:    tokens[opIndex].Value,
+			Right: ParseExpression(tokens[opIndex+1:]),
 		}
 	}
 

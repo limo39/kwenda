@@ -1,0 +1,30 @@
+# Simple method call test
+
+darasa Counter {
+    namba count
+    
+    kazi unda() {
+        hii.count = 0
+    }
+    
+    kazi ongeza() {
+        andika("Before:", hii.count)
+        hii.count = hii.count + 1
+        andika("After:", hii.count)
+    }
+    
+    kazi pata_count() namba {
+        rudisha hii.count
+    }
+}
+
+kazi kuu() {
+    kamusi c = unda Counter()
+    andika("Initial count:", c["count"])
+    
+    c.ongeza()
+    andika("Count after ongeza:", c["count"])
+    
+    c.ongeza()
+    andika("Count after second ongeza:", c["count"])
+}

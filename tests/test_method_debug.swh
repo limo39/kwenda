@@ -1,0 +1,24 @@
+# Debug method call
+
+darasa Test {
+    namba x
+    
+    kazi unda() {
+        hii.x = 5
+        andika("Constructor set x to:", hii.x)
+    }
+    
+    kazi change() {
+        andika("In change, x is:", hii.x)
+        hii.x = 10
+        andika("In change, after assignment, x is:", hii.x)
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test()
+    andika("After constructor, t.x =", t["x"])
+    
+    t.change()
+    andika("After change(), t.x =", t["x"])
+}

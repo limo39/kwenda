@@ -1,0 +1,21 @@
+# Test member assignment with expression
+
+darasa Counter {
+    namba count
+    
+    kazi unda() {
+        hii.count = 0
+    }
+    
+    kazi increment() {
+        hii.count = hii.count + 1
+    }
+}
+
+kazi kuu() {
+    kamusi c = unda Counter()
+    andika("Initial:", c["count"])
+    
+    c.increment()
+    andika("After increment:", c["count"])
+}

@@ -4,26 +4,68 @@
 
 ## 🌟 Features
 
-- **Native Swahili Syntax**: All keywords are in Swahili
-- **Interactive Input/Output**: Built-in support for user interaction
-- **Arithmetic Operations**: Basic mathematical operations
-- **Variable Declarations**: Type-safe variable handling (numbers, strings, booleans, arrays)
-- **String Manipulation**: Comprehensive string operations and functions
-- **Function Definitions**: Support for custom functions with parameters and return values
-- **Boolean Data Type**: Native boolean support with `kweli`/`uwongo`
-- **Conditional Statements**: If/else logic with `kama`/`sivyo`
-- **Loop Constructs**: While loops with `wakati` and for loops with `kwa`
-- **Loop Control**: Break and continue statements with `vunja`/`endelea`
-- **Logical Operations**: AND/OR operations with `na`/`au`
-- **Error Handling**: Try/catch/finally blocks with `jaribu`/`shika`/`hatimaye`
-- **Module System**: Multi-file support with imports using `leta`
-- **Array Operations**: Full array support with manipulation functions
-- **Dictionary/Map Data Structures**: Key-value storage with `kamusi` keyword
-- **File I/O**: Read, write, create, and delete files
-- **Object-Oriented Programming**: Full OOP support with classes, objects, and inheritance
-- **Class Syntax**: Define classes with `darasa` keyword, create instances with `unda`
-- **Member Access**: Dot notation for properties (`hii.property`)
-- **Educational Focus**: Perfect for learning programming concepts in Swahili
+### Core Language Features
+- **Native Swahili Syntax**: All keywords and concepts in Swahili
+- **Interactive I/O**: Built-in support for user input and output with `ingiza` and `andika`
+- **Comments**: Single-line comments using `#`
+
+### Data Types & Variables
+- **Numbers**: Integer and floating-point support with `namba`
+- **Strings**: Text manipulation with `maneno`
+- **Booleans**: True/false values with `kweli`/`uwongo`
+- **Arrays**: Dynamic lists with `orodha` keyword
+- **Dictionaries**: Key-value maps with `kamusi` keyword
+- **Type-safe Declarations**: Explicit type declarations for variables
+
+### Operators & Expressions
+- **Arithmetic**: `+`, `-`, `*`, `/`, `%` (modulo)
+- **Comparison**: `==`, `!=`, `<`, `<=`, `>`, `>=`
+- **Logical**: `na` (AND), `au` (OR)
+- **Assignment**: Variable and member assignment
+
+### Control Flow
+- **Conditionals**: If/else statements with `kama`/`sivyo`
+- **While Loops**: Iteration with `wakati`
+- **For Loops**: Flexible looping with `kwa`
+- **Loop Control**: Break (`vunja`) and continue (`endelea`)
+
+### Functions & Modules
+- **Function Definitions**: Custom functions with `kazi` keyword
+- **Parameters & Return Values**: Type-safe function signatures
+- **Module System**: Multi-file support with `leta` imports
+- **Module Namespaces**: Organized code with dot notation access
+
+### Object-Oriented Programming
+- **Classes**: Define classes with `darasa` keyword
+- **Constructors**: Initialize objects with `unda` method
+- **Properties**: Class properties with type declarations
+- **Methods**: Class methods with `kazi` keyword
+- **Method Calls**: Dot notation for method invocation (`object.method()`)
+- **Member Access**: Dot notation for properties (`object.property` or `hii.property`)
+- **Instance Reference**: `hii` keyword for this/self reference
+
+### Data Structures
+- **Array Operations**: Add, remove, access, and get length
+- **Dictionary Operations**: Create, access, modify key-value pairs
+- **String Functions**: Length, substring, replace, find, case conversion, trim, split
+
+### Error Handling
+- **Try-Catch-Finally**: Robust error handling with `jaribu`/`shika`/`hatimaye`
+- **Throw Errors**: Custom error throwing with `tupa`
+- **Bilingual Error Messages**: Errors in both Swahili and English
+- **Contextual Error Info**: Detailed error context and suggestions
+
+### File I/O
+- **Read Files**: Load file contents with `soma`
+- **Write Files**: Save data with `andika_faili`
+- **Create Files**: Initialize new files with `unda_faili`
+- **File Management**: Check existence and delete files
+
+### Educational Focus
+- **Accessible Syntax**: Programming in native Swahili language
+- **Clear Error Messages**: Helpful debugging information
+- **Comprehensive Examples**: Learn by example
+- **Modern Features**: Real-world programming capabilities
 
 ## 🚀 Quick Start
 

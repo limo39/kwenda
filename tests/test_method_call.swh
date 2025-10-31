@@ -1,0 +1,43 @@
+# Test method calls with dot notation
+
+darasa Mtu {
+    maneno jina
+    namba umri
+    
+    kazi unda(maneno j, namba u) {
+        andika("Constructor: j =", j, ", u =", u)
+        hii.jina = j
+        andika("After first assignment: jina =", hii.jina)
+        andika("About to set umri, u =", u)
+        hii.umri = u
+        andika("After second assignment: umri =", hii.umri)
+    }
+    
+    kazi salamu() {
+        andika("Habari! Jina langu ni", hii.jina)
+        andika("Nina umri wa miaka", hii.umri)
+    }
+    
+    kazi ongeza_umri(namba miaka) {
+        hii.umri = hii.umri + miaka
+        andika("Umri mpya:", hii.umri)
+    }
+}
+
+kazi kuu() {
+    andika("=== Testing Method Calls ===")
+    
+    # Create instance
+    kamusi mtu = unda Mtu("Amina", 25)
+    
+    # Test method call with dot notation
+    andika("Calling mtu.salamu():")
+    mtu.salamu()
+    
+    andika("")
+    andika("Calling mtu.ongeza_umri(5):")
+    mtu.ongeza_umri(5)
+    
+    andika("")
+    andika("Final age:", mtu["umri"])
+}

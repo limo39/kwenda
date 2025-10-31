@@ -1,0 +1,23 @@
+# Debug constructor
+
+darasa Test {
+    namba x
+    namba y
+    
+    kazi unda(namba a, namba b) {
+        andika("Param a =", a)
+        andika("Param b =", b)
+        andika("Setting hii.x = a")
+        hii.x = a
+        andika("hii.x is now:", hii.x)
+        andika("Setting hii.y = b")
+        hii.y = b
+        andika("hii.y is now:", hii.y)
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test(10, 20)
+    andika("Final t.x =", t["x"])
+    andika("Final t.y =", t["y"])
+}

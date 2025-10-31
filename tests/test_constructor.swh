@@ -1,0 +1,20 @@
+# Test constructor
+
+darasa Person {
+    maneno name
+    namba age
+    
+    kazi unda(maneno n, namba a) {
+        andika("Constructor called with:", n, a)
+        hii.name = n
+        hii.age = a
+        andika("After setting, hii.name =", hii.name)
+        andika("After setting, hii.age =", hii.age)
+    }
+}
+
+kazi kuu() {
+    kamusi p = unda Person("Bob", 30)
+    andika("After constructor, p.name =", p["name"])
+    andika("After constructor, p.age =", p["age"])
+}

@@ -1,0 +1,22 @@
+# Test mixed parameter types
+
+darasa Person {
+    maneno name
+    namba age
+    
+    kazi unda(maneno n, namba a) {
+        andika("In constructor: n =", n, ", a =", a)
+        hii.name = n
+        andika("After name assignment, hii.name =", hii.name)
+        hii.age = a
+        andika("After age assignment, hii.age =", hii.age)
+    }
+}
+
+kazi kuu() {
+    andika("Creating person...")
+    kamusi p = unda Person("Alice", 25)
+    andika("After creation:")
+    andika("p.name =", p["name"])
+    andika("p.age =", p["age"])
+}

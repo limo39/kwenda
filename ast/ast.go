@@ -188,10 +188,17 @@ type NewInstanceNode struct {
     Args      []ASTNode // Constructor arguments
 }
 
-// MemberAccessNode represents accessing a member (e.g., mtu.jina or mtu.salamu())
+// MemberAccessNode represents accessing a member (e.g., mtu.jina)
 type MemberAccessNode struct {
     Object ASTNode // The object being accessed
     Member string  // The member name
+}
+
+// MethodCallNode represents calling a method with dot notation (e.g., mtu.salamu())
+type MethodCallNode struct {
+    Object ASTNode   // The object whose method is being called
+    Method string    // The method name
+    Args   []ASTNode // Method arguments
 }
 
 // MemberAssignmentNode represents assigning to a member (e.g., mtu.jina = "Fatuma")

@@ -1,0 +1,70 @@
+# Comprehensive method call test
+
+darasa BankAccount {
+    maneno owner
+    namba balance
+    
+    kazi unda(maneno o, namba initial) {
+        hii.owner = o
+        hii.balance = initial
+        andika("Account created for", hii.owner, "with balance", hii.balance)
+    }
+    
+    kazi deposit(namba amount) {
+        hii.balance = hii.balance + amount
+        andika(hii.owner, "deposited", amount, "- New balance:", hii.balance)
+    }
+    
+    kazi withdraw(namba amount) {
+        kama amount > hii.balance {
+            andika("Insufficient funds!")
+        } sivyo {
+            hii.balance = hii.balance - amount
+            andika(hii.owner, "withdrew", amount, "- New balance:", hii.balance)
+        }
+    }
+    
+    kazi get_balance() namba {
+        rudisha hii.balance
+    }
+    
+    kazi display_info() {
+        andika("=== Account Info ===")
+        andika("Owner:", hii.owner)
+        andika("Balance:", hii.balance)
+        andika("===================")
+    }
+}
+
+kazi kuu() {
+    andika("*** Bank Account Demo ***")
+    andika("")
+    
+    # Create account
+    kamusi account = unda BankAccount("Amina", 1000)
+    andika("")
+    
+    # Display initial info
+    account.display_info()
+    andika("")
+    
+    # Make deposit
+    account.deposit(500)
+    andika("")
+    
+    # Make withdrawal
+    account.withdraw(300)
+    andika("")
+    
+    # Try to withdraw too much
+    account.withdraw(2000)
+    andika("")
+    
+    # Display final info
+    account.display_info()
+    andika("")
+    
+    # Get balance using method
+    namba final_balance = account.get_balance()
+    andika("Final balance via method:", final_balance)
+}

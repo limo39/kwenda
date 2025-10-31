@@ -1,0 +1,8 @@
+# Test simple expression
+
+kazi kuu() {
+    namba x = 5
+    namba y = x + 1
+    andika("x =", x)
+    andika("y =", y)
+}

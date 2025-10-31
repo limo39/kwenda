@@ -440,6 +440,78 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// If conversion fails, return 0 for numeric operations
 		return 0
 
+	case ast.MethodCallNode:
+		// Handle method calls with dot notation (e.g., object.method(args))
+		objectValue := Interpret(n.Object, env)
+		
+		// Get the object's class type
+		if dict, ok := objectValue.(map[string]interface{}); ok {
+			// Check if this is a class instance with a __class__ field
+			if className, hasClass := dict["__class__"].(string); hasClass {
+				// Look up the class definition
+				if classDef, exists := env.Classes[className]; exists {
+					// Find the method in the class
+					for _, method := range classDef.Methods {
+						if method.Name == n.Method {
+							// Create new environment for method execution
+							methodEnv := &Environment{
+								Variables: make(map[string]interface{}),
+								Functions: env.Functions,
+								Classes:   env.Classes,
+								Modules:   env.Modules,
+								Parent:    env,
+							}
+							
+							// Set 'hii' to refer to the current instance
+							methodEnv.Set("hii", objectValue)
+							
+							// Bind parameters
+							for i, param := range method.Parameters {
+								if i < len(n.Args) {
+									argValue := Interpret(n.Args[i], env)
+									methodEnv.Set(param.Name, argValue)
+								}
+							}
+							
+							// Execute method body
+							var result interface{}
+							for _, stmt := range method.Body {
+								result = Interpret(stmt, methodEnv)
+								
+								// Handle control flow
+								if cf, ok := result.(ControlFlowResult); ok {
+									if cf.Type == ControlReturn {
+										return cf.Value
+									}
+									if cf.Type == ControlThrow {
+										return cf
+									}
+								}
+							}
+							return result
+						}
+					}
+					// Method not found
+					return ControlFlowResult{
+						Type: ControlThrow,
+						Value: ErrorValue{
+							Message: fmt.Sprintf("Mbinu '%s' haipatikani katika darasa '%s'", n.Method, className),
+							Context: fmt.Sprintf("Method '%s' not found in class '%s'", n.Method, className),
+						},
+					}
+				}
+			}
+		}
+		
+		// If not a class instance, return error
+		return ControlFlowResult{
+			Type: ControlThrow,
+			Value: ErrorValue{
+				Message: "Haiwezi kuita mbinu kwenye kitu ambacho si instance ya darasa",
+				Context: "Cannot call method on non-class instance",
+			},
+		}
+
 	case ast.FunctionCallNode:
 		// Handle built-in function calls
 		if n.Name == "andika" {

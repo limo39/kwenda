@@ -1,0 +1,16 @@
+# Test member access in expression
+
+darasa Test {
+    namba x
+    
+    kazi unda() {
+        hii.x = 5
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test()
+    namba y = t["x"] + 1
+    andika("t.x =", t["x"])
+    andika("y =", y)
+}
