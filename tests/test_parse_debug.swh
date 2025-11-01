@@ -1,0 +1,17 @@
+# Simple parsing test
+
+darasa Test {
+    namba value
+    kazi unda(namba v) {
+        hii.value = v
+    }
+    kazi get() namba {
+        rudisha hii.value
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test(5)
+    namba x = t.get()
+    andika("x =", x)
+}

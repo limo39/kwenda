@@ -1,0 +1,38 @@
+# Debug return values
+
+darasa Test {
+    namba value
+    
+    kazi unda(namba v) {
+        hii.value = v
+    }
+    
+    kazi get_value() namba {
+        rudisha hii.value
+    }
+    
+    kazi test_return() namba {
+        rudisha 42
+    }
+}
+
+kazi simple_function() namba {
+    rudisha 100
+}
+
+kazi kuu() {
+    # Test simple function return
+    andika("Testing simple function:")
+    namba x = simple_function()
+    andika("x =", x)
+    
+    # Test method return
+    andika("Testing method return:")
+    kamusi t = unda Test(25)
+    namba y = t.get_value()
+    andika("y =", y)
+    
+    # Test simple literal return
+    namba z = t.test_return()
+    andika("z =", z)
+}

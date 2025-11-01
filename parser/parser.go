@@ -540,10 +540,12 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 				if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
 					break
 				}
-				// Check for next statement that starts with identifier/hii followed by = (but not .)
-				// This allows member access in expressions (e.g., hii.count = hii.count + 1)
-				if end+1 < len(tokens) && (tokens[end].Type == lexer.TokenIdentifier || tokens[end].Value == "hii") && tokens[end+1].Value == "=" && end+2 < len(tokens) && tokens[end+2].Value != "=" {
-					break
+				// Check for next member assignment (hii.property = value) or regular assignment (identifier = value)
+				if end+3 < len(tokens) && (tokens[end].Type == lexer.TokenIdentifier || tokens[end].Value == "hii") && tokens[end+1].Value == "." && tokens[end+3].Value == "=" {
+					break // Next member assignment found
+				}
+				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
+					break // Next regular assignment found
 				}
 				end++
 			}
@@ -713,6 +715,21 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 			Left:  ParseExpression(tokens[:opIndex]),
 			Op:    tokens[opIndex].Value,
 			Right: ParseExpression(tokens[opIndex+1:]),
+		}
+	}
+
+	// Handle method calls with dot notation (e.g., object.method(args)) - MUST come before member access!
+	if len(tokens) >= 4 && tokens[1].Value == "." && tokens[3].Value == "(" {
+		var object ast.ASTNode
+		if tokens[0].Value == "hii" {
+			object = ast.ThisNode{}
+		} else {
+			object = ast.IdentifierNode{Value: tokens[0].Value}
+		}
+		return ast.MethodCallNode{
+			Object: object,
+			Method: tokens[2].Value,
+			Args:   ParseArguments(tokens[4:]),
 		}
 	}
 
@@ -1405,20 +1422,28 @@ func ParseDictionaryPair(tokens []lexer.Token) *ast.DictionaryPair {
 }
 
 
-// ParseClassDefinition parses class definitions (darasa ClassName { ... })
+// ParseClassDefinition parses class definitions (darasa ClassName { ... } or darasa Child : Parent { ... })
 func ParseClassDefinition(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) < 3 || tokens[0].Value != "darasa" {
 		return nil
 	}
 
 	className := tokens[1].Value
+	parentClass := "" // For inheritance
+
+	// Check for inheritance syntax: darasa Child : Parent
+	startIndex := 2
+	if len(tokens) > 3 && tokens[2].Value == ":" {
+		parentClass = tokens[3].Value
+		startIndex = 4
+	}
 
 	// Find the class body
 	braceStart := -1
 	braceEnd := -1
 	braceCount := 0
 
-	for i := 2; i < len(tokens); i++ {
+	for i := startIndex; i < len(tokens); i++ {
 		if tokens[i].Value == "{" {
 			if braceCount == 0 {
 				braceStart = i + 1
@@ -1502,6 +1527,7 @@ func ParseClassDefinition(tokens []lexer.Token) ast.ASTNode {
 
 	return ast.ClassNode{
 		Name:        className,
+		Parent:      parentClass,
 		Properties:  properties,
 		Methods:     methods,
 		Constructor: constructor,

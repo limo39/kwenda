@@ -1,0 +1,95 @@
+# Test class inheritance
+
+# Base class
+darasa Animal {
+    maneno name
+    namba age
+    
+    kazi unda(maneno n, namba a) {
+        hii.name = n
+        hii.age = a
+        andika("Animal created:", hii.name)
+    }
+    
+    kazi speak() {
+        andika(hii.name, "makes a sound")
+    }
+    
+    kazi get_info() {
+        andika("Name:", hii.name, "Age:", hii.age)
+    }
+}
+
+# Child class inheriting from Animal
+darasa Dog : Animal {
+    maneno breed
+    
+    kazi unda(maneno n, namba a, maneno b) {
+        hii.name = n
+        hii.age = a
+        hii.breed = b
+        andika("Dog created:", hii.name, "Breed:", hii.breed)
+    }
+    
+    kazi speak() {
+        andika(hii.name, "says: Woof! Woof!")
+    }
+    
+    kazi get_breed() {
+        andika("Breed:", hii.breed)
+    }
+}
+
+# Another child class
+darasa Cat : Animal {
+    boolean is_indoor
+    
+    kazi unda(maneno n, namba a, boolean indoor) {
+        hii.name = n
+        hii.age = a
+        hii.is_indoor = indoor
+        andika("Cat created:", hii.name)
+    }
+    
+    kazi speak() {
+        andika(hii.name, "says: Meow!")
+    }
+    
+    kazi check_indoor() {
+        kama hii.is_indoor {
+            andika(hii.name, "is an indoor cat")
+        } sivyo {
+            andika(hii.name, "is an outdoor cat")
+        }
+    }
+}
+
+kazi kuu() {
+    andika("=== Inheritance Test ===")
+    andika("")
+    
+    # Create base class instance
+    andika("Creating Animal:")
+    kamusi animal = unda Animal("Generic Animal", 5)
+    animal.speak()
+    animal.get_info()
+    andika("")
+    
+    # Create Dog instance
+    andika("Creating Dog:")
+    kamusi dog = unda Dog("Buddy", 3, "Golden Retriever")
+    dog.speak()  # Overridden method
+    dog.get_info()  # Inherited method
+    dog.get_breed()  # Dog-specific method
+    andika("")
+    
+    # Create Cat instance
+    andika("Creating Cat:")
+    kamusi cat = unda Cat("Whiskers", 2, kweli)
+    cat.speak()  # Overridden method
+    cat.get_info()  # Inherited method
+    cat.check_indoor()  # Cat-specific method
+    andika("")
+    
+    andika("=== Test Complete ===")
+}

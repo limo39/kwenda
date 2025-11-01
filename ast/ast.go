@@ -170,6 +170,7 @@ type ModuleNode struct {
 // ClassNode represents a class definition (e.g., darasa Mtu { ... })
 type ClassNode struct {
     Name       string         // Class name
+    Parent     string         // Parent class name (for inheritance)
     Properties []PropertyNode // Class properties
     Methods    []FunctionNode // Class methods
     Constructor *FunctionNode // Constructor method (optional)

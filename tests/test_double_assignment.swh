@@ -1,0 +1,19 @@
+# Test double member assignment
+
+darasa Test {
+    namba x
+    namba y
+    
+    kazi unda(namba a, namba b) {
+        andika("Constructor params: a =", a, "b =", b)
+        hii.x = a
+        andika("After first assignment: hii.x =", hii.x)
+        hii.y = b
+        andika("After second assignment: hii.y =", hii.y)
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test(10, 20)
+    andika("Final values: x =", t["x"], "y =", t["y"])
+}

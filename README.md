@@ -37,10 +37,12 @@
 
 ### Object-Oriented Programming
 - **Classes**: Define classes with `darasa` keyword
+- **Inheritance**: Class inheritance with colon syntax (`darasa Child : Parent`)
 - **Constructors**: Initialize objects with `unda` method
 - **Properties**: Class properties with type declarations
 - **Methods**: Class methods with `kazi` keyword
 - **Method Calls**: Dot notation for method invocation (`object.method()`)
+- **Method Overriding**: Child classes can override parent methods
 - **Member Access**: Dot notation for properties (`object.property` or `hii.property`)
 - **Instance Reference**: `hii` keyword for this/self reference
 
@@ -798,8 +800,8 @@ The interpreter follows a traditional architecture:
 - [x] Instance creation with `unda` keyword ✅
 - [x] Self-reference with `hii` keyword ✅
 - [x] Dot notation for member access ✅
-- [ ] Method calls with dot notation (e.g., `object.method()`)
-- [ ] Class inheritance
+- [x] Method calls with dot notation (e.g., `object.method()`) ✅
+- [x] Class inheritance ✅
 - [ ] Lambda functions
 - [ ] List comprehensions
 

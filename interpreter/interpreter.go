@@ -448,57 +448,54 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if dict, ok := objectValue.(map[string]interface{}); ok {
 			// Check if this is a class instance with a __class__ field
 			if className, hasClass := dict["__class__"].(string); hasClass {
-				// Look up the class definition
-				if classDef, exists := env.Classes[className]; exists {
-					// Find the method in the class
-					for _, method := range classDef.Methods {
-						if method.Name == n.Method {
-							// Create new environment for method execution
-							methodEnv := &Environment{
-								Variables: make(map[string]interface{}),
-								Functions: env.Functions,
-								Classes:   env.Classes,
-								Modules:   env.Modules,
-								Parent:    env,
-							}
-							
-							// Set 'hii' to refer to the current instance
-							methodEnv.Set("hii", objectValue)
-							
-							// Bind parameters
-							for i, param := range method.Parameters {
-								if i < len(n.Args) {
-									argValue := Interpret(n.Args[i], env)
-									methodEnv.Set(param.Name, argValue)
-								}
-							}
-							
-							// Execute method body
-							var result interface{}
-							for _, stmt := range method.Body {
-								result = Interpret(stmt, methodEnv)
-								
-								// Handle control flow
-								if cf, ok := result.(ControlFlowResult); ok {
-									if cf.Type == ControlReturn {
-										return cf.Value
-									}
-									if cf.Type == ControlThrow {
-										return cf
-									}
-								}
-							}
-							return result
+				// Find the method in the class or its parent chain
+				method := findMethodInClass(className, n.Method, env)
+				if method != nil {
+					// Create new environment for method execution
+					methodEnv := &Environment{
+						Variables: make(map[string]interface{}),
+						Functions: env.Functions,
+						Classes:   env.Classes,
+						Modules:   env.Modules,
+						Parent:    env,
+					}
+					
+					// Set 'hii' to refer to the current instance
+					methodEnv.Set("hii", objectValue)
+					
+					// Bind parameters
+					for i, param := range method.Parameters {
+						if i < len(n.Args) {
+							argValue := Interpret(n.Args[i], env)
+							methodEnv.Set(param.Name, argValue)
 						}
 					}
-					// Method not found
-					return ControlFlowResult{
-						Type: ControlThrow,
-						Value: ErrorValue{
-							Message: fmt.Sprintf("Mbinu '%s' haipatikani katika darasa '%s'", n.Method, className),
-							Context: fmt.Sprintf("Method '%s' not found in class '%s'", n.Method, className),
-						},
+					
+					// Execute method body
+					var result interface{}
+					for _, stmt := range method.Body {
+						result = Interpret(stmt, methodEnv)
+						
+						// Handle control flow
+						if cf, ok := result.(ControlFlowResult); ok {
+							if cf.Type == ControlReturn {
+								return cf.Value
+							}
+							if cf.Type == ControlThrow {
+								return cf
+							}
+						}
 					}
+					return result
+				}
+				
+				// Method not found
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Mbinu '%s' haipatikani katika darasa '%s'", n.Method, className),
+						Context: fmt.Sprintf("Method '%s' not found in class '%s'", n.Method, className),
+					},
 				}
 			}
 		}
@@ -1203,8 +1200,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Create new instance as a dictionary
 		instance := make(map[string]interface{})
 
+		// Collect properties from inheritance chain (parent first, then child)
+		allProperties := collectInheritedProperties(classDef, env)
+		
 		// Initialize properties with default values
-		for _, prop := range classDef.Properties {
+		for _, prop := range allProperties {
 			instance[prop.Name] = nil
 		}
 
@@ -1283,4 +1283,73 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		fmt.Println("Aina ya nodi haijulikani:", n)
 		return nil
 	}
+}
+
+// collectInheritedProperties collects all properties from the class and its parent chain
+func collectInheritedProperties(class ast.ClassNode, env *Environment) []ast.PropertyNode {
+	var properties []ast.PropertyNode
+	
+	// First, collect parent properties if there's a parent
+	if class.Parent != "" {
+		parentClass, exists := env.GetClass(class.Parent)
+		if exists {
+			properties = append(properties, collectInheritedProperties(parentClass, env)...)
+		}
+	}
+	
+	// Then add this class's properties
+	properties = append(properties, class.Properties...)
+	
+	return properties
+}
+
+// collectInheritedMethods collects all methods from the class and its parent chain
+func collectInheritedMethods(class ast.ClassNode, env *Environment) []ast.FunctionNode {
+	methodMap := make(map[string]ast.FunctionNode)
+	
+	// First, collect parent methods if there's a parent
+	if class.Parent != "" {
+		parentClass, exists := env.GetClass(class.Parent)
+		if exists {
+			parentMethods := collectInheritedMethods(parentClass, env)
+			for _, method := range parentMethods {
+				methodMap[method.Name] = method
+			}
+		}
+	}
+	
+	// Then add/override with this class's methods
+	for _, method := range class.Methods {
+		methodMap[method.Name] = method
+	}
+	
+	// Convert map back to slice
+	var methods []ast.FunctionNode
+	for _, method := range methodMap {
+		methods = append(methods, method)
+	}
+	
+	return methods
+}
+
+// findMethodInClass finds a method in the class or its parent chain
+func findMethodInClass(className string, methodName string, env *Environment) *ast.FunctionNode {
+	classDef, exists := env.GetClass(className)
+	if !exists {
+		return nil
+	}
+	
+	// Check this class's methods
+	for _, method := range classDef.Methods {
+		if method.Name == methodName {
+			return &method
+		}
+	}
+	
+	// Check parent class if exists
+	if classDef.Parent != "" {
+		return findMethodInClass(classDef.Parent, methodName, env)
+	}
+	
+	return nil
 }

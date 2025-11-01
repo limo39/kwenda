@@ -1,0 +1,41 @@
+# Simple inheritance test
+
+darasa Parent {
+    namba x
+    
+    kazi unda(namba val) {
+        hii.x = val
+        andika("Parent constructor, x =", hii.x)
+    }
+    
+    kazi show() {
+        andika("Parent show: x =", hii.x)
+    }
+}
+
+darasa Child : Parent {
+    namba y
+    
+    kazi unda(namba a, namba b) {
+        hii.x = a
+        hii.y = b
+        andika("Child constructor, x =", hii.x, "y =", hii.y)
+    }
+    
+    kazi show() {
+        andika("Child show: x =", hii.x, "y =", hii.y)
+    }
+}
+
+kazi kuu() {
+    andika("Creating parent:")
+    kamusi p = unda Parent(10)
+    andika("Calling p.show():")
+    p.show()
+    
+    andika("")
+    andika("Creating child:")
+    kamusi c = unda Child(20, 30)
+    andika("Calling c.show():")
+    c.show()
+}

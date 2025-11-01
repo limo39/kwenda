@@ -1,0 +1,84 @@
+# Inheritance example with shapes
+
+darasa Shape {
+    maneno color
+    
+    kazi unda(maneno c) {
+        hii.color = c
+        andika("Shape created with color:", hii.color)
+    }
+    
+    kazi describe() {
+        andika("This is a", hii.color, "shape")
+    }
+    
+    kazi area() namba {
+        andika("Base shape has no area")
+        rudisha 0
+    }
+}
+
+darasa Rectangle : Shape {
+    namba width
+    namba height
+    
+    kazi unda(maneno c, namba w, namba h) {
+        hii.color = c
+        hii.width = w
+        hii.height = h
+        andika("Rectangle created:", hii.color, "width:", hii.width, "height:", hii.height)
+    }
+    
+    kazi area() namba {
+        namba result = hii.width * hii.height
+        rudisha result
+    }
+    
+    kazi describe() {
+        andika("This is a", hii.color, "rectangle with width", hii.width, "and height", hii.height)
+    }
+}
+
+darasa Square : Rectangle {
+    kazi unda(maneno c, namba side) {
+        hii.color = c
+        hii.width = side
+        hii.height = side
+        andika("Square created:", hii.color, "side:", side)
+    }
+    
+    kazi describe() {
+        andika("This is a", hii.color, "square with side", hii.width)
+    }
+}
+
+kazi kuu() {
+    andika("=== Shape Inheritance Demo ===")
+    andika("")
+    
+    # Create base shape
+    andika("1. Creating base shape:")
+    kamusi shape = unda Shape("blue")
+    shape.describe()
+    namba area1 = shape.area()
+    andika("Area:", area1)
+    andika("")
+    
+    # Create rectangle
+    andika("2. Creating rectangle:")
+    kamusi rect = unda Rectangle("red", 5, 10)
+    rect.describe()  # Overridden method
+    namba area2 = rect.area()  # Overridden method
+    andika("Area:", area2)
+    andika("")
+    
+    # Create square (inherits from Rectangle)
+    andika("3. Creating square:")
+    kamusi square = unda Square("green", 7)
+    square.describe()  # Overridden method
+    namba area3 = square.area()  # Inherited from Rectangle
+    andika("Area:", area3)
+    andika("")
+    
+    andika("=== Demo Complete ===")
+}

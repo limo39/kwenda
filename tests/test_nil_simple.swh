@@ -1,0 +1,26 @@
+# Simple nil debug test
+
+darasa Test {
+    namba value
+    
+    kazi unda(namba v) {
+        andika("Constructor param v =", v)
+        hii.value = v
+        andika("After assignment, hii.value =", hii.value)
+    }
+    
+    kazi get_value() namba {
+        andika("In get_value, hii.value =", hii.value)
+        rudisha hii.value
+    }
+}
+
+kazi kuu() {
+    andika("Creating test with value 10")
+    kamusi t = unda Test(10)
+    andika("t.value =", t["value"])
+    
+    andika("Calling get_value method")
+    namba result = t.get_value()
+    andika("result =", result)
+}

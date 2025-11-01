@@ -1,0 +1,27 @@
+# Debug method calls specifically
+
+darasa Test {
+    namba value
+    
+    kazi unda(namba v) {
+        hii.value = v
+    }
+    
+    kazi get_value() namba {
+        andika("Inside get_value, returning:", hii.value)
+        rudisha hii.value
+    }
+}
+
+kazi kuu() {
+    kamusi t = unda Test(42)
+    
+    # Test method call directly
+    andika("Calling t.get_value() directly:")
+    t.get_value()
+    
+    # Test method call in assignment
+    andika("Calling t.get_value() in assignment:")
+    namba result = t.get_value()
+    andika("result =", result)
+}
