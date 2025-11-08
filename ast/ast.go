@@ -251,3 +251,10 @@ type DictionaryAssignmentNode struct {
 	Key        ASTNode // The key expression
 	Value      ASTNode // The new value
 }
+
+// LambdaNode represents a lambda/anonymous function
+type LambdaNode struct {
+	Parameters []Parameter // Lambda parameters
+	ReturnType string      // Return type (optional)
+	Body       []ASTNode   // Lambda body
+}

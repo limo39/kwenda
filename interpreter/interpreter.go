@@ -918,6 +918,46 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Check if it's a lambda stored in a variable
+		if lambdaValue := env.Get(n.Name); lambdaValue != nil {
+			if lambda, ok := lambdaValue.(map[string]interface{}); ok {
+				if lambdaType, hasType := lambda["__type__"].(string); hasType && lambdaType == "lambda" {
+					// Call the lambda
+					parameters := lambda["__parameters__"].([]ast.Parameter)
+					body := lambda["__body__"].([]ast.ASTNode)
+					closureEnv := lambda["__env__"].(*Environment)
+					
+					// Create new environment for lambda execution (with closure)
+					lambdaEnv := NewChildEnvironment(closureEnv)
+					
+					// Evaluate arguments and bind to parameters
+					for i, param := range parameters {
+						if i < len(n.Args) {
+							argValue := Interpret(n.Args[i], env)
+							lambdaEnv.Set(param.Name, argValue)
+						}
+					}
+					
+					// Execute lambda body
+					var result interface{}
+					for _, statement := range body {
+						result = Interpret(statement, lambdaEnv)
+						
+						// Check for return statement or throw
+						if cf, ok := result.(ControlFlowResult); ok {
+							if cf.Type == ControlReturn {
+								return cf.Value
+							} else if cf.Type == ControlThrow {
+								return cf
+							}
+						}
+					}
+					
+					return result
+				}
+			}
+		}
+
 		// Handle user-defined function calls
 		if function, exists := env.GetFunction(n.Name); exists {
 			// Create new environment for function execution
@@ -1239,6 +1279,18 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		instance["__class__"] = n.ClassName
 
 		return instance
+
+	case ast.LambdaNode:
+		// Handle lambda functions - return the lambda as a callable value
+		// Store the lambda with its closure environment
+		lambdaValue := map[string]interface{}{
+			"__type__":      "lambda",
+			"__parameters__": n.Parameters,
+			"__return_type__": n.ReturnType,
+			"__body__":      n.Body,
+			"__env__":       env, // Capture closure
+		}
+		return lambdaValue
 
 	case ast.FunctionNode:
 		// Handle function definitions

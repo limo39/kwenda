@@ -1,0 +1,62 @@
+# Comprehensive lambda function tests
+
+kazi kuu() {
+    andika("=== Comprehensive Lambda Tests ===")
+    andika("")
+    
+    # Test 1: No parameters
+    andika("Test 1: No parameters")
+    kazi get_answer = lambda() { rudisha 42 }
+    namba answer = get_answer()
+    andika("get_answer() =", answer)
+    andika("")
+    
+    # Test 2: One parameter
+    andika("Test 2: One parameter")
+    kazi square = lambda(namba x) { rudisha x * x }
+    namba squared = square(7)
+    andika("square(7) =", squared)
+    andika("")
+    
+    # Test 3: Two parameters
+    andika("Test 3: Two parameters")
+    kazi add = lambda(namba a, namba b) { rudisha a + b }
+    namba sum = add(15, 27)
+    andika("add(15, 27) =", sum)
+    andika("")
+    
+    # Test 4: With return type
+    andika("Test 4: With return type")
+    kazi multiply = lambda(namba x, namba y) namba { rudisha x * y }
+    namba product = multiply(8, 9)
+    andika("multiply(8, 9) =", product)
+    andika("")
+    
+    # Test 5: Closure
+    andika("Test 5: Closure")
+    namba factor = 5
+    kazi scale = lambda(namba n) { rudisha n * factor }
+    namba scaled = scale(10)
+    andika("scale(10) with factor=5:", scaled)
+    andika("")
+    
+    # Test 6: Multiple statements
+    andika("Test 6: Multiple statements in body")
+    kazi complex = lambda(namba x) {
+        namba temp1 = x * 2
+        namba temp2 = temp1 + 10
+        rudisha temp2
+    }
+    namba result = complex(5)
+    andika("complex(5) =", result)
+    andika("")
+    
+    # Test 7: String parameters
+    andika("Test 7: String parameters")
+    kazi greet = lambda(maneno name) { rudisha "Habari " + name }
+    maneno greeting = greet("Amina")
+    andika("greet('Amina') =", greeting)
+    andika("")
+    
+    andika("=== All Tests Complete ===")
+}

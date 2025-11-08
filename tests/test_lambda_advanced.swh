@@ -1,0 +1,35 @@
+# Advanced lambda function tests - closures
+
+kazi kuu() {
+    andika("=== Advanced Lambda Tests ===")
+    andika("")
+    
+    # Test 1: Closure - lambda captures variables from outer scope
+    andika("Test 1: Closure")
+    namba multiplier = 3
+    kazi multiply_by_three = lambda(namba x) { rudisha x * multiplier }
+    namba result1 = multiply_by_three(7)
+    andika("multiply_by_three(7) =", result1, "(should be 21)")
+    andika("")
+    
+    # Test 2: Lambda with multiple statements in body
+    andika("Test 2: Lambda with multiple statements")
+    kazi calculate = lambda(namba a, namba b) {
+        namba sum = a + b
+        namba product = a * b
+        rudisha sum + product
+    }
+    namba result2 = calculate(3, 4)
+    andika("calculate(3, 4) =", result2, "(should be 19)")
+    andika("")
+    
+    # Test 3: Nested lambda calls
+    andika("Test 3: Nested operations")
+    kazi square = lambda(namba x) { rudisha x * x }
+    kazi double = lambda(namba x) { rudisha x * 2 }
+    namba result3 = double(square(5))
+    andika("double(square(5)) =", result3, "(should be 50)")
+    andika("")
+    
+    andika("=== Advanced Tests Complete ===")
+}

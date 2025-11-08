@@ -201,6 +201,14 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		return ParseFunctionDefinition(tokens)
 	}
 
+	// Handle function variable declarations (kazi name = lambda() { ... })
+	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "=" {
+		return ast.VariableDeclarationNode{
+			Name:  tokens[1].Value,
+			Value: ParseExpression(tokens[3:]),
+		}
+	}
+
 	// Handle variable declarations
 	if tokens[0].Value == "namba" && len(tokens) >= 4 && tokens[2].Value == "=" {
 		return ast.VariableDeclarationNode{
@@ -448,17 +456,58 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
-		// Parse variable declarations
-		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "boolean") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+		// Parse variable declarations (including kazi for lambda functions)
+		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "boolean" || tokens[i].Value == "kazi") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			end := i + 3
+			braceCount := 0
+			parenCount := 0
+			inLambda := false
+			justClosedParen := false
+			
+			// Check if this is a lambda assignment
+			if end < len(tokens) && tokens[end].Value == "lambda" {
+				inLambda = true
+			}
+			
 			for end < len(tokens) {
-				// Stop at keywords that start new statements
-				if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
-					break
-				}
-				// Stop at assignment statements (identifier followed by =)
-				if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
-					break
+				// Track parentheses and braces
+				if tokens[end].Value == "(" {
+					parenCount++
+					justClosedParen = false
+				} else if tokens[end].Value == ")" {
+					parenCount--
+					if parenCount == 0 {
+						justClosedParen = true
+					}
+				} else if tokens[end].Value == "{" {
+					braceCount++
+					justClosedParen = false
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					justClosedParen = false
+					if braceCount == 0 && parenCount == 0 {
+						end++
+						break
+					}
+				} else {
+					// If we just closed a paren and see a type keyword, it might be a return type
+					if justClosedParen && inLambda && (tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean") {
+						// This is a return type, continue
+						justClosedParen = false
+					} else {
+						justClosedParen = false
+						
+						// Only stop at keywords if we're not inside braces or parentheses
+						if braceCount == 0 && parenCount == 0 {
+							if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || tokens[end].Value == "boolean" || tokens[end].Value == "kazi" || tokens[end].Value == "andika" || tokens[end].Value == "orodha" || tokens[end].Value == "kama" || tokens[end].Value == "wakati" || tokens[end].Value == "kwa" || tokens[end].Value == "vunja" || tokens[end].Value == "endelea" || tokens[end].Value == "rudisha" || tokens[end].Value == "tupa" {
+								break
+							}
+							// Stop at assignment statements (identifier followed by =)
+							if end+1 < len(tokens) && tokens[end].Type == lexer.TokenIdentifier && tokens[end+1].Value == "=" {
+								break
+							}
+						}
+					}
 				}
 				end++
 			}
@@ -658,6 +707,11 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) == 0 {
 		return nil
+	}
+
+	// Handle lambda functions (lambda(params) { body })
+	if tokens[0].Value == "lambda" && len(tokens) >= 3 {
+		return ParseLambda(tokens)
 	}
 
 	// Handle class instantiation (unda ClassName(args))
@@ -1566,4 +1620,74 @@ func ParseNewInstance(tokens []lexer.Token) ast.ASTNode {
 	}
 
 	return nil
+}
+
+// ParseLambda parses lambda/anonymous functions (lambda(params) { body })
+func ParseLambda(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 3 || tokens[0].Value != "lambda" {
+		return nil
+	}
+
+	// Find parameters between ( and )
+	var parameters []ast.Parameter
+	var returnType string
+	braceStart := -1
+
+	if tokens[1].Value == "(" {
+		// Find closing parenthesis
+		parenEnd := -1
+		for i := 2; i < len(tokens); i++ {
+			if tokens[i].Value == ")" {
+				parenEnd = i
+				break
+			}
+		}
+
+		if parenEnd > 2 {
+			// Parse parameters
+			parameters = ParseParameters(tokens[2:parenEnd])
+		}
+
+		// Check for return type after )
+		if parenEnd+1 < len(tokens) && tokens[parenEnd+1].Value != "{" {
+			returnType = tokens[parenEnd+1].Value
+			braceStart = parenEnd + 2
+		} else {
+			braceStart = parenEnd + 1
+		}
+	}
+
+	// Find the lambda body
+	if braceStart >= len(tokens) || tokens[braceStart].Value != "{" {
+		return nil
+	}
+
+	braceEnd := -1
+	braceCount := 1 // Start with 1 since we're at the opening brace
+	bodyStart := braceStart + 1 // Body starts after the opening brace
+
+	for i := braceStart + 1; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				braceEnd = i
+				break
+			}
+		}
+	}
+
+	if braceEnd == -1 {
+		return nil
+	}
+
+	// Parse the lambda body
+	body := ParseBlock(tokens[bodyStart:braceEnd])
+
+	return ast.LambdaNode{
+		Parameters: parameters,
+		ReturnType: returnType,
+		Body:       body,
+	}
 }

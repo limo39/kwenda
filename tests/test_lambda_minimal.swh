@@ -1,0 +1,7 @@
+# Minimal lambda test
+
+kazi kuu() {
+    andika("Testing lambda")
+    kazi f = lambda() { rudisha 5 }
+    andika("Lambda created")
+}

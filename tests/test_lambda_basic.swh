@@ -1,0 +1,36 @@
+# Basic lambda function tests
+
+kazi kuu() {
+    andika("=== Basic Lambda Tests ===")
+    andika("")
+    
+    # Test 1: Simple lambda with no parameters
+    andika("Test 1: Lambda with no parameters")
+    kazi simple = lambda() { rudisha 42 }
+    namba result1 = simple()
+    andika("Result:", result1)
+    andika("")
+    
+    # Test 2: Lambda with one parameter
+    andika("Test 2: Lambda with one parameter")
+    kazi double = lambda(namba x) { rudisha x * 2 }
+    namba result2 = double(5)
+    andika("double(5) =", result2)
+    andika("")
+    
+    # Test 3: Lambda with two parameters
+    andika("Test 3: Lambda with two parameters")
+    kazi add = lambda(namba a, namba b) { rudisha a + b }
+    namba result3 = add(10, 20)
+    andika("add(10, 20) =", result3)
+    andika("")
+    
+    # Test 4: Lambda with return type
+    andika("Test 4: Lambda with return type")
+    kazi multiply = lambda(namba x, namba y) namba { rudisha x * y }
+    namba result4 = multiply(6, 7)
+    andika("multiply(6, 7) =", result4)
+    andika("")
+    
+    andika("=== All Tests Complete ===")
+}

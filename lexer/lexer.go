@@ -42,6 +42,8 @@ func isSwahiliKeyword(word string) bool {
 		"darasa", "unda", "hii",
 		// Dictionary/Map keywords
 		"kamusi",
+		// Lambda/Anonymous function keyword
+		"lambda",
 	}
 	for _, kw := range keywords {
 		if kw == word {
