@@ -1,5 +1,5 @@
 kazi kuu() {
-    andika("=== MFANO KAMILI WA LUGHA YANGU ===")
+    andika("=== MFANO KAMILI WA KWENDA ===")
     
     # 1. Kuunda orodha ya namba
     andika("1. ORODHA:")

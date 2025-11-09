@@ -1,7 +1,7 @@
 # Class Inheritance Feature
 
 ## Overview
-Added support for class inheritance in Kwenda/Lugha Yangu, allowing classes to inherit properties and methods from parent classes.
+Added support for class inheritance in Kwenda, allowing classes to inherit properties and methods from parent classes.
 
 ## Syntax
 Use colon (`:`) to specify inheritance:

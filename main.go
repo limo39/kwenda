@@ -2,9 +2,9 @@ package main
 
 import (
     "fmt"
-    "lugha-yangu/lexer"
-    "lugha-yangu/parser"
-    "lugha-yangu/interpreter"
+    "kwenda/lexer"
+    "kwenda/parser"
+    "kwenda/interpreter"
     "os"
     "strings"
 )

@@ -1,7 +1,7 @@
 # Lambda Functions - Test Results
 
 ## Summary
-Lambda functions are fully implemented and working in Lugha Yangu! All tests pass successfully.
+Lambda functions are fully implemented and working in Kwenda! All tests pass successfully.
 
 ## Test Results
 

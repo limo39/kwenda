@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"lugha-yangu/ast"
-	"lugha-yangu/lexer"
+	"kwenda/ast"
+	"kwenda/lexer"
 )
 
 // ProgramNode represents the entire program

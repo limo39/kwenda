@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"lugha-yangu/lexer"
-	"lugha-yangu/parser"
+	"kwenda/lexer"
+	"kwenda/parser"
 )
 
 func main() {

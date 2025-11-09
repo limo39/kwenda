@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"lugha-yangu/ast"
-	"lugha-yangu/lexer"
-	"lugha-yangu/parser"
+	"kwenda/ast"
+	"kwenda/lexer"
+	"kwenda/parser"
 )
 
 func main() {

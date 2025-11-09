@@ -10,7 +10,7 @@ kazi kuu() {
     # File I/O
     maneno jina = "demo.txt"
     unda_faili(jina)
-    andika_faili(jina, "Hello from Lugha Yangu!\n")
+    andika_faili(jina, "Hello from Kwenda!\n")
     andika_faili(jina, "Arrays: ", kweli)
     andika_faili(jina, namba_zangu, kweli)
     

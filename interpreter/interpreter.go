@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"lugha-yangu/ast"
+	"kwenda/ast"
 )
 
 // Special control flow values

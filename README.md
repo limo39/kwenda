@@ -1,6 +1,6 @@
-# Lugha Yangu - A Swahili Programming Language
+# Kwenda - A Swahili Programming Language
 
-**Lugha Yangu** (meaning "My Language" in Swahili) is a fully-featured, educational programming language with native Swahili syntax. Built in Go, it's designed to make programming more accessible to Swahili speakers by using familiar keywords and concepts while providing modern programming capabilities.
+**Kwenda** (meaning "Go" or "Move Forward" in Swahili) is a fully-featured, educational programming language with native Swahili syntax. Built in Go, it's designed to make programming more accessible to Swahili speakers by using familiar keywords and concepts while providing modern programming capabilities.
 
 ## 🌟 Features
 
@@ -77,7 +77,7 @@
 ### Installation
 ```bash
 git clone <repository-url>
-cd lugha-yangu
+cd kwenda
 go build
 ```
 
@@ -677,7 +677,7 @@ kazi kuu() {
 ## 🏗️ Project Structure
 
 ```
-lugha-yangu/
+kwenda/
 ├── main.go              # Entry point
 ├── lexer/
 │   └── lexer.go        # Tokenization
@@ -858,5 +858,5 @@ Kwenda believes that programming should be accessible in one's native language. 
 **Karibu kwenye ulimwengu wa programu kwa Kiswahili!** 
 *(Welcome to the world of programming in Swahili!)*
 
-**Lugha Yangu ni zaidi ya lugha ya programu - ni daraja kuelekea teknolojia kwa wote.**
-*(Lugha Yangu is more than a programming language - it's a bridge to technology for everyone.)*
+**Kwenda ni zaidi ya lugha ya programu - ni daraja kuelekea teknolojia kwa wote.**
+*(Kwenda is more than a programming language - it's a bridge to technology for everyone.)*

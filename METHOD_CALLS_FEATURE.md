@@ -1,7 +1,7 @@
 # Method Calls with Dot Notation Feature
 
 ## Overview
-Added support for calling methods using dot notation (e.g., `object.method(args)`) in Kwenda/Lugha Yangu.
+Added support for calling methods using dot notation (e.g., `object.method(args)`) in Kwenda.
 
 ## Implementation
 
