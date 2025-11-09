@@ -1,0 +1,9 @@
+# Simple Hello World program in Kwenda
+
+kazi kuu() {
+    andika("Habari Dunia!")
+    andika("Karibu kwenye Kwenda - Lugha ya Programu ya Kiswahili")
+    andika("")
+    andika("Hello World!")
+    andika("Welcome to Kwenda - The Swahili Programming Language")
+}

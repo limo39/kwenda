@@ -83,10 +83,26 @@ go build
 
 ### Running a Program
 ```bash
-go run main.go
+# Run a Kwenda program
+./kwenda program.swh
+
+# Or using go run
+go run main.go program.swh
 ```
 
-The interpreter will execute the program specified in `main.go`. You can change the input file to run different examples from the `examples/` directory.
+### Getting Help
+```bash
+# Display help and usage information
+./kwenda --help
+
+# Display version information
+./kwenda --version
+
+# Quick usage hint
+./kwenda
+```
+
+The interpreter will execute the specified `.swh` file. You can run examples from the `examples/` directory.
 
 ## 📝 Language Syntax
 

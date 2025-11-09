@@ -71,14 +71,113 @@ func ProcessImports(source string) (string, error) {
     return strings.Join(processedLines, "\n"), nil
 }
 
+func printHelp() {
+    help := `
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    KWENDA - Swahili Programming Language                  ║
+║                    "Move Forward with Technology"                         ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+USAGE:
+    kwenda <filename.swh>              Run a Kwenda program
+    kwenda --help                      Show this help message
+    kwenda --version                   Show version information
+
+DESCRIPTION:
+    Kwenda is a fully-featured programming language with native Swahili syntax.
+    It's designed to make programming accessible to Swahili speakers while
+    providing modern programming capabilities.
+
+EXAMPLES:
+    kwenda hello.swh                   Run hello.swh program
+    kwenda examples/demo.swh           Run demo from examples folder
+
+BASIC SYNTAX:
+    kazi kuu() {                       # Main function (entry point)
+        andika("Habari!")              # Print to console
+    }
+
+KEYWORDS:
+    kazi        - Function declaration
+    kuu         - Main function name
+    andika      - Print/output
+    rudisha     - Return
+    namba       - Number type
+    maneno      - String type
+    boolean     - Boolean type
+    kamusi      - Dictionary type
+    orodha      - Array/list type
+    kama        - If statement
+    sivyo       - Else statement
+    wakati      - While loop
+    kwa         - For loop
+    darasa      - Class declaration
+    unda        - Create/instantiate
+    hii         - This/self reference
+    lambda      - Anonymous function
+    leta        - Import module
+
+FEATURES:
+    ✓ Variables and data types (numbers, strings, booleans)
+    ✓ Functions with parameters and return values
+    ✓ Control flow (if/else, while, for loops)
+    ✓ Arrays and dictionaries
+    ✓ Object-oriented programming (classes, inheritance)
+    ✓ Lambda/anonymous functions
+    ✓ Closures
+    ✓ Module system
+    ✓ Error handling (try/catch)
+    ✓ Standard library functions
+
+DOCUMENTATION:
+    README.md                          Full documentation
+    examples/                          Example programs
+    
+WEBSITE:
+    https://github.com/limo39/kwenda
+
+VERSION:
+    Kwenda v1.0.0 - Built with Go
+
+For more information, visit the documentation or run example programs.
+`
+    fmt.Println(help)
+}
+
+func printVersion() {
+    version := `
+Kwenda Programming Language
+Version: 1.0.0
+Built with: Go 1.23.3
+License: MIT
+
+Kwenda - "Move Forward" in Swahili
+A bridge to technology for everyone.
+`
+    fmt.Println(version)
+}
+
 func main() {
     // Check for command line arguments
     if len(os.Args) < 2 {
         fmt.Println("Usage: kwenda <filename.swh>")
+        fmt.Println("Try 'kwenda --help' for more information.")
         return
     }
     
     filename := os.Args[1]
+    
+    // Handle help flag
+    if filename == "--help" || filename == "-h" {
+        printHelp()
+        return
+    }
+    
+    // Handle version flag
+    if filename == "--version" || filename == "-v" {
+        printVersion()
+        return
+    }
     
     // Read the source code from a file
     input, err := os.ReadFile(filename)
