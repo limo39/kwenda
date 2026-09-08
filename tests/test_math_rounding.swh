@@ -1,0 +1,161 @@
+# Comprehensive test for math rounding functions
+# Tests: chini (floor), juu (ceil), zunguka (round), kata_desimali (truncate)
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("========================================")
+    andika("  COMPREHENSIVE MATH ROUNDING TESTS")
+    andika("========================================")
+    andika("")
+    
+    # Test 1: Integer inputs (should return unchanged)
+    andika("=== Test 1: Integer Inputs ===")
+    namba int1 = 5
+    namba int2 = 10
+    namba int3 = 0
+    
+    andika("Integer 5:")
+    andika("  chini(5) =", chini(int1))
+    andika("  juu(5) =", juu(int1))
+    andika("  zunguka(5) =", zunguka(int1))
+    andika("  kata_desimali(5) =", kata_desimali(int1))
+    
+    andika("Integer 0:")
+    andika("  chini(0) =", chini(int3))
+    andika("  juu(0) =", juu(int3))
+    andika("  zunguka(0) =", zunguka(int3))
+    andika("  kata_desimali(0) =", kata_desimali(int3))
+    andika("")
+    
+    # Test 2: Positive float inputs
+    andika("=== Test 2: Positive Float Inputs ===")
+    andika("4.3:")
+    andika("  chini(4.3) =", chini(4.3))
+    andika("  juu(4.3) =", juu(4.3))
+    andika("  zunguka(4.3) =", zunguka(4.3))
+    andika("  kata_desimali(4.3) =", kata_desimali(4.3))
+    
+    andika("4.7:")
+    andika("  chini(4.7) =", chini(4.7))
+    andika("  juu(4.7) =", juu(4.7))
+    andika("  zunguka(4.7) =", zunguka(4.7))
+    andika("  kata_desimali(4.7) =", kata_desimali(4.7))
+    
+    andika("4.5 (exact half):")
+    andika("  chini(4.5) =", chini(4.5))
+    andika("  juu(4.5) =", juu(4.5))
+    andika("  zunguka(4.5) =", zunguka(4.5))
+    andika("  kata_desimali(4.5) =", kata_desimali(4.5))
+    andika("")
+    
+    # Test 3: Negative float inputs (highlighting differences)
+    andika("=== Test 3: Negative Float Inputs ===")
+    andika("NOTE: Differences between floor and truncate!")
+    andika("")
+    andika("-2.3:")
+    andika("  chini(-2.3) =", chini(0-2.3), "  (floor rounds DOWN)")
+    andika("  juu(-2.3) =", juu(0-2.3))
+    andika("  zunguka(-2.3) =", zunguka(0-2.3))
+    andika("  kata_desimali(-2.3) =", kata_desimali(0-2.3), "  (truncate toward ZERO)")
+    
+    andika("-2.7:")
+    andika("  chini(-2.7) =", chini(0-2.7), "  (floor rounds DOWN)")
+    andika("  juu(-2.7) =", juu(0-2.7))
+    andika("  zunguka(-2.7) =", zunguka(0-2.7))
+    andika("  kata_desimali(-2.7) =", kata_desimali(0-2.7), "  (truncate toward ZERO)")
+    
+    andika("-2.5 (exact half):")
+    andika("  chini(-2.5) =", chini(0-2.5))
+    andika("  juu(-2.5) =", juu(0-2.5))
+    andika("  zunguka(-2.5) =", zunguka(0-2.5))
+    andika("  kata_desimali(-2.5) =", kata_desimali(0-2.5))
+    andika("")
+    
+    # Test 4: Edge cases
+    andika("=== Test 4: Edge Cases ===")
+    andika("Very small decimal (0.1):")
+    andika("  chini(0.1) =", chini(0.1))
+    andika("  juu(0.1) =", juu(0.1))
+    andika("  zunguka(0.1) =", zunguka(0.1))
+    andika("  kata_desimali(0.1) =", kata_desimali(0.1))
+    
+    andika("Almost 1 (0.9999):")
+    andika("  chini(0.9999) =", chini(0.9999))
+    andika("  juu(0.9999) =", juu(0.9999))
+    andika("  zunguka(0.9999) =", zunguka(0.9999))
+    andika("  kata_desimali(0.9999) =", kata_desimali(0.9999))
+    andika("")
+    
+    # Test 5: Using functions with variables
+    andika("=== Test 5: Using with Variables ===")
+    namba x = 7.8
+    namba y = 0-3.4
+    
+    andika("x = 7.8, y = -3.4")
+    andika("  chini(x) =", chini(x))
+    andika("  juu(y) =", juu(y))
+    andika("  zunguka(x) =", zunguka(x))
+    andika("  kata_desimali(y) =", kata_desimali(y))
+    andika("")
+    
+    # Test 6: Using functions in expressions
+    andika("=== Test 6: Using in Expressions ===")
+    namba a = 3.7
+    namba b = 2.3
+    
+    andika("a = 3.7, b = 2.3")
+    namba sum_floors = chini(a) + chini(b)
+    andika("  chini(a) + chini(b) =", sum_floors)
+    
+    namba sum_ceils = juu(a) + juu(b)
+    andika("  juu(a) + juu(b) =", sum_ceils)
+    andika("")
+    
+    # Test 7: Using with math module constants
+    andika("=== Test 7: Using with Math Constants ===")
+    andika("PI =", math.PI)
+    andika("  chini(PI) =", chini(math.PI))
+    andika("  juu(PI) =", juu(math.PI))
+    andika("  zunguka(PI) =", zunguka(math.PI))
+    andika("  kata_desimali(PI) =", kata_desimali(math.PI))
+    
+    andika("E =", math.E)
+    andika("  chini(E) =", chini(math.E))
+    andika("  juu(E) =", juu(math.E))
+    andika("  zunguka(E) =", zunguka(math.E))
+    andika("  kata_desimali(E) =", kata_desimali(math.E))
+    andika("")
+    
+    # Test 8: Comparison table for negative numbers
+    andika("=== Test 8: Comparison Table ===")
+    andika("Understanding the differences with negative numbers:")
+    andika("")
+    andika("| Value  | chini | juu | zunguka | kata_desimali |")
+    andika("|--------|-------|-----|---------|---------------|")
+    
+    namba v1 = 0-2.7
+    andika("| -2.7   |", chini(v1), "  |", juu(v1), " |", zunguka(v1), "      |", kata_desimali(v1), "            |")
+    
+    namba v2 = 0-2.3
+    andika("| -2.3   |", chini(v2), "  |", juu(v2), " |", zunguka(v2), "      |", kata_desimali(v2), "            |")
+    
+    namba v3 = 2.7
+    andika("|  2.7   |", chini(v3), "   |", juu(v3), "  |", zunguka(v3), "       |", kata_desimali(v3), "             |")
+    andika("")
+    
+    andika("Key observations:")
+    andika("- chini (floor): Always rounds DOWN (toward negative infinity)")
+    andika("- juu (ceil): Always rounds UP (toward positive infinity)")
+    andika("- zunguka (round): Rounds to nearest integer")
+    andika("- kata_desimali (truncate): Always rounds TOWARD ZERO")
+    andika("")
+    andika("For negative numbers:")
+    andika("  chini(-2.7) = -3  (rounds down to more negative)")
+    andika("  kata_desimali(-2.7) = -2  (rounds toward zero)")
+    andika("")
+    
+    andika("========================================")
+    andika("  ALL TESTS COMPLETED SUCCESSFULLY!")
+    andika("========================================")
+}

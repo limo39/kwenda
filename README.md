@@ -158,6 +158,10 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `darasa` | class | Define a class |
 | `unda` | new/create | Create a class instance |
 | `hii` | this/self | Reference to current instance |
+| `chini` | floor | Round number down to nearest integer |
+| `juu` | ceil | Round number up to nearest integer |
+| `zunguka` | round | Round number to nearest integer |
+| `kata_desimali` | truncate | Remove decimal part (round toward zero) |
 
 ### Basic Syntax
 
@@ -361,6 +365,75 @@ maneno neno2 = "Habari"
 boolean ni_sawa = neno1 == neno2  # kweli
 boolean si_sawa = neno1 != "Mambo"  # kweli
 ```
+
+### Mathematical Rounding Operations
+
+Kwenda provides four built-in functions for rounding numbers, each with different behavior:
+
+#### Basic Usage
+
+```swahili
+# Floor - round down to nearest integer
+namba x = chini(4.7)    # x = 4
+namba y = chini(-2.3)   # y = -3 (rounds toward negative infinity)
+
+# Ceiling - round up to nearest integer  
+namba a = juu(4.2)      # a = 5
+namba b = juu(-2.7)     # b = -2 (rounds toward positive infinity)
+
+# Round - round to nearest integer
+namba p = zunguka(4.5)  # p = 5 (rounds away from zero for .5)
+namba q = zunguka(4.3)  # q = 4
+
+# Truncate - remove decimal part (round toward zero)
+namba m = kata_desimali(4.9)   # m = 4
+namba n = kata_desimali(-4.9)  # n = -4 (rounds toward zero)
+```
+
+#### Key Differences for Negative Numbers
+
+The main difference between these functions becomes apparent with negative numbers:
+
+```swahili
+namba value = -2.7
+
+andika("chini(-2.7) =", chini(value))           # -3 (rounds DOWN)
+andika("kata_desimali(-2.7) =", kata_desimali(value))  # -2 (rounds toward ZERO)
+andika("juu(-2.7) =", juu(value))               # -2 (rounds UP)
+andika("zunguka(-2.7) =", zunguka(value))       # -3 (rounds to nearest)
+```
+
+**Comparison Table:**
+
+| Function | 4.7 | -2.7 | Description |
+|----------|-----|------|-------------|
+| `chini` (floor) | 4 | -3 | Always rounds toward negative infinity |
+| `juu` (ceil) | 5 | -2 | Always rounds toward positive infinity |
+| `zunguka` (round) | 5 | -3 | Rounds to nearest integer |
+| `kata_desimali` (truncate) | 4 | -2 | Always rounds toward zero |
+
+#### Using with Math Module Constants
+
+```swahili
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("PI =", math.PI)                  # 3.14159265359
+    andika("chini(PI) =", chini(math.PI))    # 3
+    andika("juu(PI) =", juu(math.PI))        # 4
+    andika("zunguka(PI) =", zunguka(math.PI)) # 3
+    
+    andika("E =", math.E)                    # 2.71828182846
+    andika("chini(E) =", chini(math.E))      # 2
+    andika("juu(E) =", juu(math.E))          # 3
+}
+```
+
+#### IEEE 754 Rounding Behavior
+
+The `zunguka` (round) function follows IEEE 754 standard rounding:
+- Values like 4.5 round to 5 (away from zero)
+- The rounding is consistent and predictable for all edge cases
 
 ### Comments
 
@@ -765,6 +838,7 @@ The interpreter follows a traditional architecture:
 - **Assignment**: `=` operator
 - **File I/O**: `soma()`, `andika_faili()`, `unda_faili()`, `faili_ipo()`, `ondoa_faili()`
 - **Array Operations**: `ongeza()`, `ondoa()`, `urefu_orodha()`, `pata()`
+- **Mathematical Rounding**: `chini()` (floor), `juu()` (ceil), `zunguka()` (round), `kata_desimali()` (truncate)
 
 ### Control Flow
 - **Functions**: `kazi` keyword for function definitions with parameters and return types
@@ -784,7 +858,6 @@ The interpreter follows a traditional architecture:
 - No labeled break/continue (only affects innermost loop)
 - Module functions must be called with module prefix (e.g., `math.add()`)
 - No circular import detection
-- Nested function calls as arguments not fully supported (use intermediate variables)
 - Array parameters to user-defined functions have limited support
 - Floating-point precision follows IEEE 754 standard (may have rounding artifacts)
 - Limited standard library (growing)
@@ -819,6 +892,7 @@ The interpreter follows a traditional architecture:
 - [x] Method calls with dot notation (e.g., `object.method()`) ✅
 - [x] Class inheritance ✅
 - [x] Lambda functions ✅
+- [x] Built-in mathematical rounding functions (floor, ceil, round, truncate) ✅
 - [ ] List comprehensions
 
 ## 🤝 Contributing
