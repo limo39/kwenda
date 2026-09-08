@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -875,6 +876,99 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 			return 0
+		}
+
+		// Mathematical rounding functions
+		if n.Name == "chini" && len(n.Args) == 1 {
+			// Floor function: chini(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			result := math.Floor(num)
+			
+			// Return integer if input was integer, float if input was float
+			if isFloat {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "chini" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "chini inahitaji hoja moja (chini requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'chini': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "juu" && len(n.Args) == 1 {
+			// Ceiling function: juu(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			result := math.Ceil(num)
+			
+			// Return integer if input was integer, float if input was float
+			if isFloat {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "juu" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "juu inahitaji hoja moja (juu requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'juu': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "zunguka" && len(n.Args) == 1 {
+			// Round function: zunguka(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			result := math.Round(num)
+			
+			// Return integer if input was integer, float if input was float
+			if isFloat {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "zunguka" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "zunguka inahitaji hoja moja (zunguka requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'zunguka': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "kata_desimali" && len(n.Args) == 1 {
+			// Truncate function: kata_desimali(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			result := math.Trunc(num)
+			
+			// Return integer if input was integer, float if input was float
+			if isFloat {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "kata_desimali" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "kata_desimali inahitaji hoja moja (kata_desimali requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'kata_desimali': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
 		}
 
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)

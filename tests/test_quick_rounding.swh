@@ -1,0 +1,26 @@
+# Quick test for rounding functions
+
+kazi kuu() {
+    andika("=== Testing chini (floor) ===")
+    andika("chini(4.7) =", chini(4.7))
+    andika("chini(-2.3) =", chini(-2.3))
+    andika("chini(5) =", chini(5))
+    
+    andika("")
+    andika("=== Testing juu (ceil) ===")
+    andika("juu(4.2) =", juu(4.2))
+    andika("juu(-2.7) =", juu(-2.7))
+    andika("juu(5) =", juu(5))
+    
+    andika("")
+    andika("=== Testing zunguka (round) ===")
+    andika("zunguka(4.5) =", zunguka(4.5))
+    andika("zunguka(4.6) =", zunguka(4.6))
+    andika("zunguka(-2.5) =", zunguka(-2.5))
+    
+    andika("")
+    andika("=== Testing kata_desimali (truncate) ===")
+    andika("kata_desimali(4.9) =", kata_desimali(4.9))
+    andika("kata_desimali(-4.9) =", kata_desimali(-4.9))
+    andika("kata_desimali(5) =", kata_desimali(5))
+}

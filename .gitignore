@@ -36,3 +36,4 @@ Thumbs.db
 *.log
 *.backup
 .*.backup
+*.exe
