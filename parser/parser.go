@@ -709,6 +709,26 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Handle unary minus (e.g., -5 or -2.5)
+	if len(tokens) >= 2 && tokens[0].Type == lexer.TokenOperator && tokens[0].Value == "-" {
+		// Check if this is a unary minus (next token is a number or expression)
+		if tokens[1].Type == lexer.TokenNumber {
+			// Simple case: -number
+			return ast.BinaryOpNode{
+				Left:  ast.NumberNode{Value: "0"},
+				Op:    "-",
+				Right: ast.NumberNode{Value: tokens[1].Value},
+			}
+		} else {
+			// Complex case: -expression
+			return ast.BinaryOpNode{
+				Left:  ast.NumberNode{Value: "0"},
+				Op:    "-",
+				Right: ParseExpression(tokens[1:]),
+			}
+		}
+	}
+
 	// Handle lambda functions (lambda(params) { body })
 	if tokens[0].Value == "lambda" && len(tokens) >= 3 {
 		return ParseLambda(tokens)
@@ -850,9 +870,29 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 func ParseArguments(tokens []lexer.Token) []ast.ASTNode {
 	var args []ast.ASTNode
 	var currentArg []lexer.Token
+	parenDepth := 0
 
 	for _, token := range tokens {
-		if token.Value == "," || token.Value == ")" {
+		if token.Value == "(" {
+			parenDepth++
+			currentArg = append(currentArg, token)
+		} else if token.Value == ")" {
+			if parenDepth > 0 {
+				parenDepth--
+				currentArg = append(currentArg, token)
+			} else {
+				// This is the closing paren of the function call itself
+				if len(currentArg) > 0 {
+					if len(currentArg) == 1 && currentArg[0].Type == lexer.TokenString {
+						args = append(args, ast.StringNode{Value: currentArg[0].Value})
+					} else {
+						args = append(args, ParseExpression(currentArg))
+					}
+					currentArg = nil
+				}
+			}
+		} else if token.Value == "," && parenDepth == 0 {
+			// Comma at depth 0 is an argument separator
 			if len(currentArg) > 0 {
 				if len(currentArg) == 1 && currentArg[0].Type == lexer.TokenString {
 					args = append(args, ast.StringNode{Value: currentArg[0].Value})

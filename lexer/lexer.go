@@ -147,8 +147,8 @@ func Lex(input string) []Token {
 			} else {
 				tokens = append(tokens, Token{Type: TokenOperator, Value: string(char)})
 			}
-		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' || char == ':' || char == '.' {
-			// Handle punctuation
+		} else if char == '{' || char == '}' || char == '(' || char == ')' || char == '[' || char == ']' || char == ';' || char == ',' || char == ':' {
+			// Handle punctuation (note: '.' is handled separately for decimal numbers and module access)
 			if currentToken.Len() > 0 {
 				tokenValue := currentToken.String()
 				if isSwahiliKeyword(tokenValue) {

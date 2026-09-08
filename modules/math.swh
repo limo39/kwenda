@@ -1,9 +1,9 @@
 # Math module - Moduli ya hesabu
 # Standard library for mathematical operations
 
-# Constants
-namba PI = 3
-namba E = 2
+# Mathematical constants
+namba PI = 3.14159265359  # Pi - ratio of circle's circumference to diameter
+namba E = 2.71828182846   # Euler's number - base of natural logarithm
 
 # Basic arithmetic
 kazi ongeza(namba a, namba b) {

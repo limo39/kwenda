@@ -1,0 +1,22 @@
+# Test math constants with rounding functions
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Mathematical Constants ===")
+    andika("PI =", math.PI)
+    andika("E =", math.E)
+    
+    andika("")
+    andika("=== Using Constants with Rounding Functions ===")
+    andika("chini(PI) =", chini(math.PI))
+    andika("juu(PI) =", juu(math.PI))
+    andika("zunguka(PI) =", zunguka(math.PI))
+    andika("kata_desimali(PI) =", kata_desimali(math.PI))
+    
+    andika("")
+    andika("chini(E) =", chini(math.E))
+    andika("juu(E) =", juu(math.E))
+    andika("zunguka(E) =", zunguka(math.E))
+    andika("kata_desimali(E) =", kata_desimali(math.E))
+}

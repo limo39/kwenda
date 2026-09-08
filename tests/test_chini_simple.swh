@@ -1,0 +1,6 @@
+# Simple test for chini function
+
+kazi kuu() {
+    namba x = chini(4.7)
+    andika(x)
+}
