@@ -162,6 +162,9 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `juu` | ceil | Round number up to nearest integer |
 | `zunguka` | round | Round number to nearest integer |
 | `kata_desimali` | truncate | Remove decimal part (round toward zero) |
+| `mzizi_mraba` | sqrt | Calculate square root of a number |
+| `mzizi_mchemraba` | cbrt | Calculate cube root of a number |
+| `mzizi` | nth_root | Calculate nth root of a number |
 
 ### Basic Syntax
 
@@ -434,6 +437,144 @@ kazi kuu() {
 The `zunguka` (round) function follows IEEE 754 standard rounding:
 - Values like 4.5 round to 5 (away from zero)
 - The rounding is consistent and predictable for all edge cases
+
+### Mathematical Root Operations
+
+Kwenda provides three built-in functions for calculating roots, each optimized for different use cases:
+
+#### Basic Usage
+
+```swahili
+# Square root - mzizi_mraba(number)
+namba x = mzizi_mraba(16)     # x = 4
+namba y = mzizi_mraba(2)      # y = 1.4142135623730951
+namba z = mzizi_mraba(100)    # z = 10
+
+# Cube root - mzizi_mchemraba(number)
+namba a = mzizi_mchemraba(27)    # a = 3
+namba b = mzizi_mchemraba(-8)    # b = -2 (works with negatives!)
+namba c = mzizi_mchemraba(10)    # c = 2.154434690031884
+
+# Nth root - mzizi(number, root)
+namba p = mzizi(16, 2)    # p = 4 (square root)
+namba q = mzizi(8, 3)     # q = 2 (cube root)
+namba r = mzizi(32, 5)    # r = 2 (5th root)
+namba s = mzizi(-8, 3)    # s = -2 (odd roots of negatives work)
+```
+
+#### Handling Negative Numbers
+
+Root functions have different behaviors with negative numbers:
+
+```swahili
+# Square root - ONLY non-negative numbers
+namba valid = mzizi_mraba(25)      # 5 - OK
+# namba error = mzizi_mraba(-25)   # ERROR! Cannot calculate
+
+# Cube root - ANY number (positive or negative)
+namba pos = mzizi_mchemraba(27)    # 3
+namba neg = mzizi_mchemraba(-27)   # -3 - Works fine!
+
+# Nth root - depends on whether root is even or odd
+namba odd_root = mzizi(-8, 3)      # -2 - Odd root, works
+# namba even_root = mzizi(-16, 4)  # ERROR! Even root of negative
+```
+
+**Error Handling:**
+
+```swahili
+jaribu {
+    namba x = mzizi_mraba(-4)  # Will throw error
+} shika (error) {
+    andika("Cannot calculate square root of negative number")
+}
+
+jaribu {
+    namba y = mzizi(-16, 4)    # Will throw error (even root)
+} shika (error) {
+    andika("Cannot calculate even root of negative number")
+}
+
+# This works fine - odd root of negative
+namba z = mzizi(-27, 3)        # -3 (no error)
+```
+
+#### Comparison of Root Functions
+
+**When to use each function:**
+
+| Function | Use Case | Negative Numbers | Performance |
+|----------|----------|------------------|-------------|
+| `mzizi_mraba` | Square roots only | ❌ Not allowed | Fastest |
+| `mzizi_mchemraba` | Cube roots only | ✅ Allowed | Fast |
+| `mzizi` | Any root (2nd, 3rd, 4th, etc.) | ⚠️ Odd roots only | Flexible |
+
+```swahili
+# These are equivalent:
+namba a = mzizi_mraba(16)      # 4
+namba b = mzizi(16, 2)         # 4 (same result)
+
+# These are equivalent:
+namba c = mzizi_mchemraba(8)   # 2
+namba d = mzizi(8, 3)          # 2 (same result)
+
+# Only mzizi can do 5th, 7th, 10th roots, etc:
+namba e = mzizi(32, 5)         # 2 (5th root)
+namba f = mzizi(128, 7)        # 2 (7th root)
+```
+
+#### Using with Math Module Constants
+
+```swahili
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("PI =", math.PI)                        # 3.14159265359
+    andika("Square root of PI =", mzizi_mraba(math.PI))      # 1.772...
+    andika("Cube root of PI =", mzizi_mchemraba(math.PI))    # 1.464...
+    andika("4th root of PI =", mzizi(math.PI, 4))            # 1.331...
+    
+    andika("E =", math.E)                          # 2.71828182846
+    andika("Square root of E =", mzizi_mraba(math.E))        # 1.648...
+}
+```
+
+#### Combining Roots with Rounding
+
+```swahili
+# Calculate and round in one expression
+namba sqrt2 = mzizi_mraba(2)           # 1.4142135623730951
+andika("Rounded:", zunguka(sqrt2))     # 1
+
+# Or directly
+andika("Floor of sqrt(10):", chini(mzizi_mraba(10)))     # 3
+andika("Ceil of cbrt(10):", juu(mzizi_mchemraba(10)))    # 3
+
+# Using in calculations
+namba a = mzizi_mraba(16) + mzizi_mraba(9)   # 4 + 3 = 7
+namba b = mzizi_mraba(16) * mzizi_mraba(9)   # 4 * 3 = 12
+```
+
+#### Special Cases
+
+```swahili
+# Root of 0 is always 0
+andika(mzizi_mraba(0))        # 0
+andika(mzizi_mchemraba(0))    # 0
+
+# Root of 1 is always 1
+andika(mzizi_mraba(1))        # 1
+andika(mzizi_mchemraba(1))    # 1
+andika(mzizi(1, 5))           # 1
+andika(mzizi(1, 100))         # 1
+
+# Perfect roots return integers
+andika(mzizi_mraba(25))       # 5 (not 5.0)
+andika(mzizi_mchemraba(8))    # 2 (not 2.0)
+
+# Non-perfect roots return floats
+andika(mzizi_mraba(2))        # 1.4142135623730951
+```
 
 ### Comments
 
@@ -839,6 +980,7 @@ The interpreter follows a traditional architecture:
 - **File I/O**: `soma()`, `andika_faili()`, `unda_faili()`, `faili_ipo()`, `ondoa_faili()`
 - **Array Operations**: `ongeza()`, `ondoa()`, `urefu_orodha()`, `pata()`
 - **Mathematical Rounding**: `chini()` (floor), `juu()` (ceil), `zunguka()` (round), `kata_desimali()` (truncate)
+- **Mathematical Roots**: `mzizi_mraba()` (square root), `mzizi_mchemraba()` (cube root), `mzizi()` (nth root)
 
 ### Control Flow
 - **Functions**: `kazi` keyword for function definitions with parameters and return types
@@ -893,6 +1035,7 @@ The interpreter follows a traditional architecture:
 - [x] Class inheritance ✅
 - [x] Lambda functions ✅
 - [x] Built-in mathematical rounding functions (floor, ceil, round, truncate) ✅
+- [x] Built-in mathematical root functions (square root, cube root, nth root) ✅
 - [ ] List comprehensions
 
 ## 🤝 Contributing

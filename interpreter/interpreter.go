@@ -971,6 +971,124 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Mathematical root functions
+		if n.Name == "mzizi_mraba" && len(n.Args) == 1 {
+			// Square root function: mzizi_mraba(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check for negative numbers
+			if num < 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Haiwezekani kupata mzizi mraba wa namba hasi: %v", num),
+						Context: "Katika kazi 'mzizi_mraba': Cannot calculate square root of negative number",
+					},
+				}
+			}
+			
+			result := math.Sqrt(num)
+			
+			// Always return float for square roots to maintain precision
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "mzizi_mraba" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "mzizi_mraba inahitaji hoja moja (mzizi_mraba requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'mzizi_mraba': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "mzizi_mchemraba" && len(n.Args) == 1 {
+			// Cube root function: mzizi_mchemraba(number)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Cbrt(num)
+			
+			// Always return float for cube roots to maintain precision
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "mzizi_mchemraba" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "mzizi_mchemraba inahitaji hoja moja (mzizi_mchemraba requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'mzizi_mchemraba': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "mzizi" && len(n.Args) == 2 {
+			// Nth root function: mzizi(number, n) calculates the nth root of number
+			// Equivalent to: number^(1/n)
+			argNum := Interpret(n.Args[0], env)
+			argRoot := Interpret(n.Args[1], env)
+			
+			num, isFloatNum := toNumber(argNum)
+			root, _ := toNumber(argRoot)
+			
+			// Check for invalid root
+			if root == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: "Haiwezekani kuhesabu mzizi wa nambari sifuri (Cannot calculate 0th root)",
+						Context: "Katika kazi 'mzizi': Root index cannot be zero",
+					},
+				}
+			}
+			
+			// Check for even root of negative number
+			if num < 0 && int(root)%2 == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Haiwezekani kupata mzizi wa %v wa namba hasi %v", int(root), num),
+						Context: fmt.Sprintf("Katika kazi 'mzizi': Cannot calculate even root (%.0f) of negative number", root),
+					},
+				}
+			}
+			
+			// Calculate nth root: x^(1/n)
+			// For negative numbers with odd roots, handle specially
+			var result float64
+			if num < 0 && int(root)%2 != 0 {
+				// Negative number with odd root: result is negative
+				result = -math.Pow(-num, 1.0/root)
+			} else {
+				result = math.Pow(num, 1.0/root)
+			}
+			
+			// Always return float for nth roots to maintain precision
+			if isFloatNum || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "mzizi" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "mzizi inahitaji hoja mbili (mzizi requires two arguments: number, root)",
+					Context: fmt.Sprintf("Katika kazi 'mzizi': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)

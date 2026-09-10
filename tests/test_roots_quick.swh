@@ -1,0 +1,23 @@
+# Quick test for root functions
+
+kazi kuu() {
+    andika("=== Square Root (mzizi_mraba) ===")
+    andika("mzizi_mraba(4) =", mzizi_mraba(4))
+    andika("mzizi_mraba(9) =", mzizi_mraba(9))
+    andika("mzizi_mraba(16) =", mzizi_mraba(16))
+    andika("mzizi_mraba(2) =", mzizi_mraba(2))
+    
+    andika("")
+    andika("=== Cube Root (mzizi_mchemraba) ===")
+    andika("mzizi_mchemraba(8) =", mzizi_mchemraba(8))
+    andika("mzizi_mchemraba(27) =", mzizi_mchemraba(27))
+    andika("mzizi_mchemraba(-8) =", mzizi_mchemraba(0-8))
+    andika("mzizi_mchemraba(2) =", mzizi_mchemraba(2))
+    
+    andika("")
+    andika("=== Nth Root (mzizi) ===")
+    andika("mzizi(16, 2) (square root) =", mzizi(16, 2))
+    andika("mzizi(8, 3) (cube root) =", mzizi(8, 3))
+    andika("mzizi(32, 5) (5th root) =", mzizi(32, 5))
+    andika("mzizi(-8, 3) (cube root of -8) =", mzizi(0-8, 3))
+}

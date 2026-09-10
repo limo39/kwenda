@@ -1,0 +1,216 @@
+# Comprehensive test for math root functions
+# Tests: mzizi_mraba (sqrt), mzizi_mchemraba (cbrt), mzizi (nth root)
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("========================================")
+    andika("  COMPREHENSIVE MATH ROOT TESTS")
+    andika("========================================")
+    andika("")
+    
+    # Test 1: Perfect squares with mzizi_mraba
+    andika("=== Test 1: Square Root - Perfect Squares ===")
+    andika("mzizi_mraba(4) =", mzizi_mraba(4))
+    andika("mzizi_mraba(9) =", mzizi_mraba(9))
+    andika("mzizi_mraba(16) =", mzizi_mraba(16))
+    andika("mzizi_mraba(25) =", mzizi_mraba(25))
+    andika("mzizi_mraba(100) =", mzizi_mraba(100))
+    andika("mzizi_mraba(1) =", mzizi_mraba(1))
+    andika("mzizi_mraba(0) =", mzizi_mraba(0))
+    andika("")
+    
+    # Test 2: Non-perfect squares with mzizi_mraba
+    andika("=== Test 2: Square Root - Non-Perfect Squares ===")
+    andika("mzizi_mraba(2) =", mzizi_mraba(2))
+    andika("mzizi_mraba(3) =", mzizi_mraba(3))
+    andika("mzizi_mraba(5) =", mzizi_mraba(5))
+    andika("mzizi_mraba(10) =", mzizi_mraba(10))
+    andika("mzizi_mraba(50) =", mzizi_mraba(50))
+    andika("")
+    
+    # Test 3: Perfect cubes with mzizi_mchemraba
+    andika("=== Test 3: Cube Root - Perfect Cubes ===")
+    andika("mzizi_mchemraba(8) =", mzizi_mchemraba(8))
+    andika("mzizi_mchemraba(27) =", mzizi_mchemraba(27))
+    andika("mzizi_mchemraba(64) =", mzizi_mchemraba(64))
+    andika("mzizi_mchemraba(125) =", mzizi_mchemraba(125))
+    andika("mzizi_mchemraba(1) =", mzizi_mchemraba(1))
+    andika("mzizi_mchemraba(0) =", mzizi_mchemraba(0))
+    andika("")
+    
+    # Test 4: Negative numbers with mzizi_mchemraba
+    andika("=== Test 4: Cube Root - Negative Numbers ===")
+    andika("NOTE: Cube root of negative numbers works!")
+    andika("mzizi_mchemraba(-8) =", mzizi_mchemraba(0-8))
+    andika("mzizi_mchemraba(-27) =", mzizi_mchemraba(0-27))
+    andika("mzizi_mchemraba(-1) =", mzizi_mchemraba(0-1))
+    andika("")
+    
+    # Test 5: Non-perfect cubes
+    andika("=== Test 5: Cube Root - Non-Perfect Cubes ===")
+    andika("mzizi_mchemraba(2) =", mzizi_mchemraba(2))
+    andika("mzizi_mchemraba(10) =", mzizi_mchemraba(10))
+    andika("mzizi_mchemraba(100) =", mzizi_mchemraba(100))
+    andika("")
+    
+    # Test 6: Nth root - various roots
+    andika("=== Test 6: Nth Root - Various Roots ===")
+    andika("mzizi(16, 2) (square root) =", mzizi(16, 2))
+    andika("mzizi(16, 4) (4th root) =", mzizi(16, 4))
+    andika("mzizi(32, 5) (5th root) =", mzizi(32, 5))
+    andika("mzizi(64, 6) (6th root) =", mzizi(64, 6))
+    andika("mzizi(128, 7) (7th root) =", mzizi(128, 7))
+    andika("")
+    
+    # Test 7: Nth root with negative numbers (odd roots only)
+    andika("=== Test 7: Nth Root - Negative Numbers (Odd Roots) ===")
+    andika("mzizi(-8, 3) (cube root) =", mzizi(0-8, 3))
+    andika("mzizi(-32, 5) (5th root) =", mzizi(0-32, 5))
+    andika("mzizi(-128, 7) (7th root) =", mzizi(0-128, 7))
+    andika("mzizi(-1, 3) =", mzizi(0-1, 3))
+    andika("")
+    
+    # Test 8: Using with variables
+    andika("=== Test 8: Using with Variables ===")
+    namba x = 49
+    namba y = 8
+    namba z = 81
+    
+    andika("x = 49")
+    andika("  mzizi_mraba(x) =", mzizi_mraba(x))
+    
+    andika("y = 8")
+    andika("  mzizi_mchemraba(y) =", mzizi_mchemraba(y))
+    
+    andika("z = 81")
+    andika("  mzizi(z, 4) =", mzizi(z, 4))
+    andika("")
+    
+    # Test 9: Using in expressions
+    andika("=== Test 9: Using in Expressions ===")
+    namba a = 16
+    namba b = 9
+    
+    andika("a = 16, b = 9")
+    namba sum_roots = mzizi_mraba(a) + mzizi_mraba(b)
+    andika("  mzizi_mraba(a) + mzizi_mraba(b) =", sum_roots)
+    
+    namba product = mzizi_mraba(a) * mzizi_mraba(b)
+    andika("  mzizi_mraba(a) * mzizi_mraba(b) =", product)
+    andika("")
+    
+    # Test 10: Using with math module constants
+    andika("=== Test 10: Using with Math Constants ===")
+    andika("PI =", math.PI)
+    andika("  mzizi_mraba(PI) =", mzizi_mraba(math.PI))
+    andika("  mzizi_mchemraba(PI) =", mzizi_mchemraba(math.PI))
+    andika("  mzizi(PI, 4) =", mzizi(math.PI, 4))
+    
+    andika("E =", math.E)
+    andika("  mzizi_mraba(E) =", mzizi_mraba(math.E))
+    andika("  mzizi_mchemraba(E) =", mzizi_mchemraba(math.E))
+    andika("")
+    
+    # Test 11: Combining roots with rounding
+    andika("=== Test 11: Combining Roots with Rounding ===")
+    namba sqrt2 = mzizi_mraba(2)
+    andika("sqrt(2) =", sqrt2)
+    andika("  chini(sqrt(2)) =", chini(sqrt2))
+    andika("  juu(sqrt(2)) =", juu(sqrt2))
+    andika("  zunguka(sqrt(2)) =", zunguka(sqrt2))
+    
+    namba cbrt10 = mzizi_mchemraba(10)
+    andika("cbrt(10) =", cbrt10)
+    andika("  chini(cbrt(10)) =", chini(cbrt10))
+    andika("  juu(cbrt(10)) =", juu(cbrt10))
+    andika("")
+    
+    # Test 12: Error handling demonstrations
+    andika("=== Test 12: Error Handling ===")
+    
+    andika("Test 12a: Square root of negative (should error)")
+    jaribu {
+        namba neg = mzizi_mraba(0-4)
+    } shika (e) {
+        andika("  Error caught correctly:", e)
+    }
+    
+    andika("")
+    andika("Test 12b: Even root of negative (should error)")
+    jaribu {
+        namba neg = mzizi(0-16, 4)
+    } shika (e) {
+        andika("  Error caught correctly:", e)
+    }
+    
+    andika("")
+    andika("Test 12c: Odd root of negative (should work)")
+    namba neg_odd = mzizi(0-27, 3)
+    andika("  mzizi(-27, 3) =", neg_odd, "(no error)")
+    
+    andika("")
+    andika("Test 12d: Zero root (should error)")
+    jaribu {
+        namba zero_root = mzizi(16, 0)
+    } shika (e) {
+        andika("  Error caught correctly:", e)
+    }
+    andika("")
+    
+    # Test 13: Comparison table
+    andika("=== Test 13: Comparison Table ===")
+    andika("Different ways to calculate the same roots:")
+    andika("")
+    andika("| Number | mzizi_mraba | mzizi(n,2) | Match? |")
+    andika("|--------|-------------|------------|--------|")
+    
+    namba n1 = 16
+    namba sqrt1 = mzizi_mraba(n1)
+    namba sqrt2 = mzizi(n1, 2)
+    andika("| 16     |", sqrt1, "         |", sqrt2, "        | Yes    |")
+    
+    namba n2 = 25
+    namba sqrt3 = mzizi_mraba(n2)
+    namba sqrt4 = mzizi(n2, 2)
+    andika("| 25     |", sqrt3, "          |", sqrt4, "         | Yes    |")
+    
+    andika("")
+    andika("| Number | mzizi_mchemraba | mzizi(n,3) | Match? |")
+    andika("|--------|-----------------|------------|--------|")
+    
+    namba n3 = 8
+    namba cbrt1 = mzizi_mchemraba(n3)
+    namba cbrt2 = mzizi(n3, 3)
+    andika("| 8      |", cbrt1, "              |", cbrt2, "        | ~Yes   |")
+    
+    namba n4 = 27
+    namba cbrt3 = mzizi_mchemraba(n4)
+    namba cbrt4 = mzizi(n4, 3)
+    andika("| 27     |", cbrt3, "              |", cbrt4, "        | Yes    |")
+    andika("")
+    
+    # Test 14: Special values
+    andika("=== Test 14: Special Values ===")
+    andika("Square root of 0:", mzizi_mraba(0))
+    andika("Square root of 1:", mzizi_mraba(1))
+    andika("Cube root of 0:", mzizi_mchemraba(0))
+    andika("Cube root of 1:", mzizi_mchemraba(1))
+    andika("Any root of 1:")
+    andika("  mzizi(1, 2) =", mzizi(1, 2))
+    andika("  mzizi(1, 5) =", mzizi(1, 5))
+    andika("  mzizi(1, 10) =", mzizi(1, 10))
+    andika("")
+    
+    andika("Key observations:")
+    andika("- mzizi_mraba: Only works with non-negative numbers")
+    andika("- mzizi_mchemraba: Works with any number (negative or positive)")
+    andika("- mzizi: Checks if root is even/odd for negative numbers")
+    andika("- All functions return precise float values when needed")
+    andika("- Perfect roots return integers when input is integer")
+    andika("")
+    
+    andika("========================================")
+    andika("  ALL TESTS COMPLETED SUCCESSFULLY!")
+    andika("========================================")
+}

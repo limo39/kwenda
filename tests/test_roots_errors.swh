@@ -1,0 +1,43 @@
+# Test error handling for root functions
+
+kazi kuu() {
+    andika("=== Testing Error Handling ===")
+    
+    # Test 1: Square root of negative number (should error)
+    andika("Test 1: Square root of negative number")
+    jaribu {
+        namba x = mzizi_mraba(0-4)
+        andika("Result:", x)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 2: Even root of negative number (should error)
+    andika("Test 2: 4th root of negative number")
+    jaribu {
+        namba y = mzizi(0-16, 4)
+        andika("Result:", y)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 3: Odd root of negative number (should work)
+    andika("Test 3: 5th root of negative number (should work)")
+    namba z = mzizi(0-32, 5)
+    andika("mzizi(-32, 5) =", z)
+    
+    andika("")
+    
+    # Test 4: Zero root (should error)
+    andika("Test 4: 0th root")
+    jaribu {
+        namba w = mzizi(16, 0)
+        andika("Result:", w)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+}
