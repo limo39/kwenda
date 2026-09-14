@@ -165,6 +165,10 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `mzizi_mraba` | sqrt | Calculate square root of a number |
 | `mzizi_mchemraba` | cbrt | Calculate cube root of a number |
 | `mzizi` | nth_root | Calculate nth root of a number |
+| `exp` | exp | Calculate e raised to the power x (e^x) |
+| `log_asili` | ln/log | Calculate natural logarithm (base e) |
+| `log10` | log10 | Calculate base-10 logarithm |
+| `log2` | log2 | Calculate base-2 logarithm |
 
 ### Basic Syntax
 
@@ -575,6 +579,217 @@ andika(mzizi_mchemraba(8))    # 2 (not 2.0)
 # Non-perfect roots return floats
 andika(mzizi_mraba(2))        # 1.4142135623730951
 ```
+
+### Exponential & Logarithm Operations
+
+Kwenda provides four built-in functions for exponential and logarithmic calculations, essential for scientific computing, growth calculations, and data analysis:
+
+#### Basic Usage
+
+```swahili
+# Exponential - exp(x) returns e^x
+namba a = exp(0)      # a = 1
+namba b = exp(1)      # b = 2.718281828... (which is e)
+namba c = exp(2)      # c = 7.389...
+namba d = exp(-1)     # d = 0.367... (which is 1/e)
+
+# Natural logarithm - log_asili(x) returns ln(x)
+namba p = log_asili(1)      # p = 0
+namba q = log_asili(2)      # q = 0.693...
+namba r = log_asili(10)     # r = 2.302...
+namba s = log_asili(100)    # s = 4.605...
+
+# Base-10 logarithm - log10(x)
+namba m = log10(1)      # m = 0
+namba n = log10(10)     # n = 1
+namba o = log10(100)    # o = 2
+namba p = log10(1000)   # p = 3
+
+# Base-2 logarithm - log2(x)
+namba w = log2(1)       # w = 0
+namba x = log2(2)       # x = 1
+namba y = log2(8)       # y = 3 (because 2^3 = 8)
+namba z = log2(16)      # z = 4 (because 2^4 = 16)
+```
+
+#### Inverse Relationships
+
+Exponential and logarithm functions are inverses of each other:
+
+```swahili
+# exp and log_asili are inverses
+andika(exp(log_asili(5)))       # 5
+andika(log_asili(exp(3)))       # 3
+
+# This means:
+# If y = exp(x), then x = log_asili(y)
+# If y = log_asili(x), then x = exp(y)
+
+# Example: solving exponential equations
+namba x = log_asili(10)         # What power of e gives 10?
+andika("e^", x, "=", exp(x))    # Verify: e^x = 10
+```
+
+#### Logarithm Properties
+
+```swahili
+# Property 1: log(a * b) = log(a) + log(b)
+namba a = 8
+namba b = 16
+andika(log_asili(a * b))                    # 4.852...
+andika(log_asili(a) + log_asili(b))         # 4.852... (same)
+
+# Property 2: log(a / b) = log(a) - log(b)
+andika(log_asili(a) - log_asili(b))         # -0.693...
+
+# Property 3: log(a^n) = n * log(a)
+namba n = 3
+andika(log_asili(a * a * a))                # 6.238...
+andika(n * log_asili(a))                    # 6.238... (same)
+```
+
+#### Error Handling
+
+Logarithms only work with positive numbers:
+
+```swahili
+# Valid: positive numbers
+namba x = log_asili(5)      # 1.609...
+namba y = log10(100)        # 2
+namba z = log2(8)           # 3
+
+# Invalid: zero or negative numbers
+jaribu {
+    namba bad1 = log_asili(0)       # ERROR
+} shika (error) {
+    andika("Cannot take log of zero")
+}
+
+jaribu {
+    namba bad2 = log10(-5)          # ERROR
+} shika (error) {
+    andika("Cannot take log of negative")
+}
+
+# Exponential overflow
+jaribu {
+    namba big = exp(710)            # ERROR (too large)
+} shika (error) {
+    andika("Result would overflow")
+}
+```
+
+#### Using with Math Constants
+
+```swahili
+leta "modules/math.swh"
+
+kazi kuu() {
+    # E is Euler's number (base of natural log)
+    andika("E =", math.E)                   # 2.71828...
+    andika("exp(1) =", exp(1))              # 2.71828... (same as E)
+    andika("log_asili(E) =", log_asili(math.E))  # 1
+    
+    # PI with exponential/log
+    andika("PI =", math.PI)                 # 3.14159...
+    andika("exp(PI) =", exp(math.PI))       # 23.140...
+    andika("log_asili(PI) =", log_asili(math.PI))  # 1.144...
+}
+```
+
+#### Practical Applications
+
+**Compound Growth:**
+```swahili
+# Continuous compound interest: A = P * e^(rt)
+namba principal = 1000
+namba rate = 0.05              # 5% annual rate
+namba time = 10                # 10 years
+
+namba amount = principal * exp(rate * time)
+andika("After 10 years:", amount)  # $1648.72
+```
+
+**Half-Life Calculations:**
+```swahili
+# Half-life: time for quantity to reduce to half
+namba half_life = log_asili(0.5)
+andika("Time to halve:", half_life)  # -0.693...
+
+# Double-time: time for quantity to double
+namba double_time = log_asili(2)
+andika("Time to double:", double_time)  # 0.693...
+```
+
+**Powers of 2 (Computer Science):**
+```swahili
+# How many bits needed to represent a number?
+namba value = 1024
+namba bits = juu(log2(value))
+andika("Bits needed for", value, ":", bits)  # 10 bits
+```
+
+**Orders of Magnitude:**
+```swahili
+# How many digits in a number?
+namba num = 1000000
+namba digits = juu(log10(num)) + 1
+andika("Digits in", num, ":", digits)  # 7 digits
+```
+
+#### Change of Base Formula
+
+Convert between different logarithm bases:
+
+```swahili
+# log_b(x) = log_asili(x) / log_asili(b)
+
+# Example: Calculate log base 5 of 125
+namba x = 125
+namba base = 5
+namba result = log_asili(x) / log_asili(base)
+andika("log_5(125) =", result)  # 3 (because 5^3 = 125)
+
+# Verify with our log functions:
+# log2(x) = log_asili(x) / log_asili(2)
+namba test = 8
+andika("log2(8) direct:", log2(test))           # 3
+andika("Using formula:", log_asili(test) / log_asili(2))  # 3 (same)
+```
+
+#### Combining with Other Math Functions
+
+```swahili
+# Exponential with rounding
+namba exp_val = exp(2.5)
+andika("exp(2.5) =", exp_val)               # 12.182...
+andika("Rounded:", zunguka(exp_val))        # 12
+
+# Logarithm with roots
+namba num = 16
+andika("log2(16) =", log2(num))             # 4
+andika("sqrt(16) =", mzizi_mraba(num))      # 4
+andika("log2(sqrt(16)) =", log2(mzizi_mraba(num)))  # 2
+
+# Exponential growth with roots
+namba growth = exp(log_asili(2))            # 2
+andika("e^(ln(2)) =", growth)
+```
+
+#### Comparison of Functions
+
+| Function | Domain | Range | Use Case |
+|----------|--------|-------|----------|
+| `exp(x)` | All numbers | Positive only | Growth, compound interest |
+| `log_asili(x)` | Positive only | All numbers | Natural processes, calculus |
+| `log10(x)` | Positive only | All numbers | Orders of magnitude, pH, decibels |
+| `log2(x)` | Positive only | All numbers | Computer science, information theory |
+
+**Key Relationships:**
+- `exp(log_asili(x)) = x` (for x > 0)
+- `log_asili(exp(x)) = x` (for all x)
+- `log10(x) = log_asili(x) / log_asili(10)`
+- `log2(x) = log_asili(x) / log_asili(2)`
 
 ### Comments
 

@@ -1089,6 +1089,158 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Exponential and logarithm functions
+		if n.Name == "exp" && len(n.Args) == 1 {
+			// Exponential function: exp(x) returns e^x
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Exp(num)
+			
+			// Check for infinity (overflow)
+			if math.IsInf(result, 1) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la exp(%v) ni kubwa sana (Result too large)", num),
+						Context: "Katika kazi 'exp': Result would overflow (infinity)",
+					},
+				}
+			}
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la exp(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'exp': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for exponential unless it's a perfect integer
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "exp" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "exp inahitaji hoja moja (exp requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'exp': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "log_asili" && len(n.Args) == 1 {
+			// Natural logarithm function: log_asili(x) returns ln(x)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check for invalid input
+			if num <= 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Haiwezekani kuhesabu logarithm ya %v (Must be positive)", num),
+						Context: "Katika kazi 'log_asili': Logarithm only works with positive numbers",
+					},
+				}
+			}
+			
+			result := math.Log(num)
+			
+			// Always return float for logarithm
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "log_asili" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "log_asili inahitaji hoja moja (log_asili requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'log_asili': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "log10" && len(n.Args) == 1 {
+			// Base-10 logarithm function: log10(x)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check for invalid input
+			if num <= 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Haiwezekani kuhesabu logarithm ya %v (Must be positive)", num),
+						Context: "Katika kazi 'log10': Logarithm only works with positive numbers",
+					},
+				}
+			}
+			
+			result := math.Log10(num)
+			
+			// Always return float for logarithm
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "log10" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "log10 inahitaji hoja moja (log10 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'log10': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "log2" && len(n.Args) == 1 {
+			// Base-2 logarithm function: log2(x)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check for invalid input
+			if num <= 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Haiwezekani kuhesabu logarithm ya %v (Must be positive)", num),
+						Context: "Katika kazi 'log2': Logarithm only works with positive numbers",
+					},
+				}
+			}
+			
+			result := math.Log2(num)
+			
+			// Always return float for logarithm
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "log2" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "log2 inahitaji hoja moja (log2 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'log2': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)

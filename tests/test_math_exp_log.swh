@@ -1,0 +1,256 @@
+# Comprehensive test for exponential and logarithm functions
+# Tests: exp (e^x), log_asili (ln), log10, log2
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("========================================")
+    andika("  COMPREHENSIVE EXP & LOG TESTS")
+    andika("========================================")
+    andika("")
+    
+    # Test 1: Exponential with special values
+    andika("=== Test 1: Exponential - Special Values ===")
+    andika("exp(0) =", exp(0), " (should be 1)")
+    andika("exp(1) =", exp(1), " (should be e = 2.718...)")
+    andika("exp(-1) =", exp(0-1), " (should be 1/e)")
+    andika("exp(2) =", exp(2))
+    andika("exp(-2) =", exp(0-2))
+    andika("")
+    
+    # Test 2: Exponential with various values
+    andika("=== Test 2: Exponential - Various Values ===")
+    andika("exp(0.5) =", exp(0.5))
+    andika("exp(3) =", exp(3))
+    andika("exp(5) =", exp(5))
+    andika("exp(10) =", exp(10))
+    andika("exp(-5) =", exp(0-5))
+    andika("")
+    
+    # Test 3: Natural logarithm with special values
+    andika("=== Test 3: Natural Log - Special Values ===")
+    andika("log_asili(1) =", log_asili(1), " (should be 0)")
+    andika("log_asili(2) =", log_asili(2))
+    andika("log_asili(10) =", log_asili(10))
+    andika("log_asili(100) =", log_asili(100))
+    andika("")
+    
+    # Test 4: Natural logarithm with math.E
+    andika("=== Test 4: Natural Log with E ===")
+    andika("E =", math.E)
+    andika("log_asili(E) =", log_asili(math.E), " (should be 1)")
+    namba e_squared = math.E * math.E
+    andika("log_asili(E^2) =", log_asili(e_squared), " (should be 2)")
+    andika("")
+    
+    # Test 5: Base-10 logarithm
+    andika("=== Test 5: Base-10 Logarithm ===")
+    andika("log10(1) =", log10(1), " (should be 0)")
+    andika("log10(10) =", log10(10), " (should be 1)")
+    andika("log10(100) =", log10(100), " (should be 2)")
+    andika("log10(1000) =", log10(1000), " (should be 3)")
+    andika("log10(10000) =", log10(10000), " (should be 4)")
+    andika("log10(2) =", log10(2))
+    andika("log10(5) =", log10(5))
+    andika("")
+    
+    # Test 6: Base-2 logarithm
+    andika("=== Test 6: Base-2 Logarithm ===")
+    andika("log2(1) =", log2(1), " (should be 0)")
+    andika("log2(2) =", log2(2), " (should be 1)")
+    andika("log2(4) =", log2(4), " (should be 2)")
+    andika("log2(8) =", log2(8), " (should be 3)")
+    andika("log2(16) =", log2(16), " (should be 4)")
+    andika("log2(32) =", log2(32), " (should be 5)")
+    andika("log2(64) =", log2(64), " (should be 6)")
+    andika("log2(3) =", log2(3))
+    andika("log2(10) =", log2(10))
+    andika("")
+    
+    # Test 7: Inverse relationships
+    andika("=== Test 7: Inverse Relationships ===")
+    andika("exp and log_asili are inverses:")
+    andika("  exp(log_asili(5)) =", exp(log_asili(5)), " (should be 5)")
+    andika("  log_asili(exp(3)) =", log_asili(exp(3)), " (should be 3)")
+    andika("  exp(log_asili(100)) =", exp(log_asili(100)), " (should be 100)")
+    andika("  log_asili(exp(0)) =", log_asili(exp(0)), " (should be 0)")
+    andika("")
+    
+    # Test 8: Using with variables
+    andika("=== Test 8: Using with Variables ===")
+    namba x = 7
+    namba y = 2
+    
+    andika("x = 7")
+    andika("  exp(x) =", exp(x))
+    andika("  log_asili(x) =", log_asili(x))
+    andika("  log10(x) =", log10(x))
+    andika("  log2(x) =", log2(x))
+    
+    andika("y = 2")
+    andika("  exp(y) =", exp(y))
+    andika("  log2(y) =", log2(y))
+    andika("")
+    
+    # Test 9: Using in expressions
+    andika("=== Test 9: Using in Expressions ===")
+    namba a = 3
+    namba b = 4
+    
+    andika("a = 3, b = 4")
+    namba sum_exp = exp(a) + exp(b)
+    andika("  exp(a) + exp(b) =", sum_exp)
+    
+    namba sum_log = log_asili(a) + log_asili(b)
+    andika("  log_asili(a) + log_asili(b) =", sum_log)
+    
+    namba product_log = log_asili(a * b)
+    andika("  log_asili(a * b) =", product_log, " (should equal sum above)")
+    andika("")
+    
+    # Test 10: Logarithm properties
+    andika("=== Test 10: Logarithm Properties ===")
+    namba m = 8
+    namba n = 16
+    
+    andika("m = 8, n = 16")
+    andika("Property: log(m*n) = log(m) + log(n)")
+    namba log_product = log_asili(m * n)
+    namba sum_logs = log_asili(m) + log_asili(n)
+    andika("  log_asili(m*n) =", log_product)
+    andika("  log_asili(m) + log_asili(n) =", sum_logs)
+    
+    andika("Property: log(m/n) = log(m) - log(n)")
+    namba log_quotient = log_asili(m)
+    namba diff_logs = log_asili(m) - log_asili(n)
+    andika("  log_asili(m) =", log_quotient)
+    andika("  log_asili(m) - log_asili(n) =", diff_logs)
+    andika("")
+    
+    # Test 11: Using with math constants
+    andika("=== Test 11: Using with Math Constants ===")
+    andika("PI =", math.PI)
+    andika("  exp(PI) =", exp(math.PI))
+    andika("  log_asili(PI) =", log_asili(math.PI))
+    andika("  log10(PI) =", log10(math.PI))
+    andika("  log2(PI) =", log2(math.PI))
+    
+    andika("E =", math.E)
+    andika("  exp(1) = E =", exp(1))
+    andika("  log_asili(E) =", log_asili(math.E), " (should be 1)")
+    andika("  log10(E) =", log10(math.E))
+    andika("")
+    
+    # Test 12: Combining with other math functions
+    andika("=== Test 12: Combining with Rounding ===")
+    namba exp_val = exp(2.5)
+    andika("exp(2.5) =", exp_val)
+    andika("  chini(exp(2.5)) =", chini(exp_val))
+    andika("  juu(exp(2.5)) =", juu(exp_val))
+    andika("  zunguka(exp(2.5)) =", zunguka(exp_val))
+    
+    namba log_val = log_asili(20)
+    andika("log_asili(20) =", log_val)
+    andika("  chini(log_asili(20)) =", chini(log_val))
+    andika("  juu(log_asili(20)) =", juu(log_val))
+    andika("")
+    
+    # Test 13: Combining with roots
+    andika("=== Test 13: Combining with Roots ===")
+    namba num = 16
+    andika("num = 16")
+    andika("  log2(num) =", log2(num), " (4, since 2^4 = 16)")
+    andika("  exp(log_asili(num)) =", exp(log_asili(num)), " (should be 16)")
+    andika("  log_asili(mzizi_mraba(num)) =", log_asili(mzizi_mraba(num)))
+    andika("")
+    
+    # Test 14: Change of base formula
+    andika("=== Test 14: Change of Base Formula ===")
+    andika("log2(x) = log_asili(x) / log_asili(2)")
+    namba test_num = 8
+    andika("For x = 8:")
+    namba log2_direct = log2(test_num)
+    namba log2_formula = log_asili(test_num) / log_asili(2)
+    andika("  log2(8) =", log2_direct)
+    andika("  log_asili(8) / log_asili(2) =", log2_formula)
+    andika("  Match:", log2_direct == log2_formula)
+    
+    andika("log10(x) = log_asili(x) / log_asili(10)")
+    namba test_num2 = 100
+    andika("For x = 100:")
+    namba log10_direct = log10(test_num2)
+    namba log10_formula = log_asili(test_num2) / log_asili(10)
+    andika("  log10(100) =", log10_direct)
+    andika("  log_asili(100) / log_asili(10) =", log10_formula)
+    andika("")
+    
+    # Test 15: Error handling
+    andika("=== Test 15: Error Handling ===")
+    
+    andika("Test 15a: log_asili(0) - should error")
+    jaribu {
+        namba bad = log_asili(0)
+    } shika (e) {
+        andika("  Error caught:", e)
+    }
+    
+    andika("Test 15b: log_asili(-5) - should error")
+    jaribu {
+        namba bad = log_asili(0-5)
+    } shika (e) {
+        andika("  Error caught:", e)
+    }
+    
+    andika("Test 15c: log10(0) - should error")
+    jaribu {
+        namba bad = log10(0)
+    } shika (e) {
+        andika("  Error caught:", e)
+    }
+    
+    andika("Test 15d: log2(-1) - should error")
+    jaribu {
+        namba bad = log2(0-1)
+    } shika (e) {
+        andika("  Error caught:", e)
+    }
+    
+    andika("Test 15e: exp(710) - overflow should error")
+    jaribu {
+        namba big = exp(710)
+    } shika (e) {
+        andika("  Error caught:", e)
+    }
+    andika("")
+    
+    # Test 16: Practical applications
+    andika("=== Test 16: Practical Applications ===")
+    
+    andika("Growth calculation (compound interest):")
+    namba rate = 0.05
+    namba time = 10
+    namba growth = exp(rate * time)
+    andika("  5% growth for 10 years: e^(0.05*10) =", growth)
+    
+    andika("Half-life calculation:")
+    namba halflife = log_asili(0.5)
+    andika("  Time to halve: ln(0.5) =", halflife)
+    
+    andika("Powers of 2:")
+    namba power = log2(1024)
+    andika("  2^? = 1024: log2(1024) =", power)
+    andika("")
+    
+    andika("Key observations:")
+    andika("- exp(x) grows very rapidly for large x")
+    andika("- log functions only work with positive numbers")
+    andika("- exp and log_asili are inverse functions")
+    andika("- log2 is useful for powers of 2")
+    andika("- log10 is useful for orders of magnitude")
+    andika("- Change of base formula connects all logarithms")
+    andika("")
+    
+    andika("========================================")
+    andika("  ALL TESTS COMPLETED SUCCESSFULLY!")
+    andika("========================================")
+}

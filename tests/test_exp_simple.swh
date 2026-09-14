@@ -1,0 +1,14 @@
+# Simple exp test
+
+kazi kuu() {
+    andika("exp(10) =", exp(10))
+    andika("exp(20) =", exp(20))
+    
+    andika("Testing exp(710) - should overflow")
+    jaribu {
+        namba big = exp(710)
+        andika("Result:", big)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+}

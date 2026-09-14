@@ -1,0 +1,58 @@
+# Test error handling for exponential and logarithm functions
+
+kazi kuu() {
+    andika("=== Testing Error Handling ===")
+    
+    # Test 1: Logarithm of zero (should error)
+    andika("Test 1: log_asili(0)")
+    jaribu {
+        namba x = log_asili(0)
+        andika("Result:", x)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 2: Logarithm of negative number (should error)
+    andika("Test 2: log_asili(-5)")
+    jaribu {
+        namba y = log_asili(0-5)
+        andika("Result:", y)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 3: log10 of zero (should error)
+    andika("Test 3: log10(0)")
+    jaribu {
+        namba z = log10(0)
+        andika("Result:", z)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 4: log2 of negative (should error)
+    andika("Test 4: log2(-8)")
+    jaribu {
+        namba w = log2(0-8)
+        andika("Result:", w)
+    } shika (error) {
+        andika("Error caught:", error)
+    }
+    
+    andika("")
+    
+    # Test 5: Very large exponential (should handle gracefully)
+    andika("Test 5: exp(710) - causes overflow")
+    jaribu {
+        namba big = exp(710)
+        andika("Result:", big)
+    } shika (error) {
+        andika("Error caught (overflow):", error)
+    }
+}

@@ -1,0 +1,36 @@
+# Quick test for exponential and logarithm functions
+
+kazi kuu() {
+    andika("=== Exponential (exp) ===")
+    andika("exp(0) =", exp(0))
+    andika("exp(1) =", exp(1))
+    andika("exp(2) =", exp(2))
+    andika("exp(-1) =", exp(0-1))
+    
+    andika("")
+    andika("=== Natural Logarithm (log_asili) ===")
+    andika("log_asili(1) =", log_asili(1))
+    andika("log_asili(2) =", log_asili(2))
+    andika("log_asili(10) =", log_asili(10))
+    andika("log_asili(100) =", log_asili(100))
+    
+    andika("")
+    andika("=== Base-10 Logarithm (log10) ===")
+    andika("log10(1) =", log10(1))
+    andika("log10(10) =", log10(10))
+    andika("log10(100) =", log10(100))
+    andika("log10(1000) =", log10(1000))
+    
+    andika("")
+    andika("=== Base-2 Logarithm (log2) ===")
+    andika("log2(1) =", log2(1))
+    andika("log2(2) =", log2(2))
+    andika("log2(4) =", log2(4))
+    andika("log2(8) =", log2(8))
+    andika("log2(16) =", log2(16))
+    
+    andika("")
+    andika("=== Inverse Relationship ===")
+    andika("exp(log_asili(5)) =", exp(log_asili(5)))
+    andika("log_asili(exp(3)) =", log_asili(exp(3)))
+}
