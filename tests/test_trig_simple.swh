@@ -1,0 +1,49 @@
+# Simple trigonometric functions test
+
+kazi kuu() {
+    andika("=== SIMPLE TRIG TEST ===")
+    andika("")
+    
+    # Test degree/radian conversion
+    andika("radians(90) = ", radians(90))
+    andika("degrees(1.5708) = ", degrees(1.5708))
+    andika("")
+    
+    # Test sine
+    andika("sin(0) = ", sin(0))
+    andika("sin(radians(30)) = ", sin(radians(30)))
+    andika("sin(radians(90)) = ", sin(radians(90)))
+    andika("")
+    
+    # Test cosine
+    andika("cos(0) = ", cos(0))
+    andika("cos(radians(60)) = ", cos(radians(60)))
+    andika("cos(radians(90)) = ", cos(radians(90)))
+    andika("")
+    
+    # Test tangent
+    andika("tan(0) = ", tan(0))
+    andika("tan(radians(45)) = ", tan(radians(45)))
+    andika("")
+    
+    # Test inverse functions
+    andika("asin(0.5) = ", asin(0.5))
+    andika("acos(0.5) = ", acos(0.5))
+    andika("atan(1) = ", atan(1))
+    andika("atan2(1, 1) = ", atan2(1, 1))
+    andika("")
+    
+    # Test error handling
+    jaribu {
+        andika("Testing asin(2) - should fail...")
+        result = asin(2)
+        andika("ERROR: Should have failed!")
+    } shika kosa {
+        andika("✓ Correctly caught error:", kosa)
+    }
+    
+    andika("")
+    andika("=== TEST COMPLETE ===")
+}
+
+kuu()

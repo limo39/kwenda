@@ -1241,6 +1241,296 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Trigonometric functions (angle in radians)
+		if n.Name == "sin" && len(n.Args) == 1 {
+			// Sine function: sin(x) where x is in radians
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Sin(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la sin(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'sin': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "sin" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "sin inahitaji hoja moja (sin requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'sin': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "cos" && len(n.Args) == 1 {
+			// Cosine function: cos(x) where x is in radians
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Cos(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la cos(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'cos': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "cos" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "cos inahitaji hoja moja (cos requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'cos': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "tan" && len(n.Args) == 1 {
+			// Tangent function: tan(x) where x is in radians
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Tan(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la tan(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'tan': Result is NaN",
+					},
+				}
+			}
+			
+			// Check for infinity (happens at π/2 + nπ)
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("tan(%v) haiwezekani (undefined at π/2 + nπ)", num),
+						Context: "Katika kazi 'tan': Result is undefined (approaches infinity)",
+					},
+				}
+			}
+			
+			// Always return float for trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "tan" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "tan inahitaji hoja moja (tan requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'tan': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		// Inverse trigonometric functions (return angle in radians)
+		if n.Name == "asin" && len(n.Args) == 1 {
+			// Arc sine function: asin(x) returns angle in radians, domain [-1, 1]
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check domain: asin only works for -1 <= x <= 1
+			if num < -1 || num > 1 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("asin(%v) haiwezekani (Domain must be between -1 and 1)", num),
+						Context: "Katika kazi 'asin': Input must be in range [-1, 1]",
+					},
+				}
+			}
+			
+			result := math.Asin(num)
+			
+			// Always return float for inverse trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "asin" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "asin inahitaji hoja moja (asin requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'asin': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "acos" && len(n.Args) == 1 {
+			// Arc cosine function: acos(x) returns angle in radians, domain [-1, 1]
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check domain: acos only works for -1 <= x <= 1
+			if num < -1 || num > 1 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("acos(%v) haiwezekani (Domain must be between -1 and 1)", num),
+						Context: "Katika kazi 'acos': Input must be in range [-1, 1]",
+					},
+				}
+			}
+			
+			result := math.Acos(num)
+			
+			// Always return float for inverse trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "acos" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "acos inahitaji hoja moja (acos requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'acos': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "atan" && len(n.Args) == 1 {
+			// Arc tangent function: atan(x) returns angle in radians, domain all real numbers
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Atan(num)
+			
+			// Always return float for inverse trig functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "atan" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "atan inahitaji hoja moja (atan requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'atan': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "atan2" && len(n.Args) == 2 {
+			// Two-argument arc tangent: atan2(y, x) returns angle in radians
+			// Properly handles all quadrants and signs
+			yArg := Interpret(n.Args[0], env)
+			xArg := Interpret(n.Args[1], env)
+			y, yIsFloat := toNumber(yArg)
+			x, xIsFloat := toNumber(xArg)
+			
+			result := math.Atan2(y, x)
+			
+			// Always return float for inverse trig functions
+			if yIsFloat || xIsFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "atan2" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "atan2 inahitaji hoja mbili (atan2 requires two arguments: y, x)",
+					Context: fmt.Sprintf("Katika kazi 'atan2': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		// Degree/Radian conversion functions
+		if n.Name == "radians" && len(n.Args) == 1 {
+			// Convert degrees to radians: radians(degrees)
+			arg := Interpret(n.Args[0], env)
+			degrees, isFloat := toNumber(arg)
+			
+			// Formula: radians = degrees × π / 180
+			result := degrees * math.Pi / 180.0
+			
+			// Always return float for conversion
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "radians" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "radians inahitaji hoja moja (radians requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'radians': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "degrees" && len(n.Args) == 1 {
+			// Convert radians to degrees: degrees(radians)
+			arg := Interpret(n.Args[0], env)
+			radians, isFloat := toNumber(arg)
+			
+			// Formula: degrees = radians × 180 / π
+			result := radians * 180.0 / math.Pi
+			
+			// Always return float for conversion
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "degrees" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "degrees inahitaji hoja moja (degrees requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'degrees': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)

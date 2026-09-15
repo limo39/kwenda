@@ -1,0 +1,231 @@
+# Comprehensive Trigonometric Functions Test
+# Tests sin, cos, tan, asin, acos, atan, atan2, radians, degrees
+
+andika("=== TRIGONOMETRIC FUNCTIONS TEST ===")
+andika("")
+
+# Test 1: Degree/Radian Conversions
+andika("Test 1: Degree/Radian Conversions")
+andika("radians(0) = ", radians(0))           # 0
+andika("radians(30) = ", radians(30))         # π/6 ≈ 0.5236
+andika("radians(45) = ", radians(45))         # π/4 ≈ 0.7854
+andika("radians(60) = ", radians(60))         # π/3 ≈ 1.0472
+andika("radians(90) = ", radians(90))         # π/2 ≈ 1.5708
+andika("radians(180) = ", radians(180))       # π ≈ 3.1416
+andika("radians(270) = ", radians(270))       # 3π/2 ≈ 4.7124
+andika("radians(360) = ", radians(360))       # 2π ≈ 6.2832
+andika("")
+
+andika("degrees(0) = ", degrees(0))                    # 0
+andika("degrees(1.5708) ≈ ", degrees(1.5708))         # ≈ 90
+andika("degrees(3.14159) ≈ ", degrees(3.14159))       # ≈ 180
+andika("degrees(6.28318) ≈ ", degrees(6.28318))       # ≈ 360
+andika("")
+
+# Test 2: Sine Function - Special Angles
+andika("Test 2: Sine Function - Special Angles")
+andika("sin(0) = ", sin(0))                       # 0
+andika("sin(π/6) = sin(radians(30)) = ", sin(radians(30)))    # 0.5
+andika("sin(π/4) = sin(radians(45)) = ", sin(radians(45)))    # √2/2 ≈ 0.7071
+andika("sin(π/3) = sin(radians(60)) = ", sin(radians(60)))    # √3/2 ≈ 0.8660
+andika("sin(π/2) = sin(radians(90)) = ", sin(radians(90)))    # 1
+andika("sin(π) = sin(radians(180)) = ", sin(radians(180)))    # 0
+andika("sin(3π/2) = sin(radians(270)) = ", sin(radians(270))) # -1
+andika("sin(2π) = sin(radians(360)) = ", sin(radians(360)))   # 0
+andika("")
+
+# Test 3: Cosine Function - Special Angles
+andika("Test 3: Cosine Function - Special Angles")
+andika("cos(0) = ", cos(0))                       # 1
+andika("cos(π/6) = cos(radians(30)) = ", cos(radians(30)))    # √3/2 ≈ 0.8660
+andika("cos(π/4) = cos(radians(45)) = ", cos(radians(45)))    # √2/2 ≈ 0.7071
+andika("cos(π/3) = cos(radians(60)) = ", cos(radians(60)))    # 0.5
+andika("cos(π/2) = cos(radians(90)) = ", cos(radians(90)))    # 0
+andika("cos(π) = cos(radians(180)) = ", cos(radians(180)))    # -1
+andika("cos(3π/2) = cos(radians(270)) = ", cos(radians(270))) # 0
+andika("cos(2π) = cos(radians(360)) = ", cos(radians(360)))   # 1
+andika("")
+
+# Test 4: Tangent Function - Special Angles
+andika("Test 4: Tangent Function - Special Angles")
+andika("tan(0) = ", tan(0))                       # 0
+andika("tan(π/6) = tan(radians(30)) = ", tan(radians(30)))    # √3/3 ≈ 0.5774
+andika("tan(π/4) = tan(radians(45)) = ", tan(radians(45)))    # 1
+andika("tan(π/3) = tan(radians(60)) = ", tan(radians(60)))    # √3 ≈ 1.7321
+andika("tan(π) = tan(radians(180)) = ", tan(radians(180)))    # 0
+andika("")
+
+# Test 5: Negative Angles
+andika("Test 5: Negative Angles")
+andika("sin(-π/6) = sin(radians(-30)) = ", sin(radians(-30)))  # -0.5
+andika("cos(-π/4) = cos(radians(-45)) = ", cos(radians(-45)))  # √2/2 ≈ 0.7071
+andika("tan(-π/4) = tan(radians(-45)) = ", tan(radians(-45)))  # -1
+andika("")
+
+# Test 6: Inverse Sine Function
+andika("Test 6: Inverse Sine (asin) - Returns radians")
+andika("asin(0) = ", asin(0))                     # 0
+andika("asin(0.5) ≈ ", asin(0.5))                # π/6 ≈ 0.5236
+andika("asin(0.7071) ≈ ", asin(0.7071))          # π/4 ≈ 0.7854
+andika("asin(0.8660) ≈ ", asin(0.8660))          # π/3 ≈ 1.0472
+andika("asin(1) = ", asin(1))                     # π/2 ≈ 1.5708
+andika("asin(-0.5) ≈ ", asin(-0.5))              # -π/6 ≈ -0.5236
+andika("asin(-1) = ", asin(-1))                   # -π/2 ≈ -1.5708
+andika("")
+
+# Test 7: Inverse Cosine Function
+andika("Test 7: Inverse Cosine (acos) - Returns radians")
+andika("acos(1) = ", acos(1))                     # 0
+andika("acos(0.8660) ≈ ", acos(0.8660))          # π/6 ≈ 0.5236
+andika("acos(0.7071) ≈ ", acos(0.7071))          # π/4 ≈ 0.7854
+andika("acos(0.5) ≈ ", acos(0.5))                # π/3 ≈ 1.0472
+andika("acos(0) = ", acos(0))                     # π/2 ≈ 1.5708
+andika("acos(-1) = ", acos(-1))                   # π ≈ 3.1416
+andika("")
+
+# Test 8: Inverse Tangent Function
+andika("Test 8: Inverse Tangent (atan) - Returns radians")
+andika("atan(0) = ", atan(0))                     # 0
+andika("atan(0.5774) ≈ ", atan(0.5774))          # π/6 ≈ 0.5236
+andika("atan(1) = ", atan(1))                     # π/4 ≈ 0.7854
+andika("atan(1.7321) ≈ ", atan(1.7321))          # π/3 ≈ 1.0472
+andika("atan(10) ≈ ", atan(10))                   # Large positive
+andika("atan(-1) = ", atan(-1))                   # -π/4 ≈ -0.7854
+andika("atan(-10) ≈ ", atan(-10))                 # Large negative
+andika("")
+
+# Test 9: Two-Argument Arc Tangent (atan2)
+andika("Test 9: Two-Argument Arc Tangent (atan2)")
+andika("atan2(1, 1) = ", atan2(1, 1))             # π/4 (Quadrant I)
+andika("atan2(1, -1) = ", atan2(1, -1))           # 3π/4 (Quadrant II)
+andika("atan2(-1, -1) = ", atan2(-1, -1))         # -3π/4 (Quadrant III)
+andika("atan2(-1, 1) = ", atan2(-1, 1))           # -π/4 (Quadrant IV)
+andika("atan2(0, 1) = ", atan2(0, 1))             # 0 (positive x-axis)
+andika("atan2(0, -1) = ", atan2(0, -1))           # π (negative x-axis)
+andika("atan2(1, 0) = ", atan2(1, 0))             # π/2 (positive y-axis)
+andika("atan2(-1, 0) = ", atan2(-1, 0))           # -π/2 (negative y-axis)
+andika("")
+
+# Test 10: Inverse Relationships
+andika("Test 10: Inverse Relationships")
+pembe = radians(30)
+andika("Original angle: 30° = ", pembe, " radians")
+andika("sin(30°) = ", sin(pembe))
+andika("asin(sin(30°)) = ", asin(sin(pembe)), " radians")
+andika("Back to degrees: ", degrees(asin(sin(pembe))), "°")
+andika("")
+
+namba = 0.5
+andika("Original value: ", namba)
+andika("asin(", namba, ") = ", asin(namba), " radians")
+andika("sin(asin(", namba, ")) = ", sin(asin(namba)))
+andika("")
+
+# Test 11: Pythagorean Identity: sin²(x) + cos²(x) = 1
+andika("Test 11: Pythagorean Identity - sin²(x) + cos²(x) = 1")
+x = radians(30)
+andika("For x = 30°:")
+sin_val = sin(x)
+cos_val = cos(x)
+andika("sin(x) = ", sin_val)
+andika("cos(x) = ", cos_val)
+andika("sin²(x) + cos²(x) = ", sin_val * sin_val + cos_val * cos_val, " (should be 1)")
+andika("")
+
+# Test 12: Using Variables
+andika("Test 12: Using Variables")
+angle_deg = 45
+angle_rad = radians(angle_deg)
+andika("Angle: ", angle_deg, "° = ", angle_rad, " radians")
+andika("sin(", angle_deg, "°) = ", sin(angle_rad))
+andika("cos(", angle_deg, "°) = ", cos(angle_rad))
+andika("tan(", angle_deg, "°) = ", tan(angle_rad))
+andika("")
+
+# Test 13: Using Expressions
+andika("Test 13: Using Expressions")
+andika("sin(radians(30 + 15)) = ", sin(radians(30 + 15)))
+andika("cos(radians(90 - 45)) = ", cos(radians(90 - 45)))
+andika("tan(radians(60 / 2)) = ", tan(radians(60 / 2)))
+andika("")
+
+# Test 14: Combining with Other Math Functions
+andika("Test 14: Combining with Other Math Functions")
+andika("juu(sin(radians(30))) = ", juu(sin(radians(30))))
+andika("chini(cos(radians(60))) = ", chini(cos(radians(60))))
+andika("zunguka(tan(radians(45)) * 10) = ", zunguka(tan(radians(45)) * 10))
+andika("mzizi_mraba(sin(radians(30)) * sin(radians(30)) + cos(radians(30)) * cos(radians(30))) = ", 
+       mzizi_mraba(sin(radians(30)) * sin(radians(30)) + cos(radians(30)) * cos(radians(30))))
+andika("")
+
+# Test 15: Practical Applications - Triangle Calculations
+andika("Test 15: Practical - Right Triangle Calculations")
+andika("Right triangle with hypotenuse = 10, angle = 30°")
+hypotenuse = 10
+angle = radians(30)
+opposite = hypotenuse * sin(angle)
+adjacent = hypotenuse * cos(angle)
+andika("Opposite side = ", opposite)
+andika("Adjacent side = ", adjacent)
+andika("Verification: opposite² + adjacent² = ", opposite*opposite + adjacent*adjacent, " (should be 100)")
+andika("")
+
+# Test 16: Practical Applications - Distance Between Points
+andika("Test 16: Practical - Angle Between Two Points")
+y1 = 3
+x1 = 4
+angle_rad = atan2(y1, x1)
+angle_deg = degrees(angle_rad)
+andika("Point (", x1, ", ", y1, ")")
+andika("Angle from origin: ", angle_rad, " radians")
+andika("Angle from origin: ", angle_deg, "°")
+distance = mzizi_mraba(x1*x1 + y1*y1)
+andika("Distance from origin: ", distance)
+andika("")
+
+# Test 17: Error Handling - Domain Errors for asin
+andika("Test 17: Error Handling - asin domain")
+jaribu {
+    andika("Trying asin(2) - should fail...")
+    result = asin(2)
+    andika("ERROR: Should have thrown an error!")
+} shika kosa {
+    andika("✓ Correctly caught error: ", kosa)
+}
+andika("")
+
+# Test 18: Error Handling - Domain Errors for acos
+andika("Test 18: Error Handling - acos domain")
+jaribu {
+    andika("Trying acos(-1.5) - should fail...")
+    result = acos(-1.5)
+    andika("ERROR: Should have thrown an error!")
+} shika kosa {
+    andika("✓ Correctly caught error: ", kosa)
+}
+andika("")
+
+# Test 19: Converting Results Back to Degrees
+andika("Test 19: Converting Results Back to Degrees")
+andika("asin(0.5) in radians = ", asin(0.5))
+andika("asin(0.5) in degrees = ", degrees(asin(0.5)), "°")
+andika("acos(0.5) in radians = ", acos(0.5))
+andika("acos(0.5) in degrees = ", degrees(acos(0.5)), "°")
+andika("atan(1) in radians = ", atan(1))
+andika("atan(1) in degrees = ", degrees(atan(1)), "°")
+andika("")
+
+# Test 20: Unit Circle - Complete Rotation
+andika("Test 20: Unit Circle - Complete Rotation (0° to 360°)")
+dor = 0
+wakati (dor <= 360) {
+    rad = radians(dor)
+    kama (dor % 45 == 0) {
+        andika(dor, "°: sin=", zunguka(sin(rad) * 1000) / 1000, 
+               " cos=", zunguka(cos(rad) * 1000) / 1000)
+    }
+    dor = dor + 45
+}
+andika("")
+
+andika("=== ALL TRIGONOMETRIC TESTS COMPLETE ===")

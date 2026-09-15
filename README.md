@@ -169,6 +169,15 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `log_asili` | ln/log | Calculate natural logarithm (base e) |
 | `log10` | log10 | Calculate base-10 logarithm |
 | `log2` | log2 | Calculate base-2 logarithm |
+| `sin` | sin | Calculate sine of angle (in radians) |
+| `cos` | cos | Calculate cosine of angle (in radians) |
+| `tan` | tan | Calculate tangent of angle (in radians) |
+| `asin` | asin/arcsin | Calculate arc sine (inverse sine), returns radians |
+| `acos` | acos/arccos | Calculate arc cosine (inverse cosine), returns radians |
+| `atan` | atan/arctan | Calculate arc tangent (inverse tangent), returns radians |
+| `atan2` | atan2 | Two-argument arc tangent for proper quadrant handling |
+| `radians` | radians | Convert degrees to radians |
+| `degrees` | degrees | Convert radians to degrees |
 
 ### Basic Syntax
 
@@ -790,6 +799,222 @@ andika("e^(ln(2)) =", growth)
 - `log_asili(exp(x)) = x` (for all x)
 - `log10(x) = log_asili(x) / log_asili(10)`
 - `log2(x) = log_asili(x) / log_asili(2)`
+
+### Trigonometric Functions
+
+Kwenda provides comprehensive trigonometric functions for angle calculations, including basic trig functions (sin, cos, tan), their inverses (asin, acos, atan, atan2), and angle conversion utilities (radians, degrees).
+
+**Important:** All trigonometric functions work with angles in **radians**, not degrees. Use the `radians()` and `degrees()` functions to convert between the two.
+
+#### Angle Conversion
+
+```swahili
+# Convert degrees to radians
+namba angle_rad = radians(90)      # π/2 ≈ 1.5708
+andika("90° = ", angle_rad, " radians")
+
+# Convert radians to degrees
+namba angle_deg = degrees(1.5708)  # ≈ 90
+andika("1.5708 radians = ", angle_deg, "°")
+
+# Common conversions
+andika("0° = ", radians(0), " rad")       # 0
+andika("30° = ", radians(30), " rad")     # π/6 ≈ 0.5236
+andika("45° = ", radians(45), " rad")     # π/4 ≈ 0.7854
+andika("60° = ", radians(60), " rad")     # π/3 ≈ 1.0472
+andika("90° = ", radians(90), " rad")     # π/2 ≈ 1.5708
+andika("180° = ", radians(180), " rad")   # π ≈ 3.1416
+andika("360° = ", radians(360), " rad")   # 2π ≈ 6.2832
+```
+
+#### Basic Trigonometric Functions
+
+```swahili
+# Sine - sin(angle_in_radians)
+andika("sin(0) = ", sin(0))                       # 0
+andika("sin(30°) = ", sin(radians(30)))           # 0.5
+andika("sin(45°) = ", sin(radians(45)))           # √2/2 ≈ 0.7071
+andika("sin(90°) = ", sin(radians(90)))           # 1
+
+# Cosine - cos(angle_in_radians)
+andika("cos(0) = ", cos(0))                       # 1
+andika("cos(60°) = ", cos(radians(60)))           # 0.5
+andika("cos(45°) = ", cos(radians(45)))           # √2/2 ≈ 0.7071
+andika("cos(90°) = ", cos(radians(90)))           # 0 (approximately)
+
+# Tangent - tan(angle_in_radians)
+andika("tan(0) = ", tan(0))                       # 0
+andika("tan(45°) = ", tan(radians(45)))           # 1
+andika("tan(30°) = ", tan(radians(30)))           # √3/3 ≈ 0.5774
+andika("tan(60°) = ", tan(radians(60)))           # √3 ≈ 1.7321
+```
+
+#### Inverse Trigonometric Functions
+
+Inverse trig functions return angles in **radians**:
+
+```swahili
+# Arc sine - asin(x) returns angle where sin(angle) = x
+# Domain: -1 ≤ x ≤ 1, Range: -π/2 to π/2
+namba angle1 = asin(0.5)                          # π/6 ≈ 0.5236 radians (30°)
+namba angle2 = asin(1)                            # π/2 ≈ 1.5708 radians (90°)
+andika("asin(0.5) = ", degrees(angle1), "°")      # 30°
+
+# Arc cosine - acos(x) returns angle where cos(angle) = x
+# Domain: -1 ≤ x ≤ 1, Range: 0 to π
+namba angle3 = acos(0.5)                          # π/3 ≈ 1.0472 radians (60°)
+namba angle4 = acos(0)                            # π/2 ≈ 1.5708 radians (90°)
+andika("acos(0.5) = ", degrees(angle3), "°")      # 60°
+
+# Arc tangent - atan(x) returns angle where tan(angle) = x
+# Domain: all real numbers, Range: -π/2 to π/2
+namba angle5 = atan(1)                            # π/4 ≈ 0.7854 radians (45°)
+namba angle6 = atan(0)                            # 0 radians (0°)
+andika("atan(1) = ", degrees(angle5), "°")        # 45°
+
+# Two-argument arc tangent - atan2(y, x) for proper quadrant handling
+# Returns angle from origin to point (x, y)
+namba angle7 = atan2(1, 1)                        # π/4 ≈ 0.7854 (Quadrant I)
+namba angle8 = atan2(1, -1)                       # 3π/4 ≈ 2.3562 (Quadrant II)
+namba angle9 = atan2(-1, -1)                      # -3π/4 ≈ -2.3562 (Quadrant III)
+namba angle10 = atan2(-1, 1)                      # -π/4 ≈ -0.7854 (Quadrant IV)
+```
+
+#### Pythagorean Identity
+
+The fundamental relationship sin²(x) + cos²(x) = 1:
+
+```swahili
+namba angle = radians(30)
+namba s = sin(angle)
+namba c = cos(angle)
+
+# Verify the identity
+namba sum = s*s + c*c
+andika("sin²(30°) + cos²(30°) = ", sum)  # Always equals 1
+```
+
+#### Practical Applications
+
+**Right Triangle Calculations:**
+
+```swahili
+# Given: right triangle with hypotenuse = 10, angle = 30°
+namba hypotenuse = 10
+namba angle = radians(30)
+
+# Calculate sides
+namba opposite = hypotenuse * sin(angle)          # 5
+namba adjacent = hypotenuse * cos(angle)          # 8.66
+
+andika("Opposite side = ", opposite)
+andika("Adjacent side = ", adjacent)
+
+# Verify: opposite² + adjacent² = hypotenuse²
+namba check = opposite*opposite + adjacent*adjacent
+andika("Verification: ", check, " ≈ ", hypotenuse*hypotenuse)
+```
+
+**Finding Angle Between Two Points:**
+
+```swahili
+# Point coordinates
+namba x = 4
+namba y = 3
+
+# Find angle from origin to point (x, y)
+namba angle_rad = atan2(y, x)
+namba angle_deg = degrees(angle_rad)
+
+andika("Point (", x, ", ", y, ")")
+andika("Angle from origin: ", angle_deg, "°")
+
+# Calculate distance
+namba distance = mzizi_mraba(x*x + y*y)  # 5
+andika("Distance: ", distance)
+```
+
+**Navigation and Bearings:**
+
+```swahili
+# Calculate direction to travel from point A to point B
+namba dx = 100  # East displacement
+namba dy = 100  # North displacement
+
+namba bearing_rad = atan2(dy, dx)
+namba bearing_deg = degrees(bearing_rad)
+
+andika("Bearing: ", bearing_deg, "° from East")
+
+# Convert to compass bearing (from North)
+namba compass_bearing = 90 - bearing_deg
+andika("Compass bearing: ", compass_bearing, "° from North")
+```
+
+#### Error Handling
+
+```swahili
+# asin and acos have restricted domains
+jaribu {
+    namba bad = asin(2)  # ERROR: must be in [-1, 1]
+} shika kosa {
+    andika("Domain error: asin requires input between -1 and 1")
+}
+
+jaribu {
+    namba bad = acos(1.5)  # ERROR: must be in [-1, 1]
+} shika kosa {
+    andika("Domain error: acos requires input between -1 and 1")
+}
+
+# tan is undefined at π/2 + nπ
+jaribu {
+    namba bad = tan(radians(90))  # May produce very large number or error
+} shika kosa {
+    andika("tan(90°) is undefined (approaches infinity)")
+}
+```
+
+#### Combining with Other Math Functions
+
+```swahili
+# Rounding trig results
+namba angle = radians(30)
+andika("sin(30°) rounded:", zunguka(sin(angle)))  # 1
+
+# Using with roots
+namba a = sin(radians(30))  # 0.5
+namba b = cos(radians(30))  # 0.866
+namba hyp = mzizi_mraba(a*a + b*b)  # 1 (Pythagorean theorem)
+
+# Converting between trig functions
+# tan(x) = sin(x) / cos(x)
+namba angle2 = radians(45)
+namba tan_val = sin(angle2) / cos(angle2)
+andika("tan(45°) = sin(45°)/cos(45°) = ", tan_val)  # 1
+```
+
+#### Comparison Table
+
+| Function | Input | Output | Domain | Use Case |
+|----------|-------|--------|--------|----------|
+| `sin(x)` | Radians | Ratio [-1, 1] | All numbers | Height, oscillation |
+| `cos(x)` | Radians | Ratio [-1, 1] | All numbers | Distance, projection |
+| `tan(x)` | Radians | Any number | x ≠ π/2 + nπ | Slope, gradient |
+| `asin(x)` | Ratio [-1, 1] | Radians [-π/2, π/2] | [-1, 1] | Finding angles |
+| `acos(x)` | Ratio [-1, 1] | Radians [0, π] | [-1, 1] | Finding angles |
+| `atan(x)` | Any number | Radians [-π/2, π/2] | All numbers | Finding angles |
+| `atan2(y, x)` | Any numbers | Radians [-π, π] | All numbers | Direction, quadrants |
+| `radians(deg)` | Degrees | Radians | All numbers | Angle conversion |
+| `degrees(rad)` | Radians | Degrees | All numbers | Angle conversion |
+
+**Key Relationships:**
+- `sin(asin(x)) = x` (for -1 ≤ x ≤ 1)
+- `cos(acos(x)) = x` (for -1 ≤ x ≤ 1)
+- `tan(atan(x)) = x` (for all x)
+- `sin²(x) + cos²(x) = 1` (Pythagorean identity)
+- `tan(x) = sin(x) / cos(x)` (when cos(x) ≠ 0)
+- Use `atan2(y, x)` instead of `atan(y/x)` to handle all quadrants correctly
 
 ### Comments
 
