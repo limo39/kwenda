@@ -1,0 +1,244 @@
+# Comprehensive Hyperbolic Functions Test
+# Tests sinh, cosh, tanh, asinh, acosh, atanh
+
+kazi kuu() {
+    andika("=== HYPERBOLIC FUNCTIONS TEST ===")
+    andika("")
+    
+    # Test 1: Basic Hyperbolic Functions at Zero
+    andika("Test 1: Hyperbolic Functions at x = 0")
+    andika("sinh(0) = ", sinh(0))           # 0
+    andika("cosh(0) = ", cosh(0))           # 1
+    andika("tanh(0) = ", tanh(0))           # 0
+    andika("")
+    
+    # Test 2: Hyperbolic Sine - Various Values
+    andika("Test 2: Hyperbolic Sine - sinh(x)")
+    andika("sinh(1) = ", sinh(1))           # 1.1752...
+    andika("sinh(2) = ", sinh(2))           # 3.6269...
+    andika("sinh(-1) = ", sinh(-1))         # -1.1752...
+    andika("sinh(-2) = ", sinh(-2))         # -3.6269...
+    andika("sinh(0.5) = ", sinh(0.5))       # 0.5211...
+    andika("")
+    
+    # Test 3: Hyperbolic Cosine - Various Values
+    andika("Test 3: Hyperbolic Cosine - cosh(x)")
+    andika("cosh(1) = ", cosh(1))           # 1.5431...
+    andika("cosh(2) = ", cosh(2))           # 3.7622...
+    andika("cosh(-1) = ", cosh(-1))         # 1.5431... (even function)
+    andika("cosh(-2) = ", cosh(-2))         # 3.7622... (even function)
+    andika("cosh(0.5) = ", cosh(0.5))       # 1.1276...
+    andika("")
+    
+    # Test 4: Hyperbolic Tangent - Various Values
+    andika("Test 4: Hyperbolic Tangent - tanh(x)")
+    andika("tanh(0) = ", tanh(0))           # 0
+    andika("tanh(1) = ", tanh(1))           # 0.7616...
+    andika("tanh(2) = ", tanh(2))           # 0.9640...
+    andika("tanh(-1) = ", tanh(-1))         # -0.7616...
+    andika("tanh(0.5) = ", tanh(0.5))       # 0.4621...
+    andika("tanh(10) = ", tanh(10))         # ~1 (approaches 1 for large x)
+    andika("tanh(-10) = ", tanh(-10))       # ~-1 (approaches -1 for large negative x)
+    andika("")
+    
+    # Test 5: Inverse Hyperbolic Sine - Various Values
+    andika("Test 5: Inverse Hyperbolic Sine - asinh(x)")
+    andika("asinh(0) = ", asinh(0))         # 0
+    andika("asinh(1) = ", asinh(1))         # 0.8814...
+    andika("asinh(2) = ", asinh(2))         # 1.4436...
+    andika("asinh(-1) = ", asinh(-1))       # -0.8814...
+    andika("asinh(0.5) = ", asinh(0.5))     # 0.4812...
+    andika("asinh(10) = ", asinh(10))       # 2.9982...
+    andika("")
+    
+    # Test 6: Inverse Hyperbolic Cosine - Various Values
+    andika("Test 6: Inverse Hyperbolic Cosine - acosh(x)")
+    andika("acosh(1) = ", acosh(1))         # 0
+    andika("acosh(2) = ", acosh(2))         # 1.3170...
+    andika("acosh(5) = ", acosh(5))         # 2.2924...
+    andika("acosh(10) = ", acosh(10))       # 2.9932...
+    andika("acosh(1.5) = ", acosh(1.5))     # 0.9624...
+    andika("")
+    
+    # Test 7: Inverse Hyperbolic Tangent - Various Values
+    andika("Test 7: Inverse Hyperbolic Tangent - atanh(x)")
+    andika("atanh(0) = ", atanh(0))         # 0
+    andika("atanh(0.5) = ", atanh(0.5))     # 0.5493...
+    andika("atanh(-0.5) = ", atanh(-0.5))   # -0.5493...
+    andika("atanh(0.9) = ", atanh(0.9))     # 1.4722...
+    andika("atanh(0.25) = ", atanh(0.25))   # 0.2554...
+    andika("")
+    
+    # Test 8: Inverse Relationships
+    andika("Test 8: Inverse Relationships")
+    namba x = 2
+    andika("Original value: ", x)
+    andika("sinh(", x, ") = ", sinh(x))
+    andika("asinh(sinh(", x, ")) = ", asinh(sinh(x)))
+    andika("")
+    
+    namba y = 1.5
+    andika("Original value: ", y)
+    andika("asinh(", y, ") = ", asinh(y))
+    andika("sinh(asinh(", y, ")) = ", sinh(asinh(y)))
+    andika("")
+    
+    # Test 9: Hyperbolic Identity - cosh²(x) - sinh²(x) = 1
+    andika("Test 9: Hyperbolic Identity - cosh²(x) - sinh²(x) = 1")
+    namba val = 2
+    namba sinh_val = sinh(val)
+    namba cosh_val = cosh(val)
+    namba identity = cosh_val * cosh_val - sinh_val * sinh_val
+    andika("For x = ", val, ":")
+    andika("sinh(x) = ", sinh_val)
+    andika("cosh(x) = ", cosh_val)
+    andika("cosh²(x) - sinh²(x) = ", identity, " (should be 1)")
+    andika("")
+    
+    # Test 10: Relationship - tanh(x) = sinh(x) / cosh(x)
+    andika("Test 10: Relationship - tanh(x) = sinh(x) / cosh(x)")
+    namba val2 = 1.5
+    namba tanh_direct = tanh(val2)
+    namba tanh_computed = sinh(val2) / cosh(val2)
+    andika("For x = ", val2, ":")
+    andika("tanh(x) direct = ", tanh_direct)
+    andika("sinh(x)/cosh(x) = ", tanh_computed)
+    andika("Difference = ", tanh_direct - tanh_computed, " (should be ~0)")
+    andika("")
+    
+    # Test 11: Using Variables
+    andika("Test 11: Using Variables")
+    namba a = 3
+    andika("For a = ", a, ":")
+    andika("sinh(a) = ", sinh(a))
+    andika("cosh(a) = ", cosh(a))
+    andika("tanh(a) = ", tanh(a))
+    andika("")
+    
+    # Test 12: Using Expressions
+    andika("Test 12: Using Expressions")
+    andika("sinh(1 + 1) = ", sinh(1 + 1))
+    andika("cosh(3 - 1) = ", cosh(3 - 1))
+    andika("tanh(4 / 2) = ", tanh(4 / 2))
+    andika("asinh(2 * 0.5) = ", asinh(2 * 0.5))
+    andika("")
+    
+    # Test 13: Combining with Other Math Functions
+    andika("Test 13: Combining with Other Math Functions")
+    andika("juu(sinh(1)) = ", juu(sinh(1)))
+    andika("chini(cosh(2)) = ", chini(cosh(2)))
+    andika("zunguka(tanh(1.5) * 100) = ", zunguka(tanh(1.5) * 100))
+    andika("exp(asinh(1)) = ", exp(asinh(1)))
+    andika("log_asili(cosh(2)) = ", log_asili(cosh(2)))
+    andika("")
+    
+    # Test 14: Exponential Definition Verification
+    andika("Test 14: Exponential Definition - sinh(x) = (e^x - e^-x)/2")
+    namba test_x = 1
+    namba sinh_result = sinh(test_x)
+    namba sinh_formula = (exp(test_x) - exp(0 - test_x)) / 2
+    andika("For x = ", test_x, ":")
+    andika("sinh(x) = ", sinh_result)
+    andika("(e^x - e^-x)/2 = ", sinh_formula)
+    andika("Difference = ", sinh_result - sinh_formula, " (should be ~0)")
+    andika("")
+    
+    andika("cosh(x) = (e^x + e^-x)/2")
+    namba cosh_result = cosh(test_x)
+    namba cosh_formula = (exp(test_x) + exp(0 - test_x)) / 2
+    andika("cosh(x) = ", cosh_result)
+    andika("(e^x + e^-x)/2 = ", cosh_formula)
+    andika("Difference = ", cosh_result - cosh_formula, " (should be ~0)")
+    andika("")
+    
+    # Test 15: Practical Application - Catenary Curve
+    andika("Test 15: Practical - Catenary Curve (hanging cable)")
+    andika("A cable hanging between two points forms a catenary: y = a*cosh(x/a)")
+    namba cable_a = 10
+    namba cable_x = 5
+    namba cable_y = cable_a * cosh(cable_x / cable_a)
+    andika("Cable parameter a = ", cable_a)
+    andika("Position x = ", cable_x)
+    andika("Height y = ", cable_y)
+    andika("")
+    
+    # Test 16: Practical Application - Special Relativity
+    andika("Test 16: Practical - Rapidity in Special Relativity")
+    andika("Velocity β = tanh(rapidity), where β = v/c")
+    namba rapidity = 1
+    namba beta = tanh(rapidity)
+    andika("Rapidity = ", rapidity)
+    andika("Velocity β = ", beta, " (fraction of speed of light)")
+    andika("")
+    
+    # Test 17: Error Handling - acosh Domain
+    andika("Test 17: Error Handling - acosh domain (x >= 1)")
+    jaribu {
+        andika("Trying acosh(0.5) - should fail...")
+        result = acosh(0.5)
+        andika("ERROR: Should have thrown an error!")
+    } shika kosa {
+        andika("✓ Correctly caught error: ", kosa)
+    }
+    andika("")
+    
+    # Test 18: Error Handling - atanh Domain
+    andika("Test 18: Error Handling - atanh domain (-1 < x < 1)")
+    jaribu {
+        andika("Trying atanh(1) - should fail...")
+        result = atanh(1)
+        andika("ERROR: Should have thrown an error!")
+    } shika kosa {
+        andika("✓ Correctly caught error: ", kosa)
+    }
+    andika("")
+    
+    jaribu {
+        andika("Trying atanh(-1) - should fail...")
+        result = atanh(-1)
+        andika("ERROR: Should have thrown an error!")
+    } shika kosa {
+        andika("✓ Correctly caught error: ", kosa)
+    }
+    andika("")
+    
+    jaribu {
+        andika("Trying atanh(1.5) - should fail...")
+        result = atanh(1.5)
+        andika("ERROR: Should have thrown an error!")
+    } shika kosa {
+        andika("✓ Correctly caught error: ", kosa)
+    }
+    andika("")
+    
+    # Test 19: Symmetry Properties
+    andika("Test 19: Symmetry Properties")
+    namba test_val = 2
+    andika("For x = ", test_val, ":")
+    andika("sinh(-x) = ", sinh(0 - test_val))
+    andika("-sinh(x) = ", 0 - sinh(test_val), " (sinh is odd)")
+    andika("")
+    andika("cosh(-x) = ", cosh(0 - test_val))
+    andika("cosh(x) = ", cosh(test_val), " (cosh is even)")
+    andika("")
+    
+    # Test 20: Limits and Asymptotic Behavior
+    andika("Test 20: Limits and Asymptotic Behavior")
+    andika("tanh approaches ±1 as x approaches ±infinity:")
+    andika("tanh(5) = ", tanh(5))           # ~0.9999
+    andika("tanh(10) = ", tanh(10))         # ~1.0
+    andika("tanh(-5) = ", tanh(-5))         # ~-0.9999
+    andika("")
+    
+    andika("cosh(x) ≈ sinh(x) for large |x|:")
+    namba large_x = 5
+    andika("For x = ", large_x, ":")
+    andika("sinh(x) = ", sinh(large_x))
+    andika("cosh(x) = ", cosh(large_x))
+    andika("Ratio cosh/sinh = ", cosh(large_x) / sinh(large_x), " (approaches 1)")
+    andika("")
+    
+    andika("=== ALL HYPERBOLIC TESTS COMPLETE ===")
+}
+
+kuu()

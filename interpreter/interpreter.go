@@ -1531,6 +1531,276 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Hyperbolic functions
+		if n.Name == "sinh" && len(n.Args) == 1 {
+			// Hyperbolic sine function: sinh(x) = (e^x - e^-x) / 2
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Sinh(num)
+			
+			// Check for infinity (overflow)
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la sinh(%v) ni kubwa sana (Result too large)", num),
+						Context: "Katika kazi 'sinh': Result would overflow (infinity)",
+					},
+				}
+			}
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la sinh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'sinh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "sinh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "sinh inahitaji hoja moja (sinh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'sinh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "cosh" && len(n.Args) == 1 {
+			// Hyperbolic cosine function: cosh(x) = (e^x + e^-x) / 2
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Cosh(num)
+			
+			// Check for infinity (overflow)
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la cosh(%v) ni kubwa sana (Result too large)", num),
+						Context: "Katika kazi 'cosh': Result would overflow (infinity)",
+					},
+				}
+			}
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la cosh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'cosh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "cosh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "cosh inahitaji hoja moja (cosh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'cosh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "tanh" && len(n.Args) == 1 {
+			// Hyperbolic tangent function: tanh(x) = sinh(x) / cosh(x)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Tanh(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la tanh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'tanh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "tanh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "tanh inahitaji hoja moja (tanh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'tanh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		// Inverse hyperbolic functions
+		if n.Name == "asinh" && len(n.Args) == 1 {
+			// Inverse hyperbolic sine: asinh(x) = ln(x + sqrt(x^2 + 1))
+			// Domain: all real numbers
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Asinh(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la asinh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'asinh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for inverse hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "asinh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "asinh inahitaji hoja moja (asinh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'asinh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "acosh" && len(n.Args) == 1 {
+			// Inverse hyperbolic cosine: acosh(x) = ln(x + sqrt(x^2 - 1))
+			// Domain: x >= 1
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check domain: acosh only works for x >= 1
+			if num < 1 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("acosh(%v) haiwezekani (Domain must be >= 1)", num),
+						Context: "Katika kazi 'acosh': Input must be greater than or equal to 1",
+					},
+				}
+			}
+			
+			result := math.Acosh(num)
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la acosh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'acosh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for inverse hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "acosh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "acosh inahitaji hoja moja (acosh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'acosh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "atanh" && len(n.Args) == 1 {
+			// Inverse hyperbolic tangent: atanh(x) = 0.5 * ln((1+x)/(1-x))
+			// Domain: -1 < x < 1 (strictly between -1 and 1)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			// Check domain: atanh only works for -1 < x < 1
+			if num <= -1 || num >= 1 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("atanh(%v) haiwezekani (Domain must be strictly between -1 and 1)", num),
+						Context: "Katika kazi 'atanh': Input must be in range (-1, 1)",
+					},
+				}
+			}
+			
+			result := math.Atanh(num)
+			
+			// Check for infinity
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la atanh(%v) ni kubwa sana (Result approaches infinity)", num),
+						Context: "Katika kazi 'atanh': Result would overflow (approaches infinity at boundaries)",
+					},
+				}
+			}
+			
+			// Check for NaN
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("Jibu la atanh(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'atanh': Result is NaN",
+					},
+				}
+			}
+			
+			// Always return float for inverse hyperbolic functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "atanh" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "atanh inahitaji hoja moja (atanh requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'atanh': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)

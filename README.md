@@ -178,6 +178,12 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `atan2` | atan2 | Two-argument arc tangent for proper quadrant handling |
 | `radians` | radians | Convert degrees to radians |
 | `degrees` | degrees | Convert radians to degrees |
+| `sinh` | sinh | Calculate hyperbolic sine |
+| `cosh` | cosh | Calculate hyperbolic cosine |
+| `tanh` | tanh | Calculate hyperbolic tangent |
+| `asinh` | asinh/arcsinh | Calculate inverse hyperbolic sine |
+| `acosh` | acosh/arccosh | Calculate inverse hyperbolic cosine (domain: x >= 1) |
+| `atanh` | atanh/arctanh | Calculate inverse hyperbolic tangent (domain: -1 < x < 1) |
 
 ### Basic Syntax
 
@@ -1015,6 +1021,250 @@ andika("tan(45°) = sin(45°)/cos(45°) = ", tan_val)  # 1
 - `sin²(x) + cos²(x) = 1` (Pythagorean identity)
 - `tan(x) = sin(x) / cos(x)` (when cos(x) ≠ 0)
 - Use `atan2(y, x)` instead of `atan(y/x)` to handle all quadrants correctly
+
+### Hyperbolic Functions
+
+Kwenda provides hyperbolic functions for advanced mathematical applications including calculus, physics, and engineering. These functions are analogs of trigonometric functions but relate to hyperbolas instead of circles.
+
+#### Basic Hyperbolic Functions
+
+```swahili
+# Hyperbolic sine - sinh(x) = (e^x - e^-x) / 2
+andika("sinh(0) = ", sinh(0))           # 0
+andika("sinh(1) = ", sinh(1))           # 1.1752...
+andika("sinh(2) = ", sinh(2))           # 3.6269...
+andika("sinh(-1) = ", sinh(-1))         # -1.1752... (odd function)
+
+# Hyperbolic cosine - cosh(x) = (e^x + e^-x) / 2
+andika("cosh(0) = ", cosh(0))           # 1
+andika("cosh(1) = ", cosh(1))           # 1.5431...
+andika("cosh(2) = ", cosh(2))           # 3.7622...
+andika("cosh(-1) = ", cosh(-1))         # 1.5431... (even function)
+
+# Hyperbolic tangent - tanh(x) = sinh(x) / cosh(x)
+andika("tanh(0) = ", tanh(0))           # 0
+andika("tanh(1) = ", tanh(1))           # 0.7616...
+andika("tanh(2) = ", tanh(2))           # 0.9640...
+andika("tanh(10) = ", tanh(10))         # ~1 (approaches 1 as x → ∞)
+andika("tanh(-10) = ", tanh(-10))       # ~-1 (approaches -1 as x → -∞)
+```
+
+#### Inverse Hyperbolic Functions
+
+```swahili
+# Inverse hyperbolic sine - asinh(x) = ln(x + sqrt(x² + 1))
+# Domain: all real numbers
+andika("asinh(0) = ", asinh(0))         # 0
+andika("asinh(1) = ", asinh(1))         # 0.8814...
+andika("asinh(2) = ", asinh(2))         # 1.4436...
+andika("asinh(-1) = ", asinh(-1))       # -0.8814...
+
+# Inverse hyperbolic cosine - acosh(x) = ln(x + sqrt(x² - 1))
+# Domain: x >= 1
+andika("acosh(1) = ", acosh(1))         # 0
+andika("acosh(2) = ", acosh(2))         # 1.3170...
+andika("acosh(5) = ", acosh(5))         # 2.2924...
+
+# Inverse hyperbolic tangent - atanh(x) = 0.5 * ln((1+x)/(1-x))
+# Domain: -1 < x < 1 (strictly between -1 and 1)
+andika("atanh(0) = ", atanh(0))         # 0
+andika("atanh(0.5) = ", atanh(0.5))     # 0.5493...
+andika("atanh(-0.5) = ", atanh(-0.5))   # -0.5493...
+andika("atanh(0.9) = ", atanh(0.9))     # 1.4722...
+```
+
+#### Inverse Relationships
+
+```swahili
+# Hyperbolic functions and their inverses
+namba x = 2
+andika("sinh(", x, ") = ", sinh(x))
+andika("asinh(sinh(", x, ")) = ", asinh(sinh(x)))  # Returns original x
+
+namba y = 1.5
+andika("asinh(", y, ") = ", asinh(y))
+andika("sinh(asinh(", y, ")) = ", sinh(asinh(y)))  # Returns original y
+
+# Similar relationships for cosh/acosh and tanh/atanh
+```
+
+#### Hyperbolic Identities
+
+**Fundamental Identity:** cosh²(x) - sinh²(x) = 1
+
+```swahili
+namba val = 2
+namba sinh_val = sinh(val)
+namba cosh_val = cosh(val)
+namba identity = cosh_val * cosh_val - sinh_val * sinh_val
+andika("cosh²(x) - sinh²(x) = ", identity)  # Always equals 1
+```
+
+**Relationship:** tanh(x) = sinh(x) / cosh(x)
+
+```swahili
+namba x = 1.5
+namba tanh_direct = tanh(x)
+namba tanh_computed = sinh(x) / cosh(x)
+andika("tanh(x) = ", tanh_direct)
+andika("sinh(x)/cosh(x) = ", tanh_computed)  # Same value
+```
+
+**Exponential Definitions:**
+
+```swahili
+# Verify definitions using exponential functions
+namba x = 1
+andika("sinh(x) = ", sinh(x))
+andika("(e^x - e^-x)/2 = ", (exp(x) - exp(-x)) / 2)  # Same
+
+andika("cosh(x) = ", cosh(x))
+andika("(e^x + e^-x)/2 = ", (exp(x) + exp(-x)) / 2)  # Same
+```
+
+#### Symmetry Properties
+
+```swahili
+namba x = 2
+
+# sinh is an odd function: sinh(-x) = -sinh(x)
+andika("sinh(-x) = ", sinh(-x))
+andika("-sinh(x) = ", -sinh(x))  # Equal
+
+# cosh is an even function: cosh(-x) = cosh(x)
+andika("cosh(-x) = ", cosh(-x))
+andika("cosh(x) = ", cosh(x))    # Equal
+
+# tanh is an odd function: tanh(-x) = -tanh(x)
+andika("tanh(-x) = ", tanh(-x))
+andika("-tanh(x) = ", -tanh(x))  # Equal
+```
+
+#### Practical Applications
+
+**Catenary Curve (Hanging Cable):**
+
+```swahili
+# A cable hanging between two points forms a catenary curve
+# Formula: y = a * cosh(x/a)
+namba cable_a = 10  # Cable parameter
+namba cable_x = 5   # Horizontal position
+namba cable_y = cable_a * cosh(cable_x / cable_a)
+
+andika("Cable height at x=", cable_x, ": y=", cable_y)
+```
+
+**Special Relativity (Rapidity):**
+
+```swahili
+# In special relativity, velocity relates to rapidity via tanh
+# β = v/c = tanh(rapidity)
+namba rapidity = 1
+namba beta = tanh(rapidity)
+andika("Velocity as fraction of light speed: ", beta)  # 0.7616...
+```
+
+**Hyperbolic Geometry:**
+
+```swahili
+# Hyperbolic distance in Poincaré disk model
+namba r = 0.5  # Radial distance
+namba distance = 2 * atanh(r)
+andika("Hyperbolic distance: ", distance)
+```
+
+#### Error Handling
+
+```swahili
+# acosh requires x >= 1
+jaribu {
+    namba bad = acosh(0.5)  # ERROR: must be >= 1
+} shika kosa {
+    andika("Domain error: acosh requires input >= 1")
+}
+
+# atanh requires -1 < x < 1 (strictly)
+jaribu {
+    namba bad1 = atanh(1)   # ERROR: must be strictly < 1
+} shika kosa {
+    andika("Domain error: atanh requires -1 < x < 1")
+}
+
+jaribu {
+    namba bad2 = atanh(-1)  # ERROR: must be strictly > -1
+} shika kosa {
+    andika("Domain error: atanh requires -1 < x < 1")
+}
+
+jaribu {
+    namba bad3 = atanh(1.5) # ERROR: outside domain
+} shika kosa {
+    andika("Domain error: atanh input outside (-1, 1)")
+}
+
+# sinh and cosh can overflow for large |x|
+jaribu {
+    namba big = sinh(1000)  # ERROR: result too large
+} shika kosa {
+    andika("Overflow: result approaches infinity")
+}
+```
+
+#### Combining with Other Functions
+
+```swahili
+# With rounding functions
+andika("juu(sinh(1)) = ", juu(sinh(1)))          # 2
+andika("chini(cosh(2)) = ", chini(cosh(2)))      # 3
+
+# With exponential/logarithm
+andika("exp(asinh(1)) = ", exp(asinh(1)))        # 2.4142...
+andika("log_asili(cosh(2)) = ", log_asili(cosh(2)))  # 1.3250...
+
+# With trigonometric (Gudermannian function)
+# gd(x) = 2*atan(tanh(x/2))
+namba x = 1
+namba gud = 2 * atan(tanh(x / 2))
+andika("Gudermannian of ", x, " = ", gud)
+```
+
+#### Asymptotic Behavior
+
+```swahili
+# tanh approaches ±1 for large |x|
+andika("tanh(5) = ", tanh(5))     # 0.9999...
+andika("tanh(10) = ", tanh(10))   # ~1.0
+andika("tanh(-5) = ", tanh(-5))   # -0.9999...
+
+# For large |x|, sinh(x) ≈ cosh(x) ≈ 0.5 * e^|x|
+namba large_x = 5
+andika("sinh(x) = ", sinh(large_x))
+andika("cosh(x) = ", cosh(large_x))
+andika("Ratio cosh/sinh = ", cosh(large_x) / sinh(large_x))  # ~1
+```
+
+#### Comparison Table
+
+| Function | Domain | Range | Formula | Use Case |
+|----------|--------|-------|---------|----------|
+| `sinh(x)` | All numbers | All numbers | (e^x - e^-x)/2 | Wave equations, special relativity |
+| `cosh(x)` | All numbers | [1, ∞) | (e^x + e^-x)/2 | Catenary curves, hanging cables |
+| `tanh(x)` | All numbers | (-1, 1) | sinh(x)/cosh(x) | Activation functions, relativity |
+| `asinh(x)` | All numbers | All numbers | ln(x + √(x²+1)) | Inverse of sinh |
+| `acosh(x)` | [1, ∞) | [0, ∞) | ln(x + √(x²-1)) | Inverse of cosh |
+| `atanh(x)` | (-1, 1) | All numbers | 0.5·ln((1+x)/(1-x)) | Inverse of tanh, logit function |
+
+**Key Relationships:**
+- `sinh(asinh(x)) = x` (for all x)
+- `cosh(acosh(x)) = x` (for x ≥ 1)
+- `tanh(atanh(x)) = x` (for -1 < x < 1)
+- `cosh²(x) - sinh²(x) = 1` (fundamental hyperbolic identity)
+- `tanh(x) = sinh(x) / cosh(x)`
+- `sinh(x) = (e^x - e^-x) / 2`
+- `cosh(x) = (e^x + e^-x) / 2`
+- sinh is odd: `sinh(-x) = -sinh(x)`
+- cosh is even: `cosh(-x) = cosh(x)`
+- `tanh(x)` approaches ±1 as `x` approaches ±∞
 
 ### Comments
 
