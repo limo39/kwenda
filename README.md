@@ -1266,6 +1266,188 @@ andika("Ratio cosh/sinh = ", cosh(large_x) / sinh(large_x))  # ~1
 - cosh is even: `cosh(-x) = cosh(x)`
 - `tanh(x)` approaches ±1 as `x` approaches ±∞
 
+### Number Properties & Utilities
+
+Kwenda provides 14 built-in functions for checking number properties and performing common mathematical utilities. These functions help with number classification, finding extremes, and performing mathematical operations.
+
+#### Number Property Checkers
+
+These functions check properties of numbers and return boolean values:
+
+```swahili
+# Parity checks
+andika("ni_shufwa(4) = ", ni_shufwa(4))         # kweli (even)
+andika("ni_witiri(5) = ", ni_witiri(5))         # kweli (odd)
+
+# Sign checks
+andika("ni_chanya(5) = ", ni_chanya(5))         # kweli (positive)
+andika("ni_hasi(-5) = ", ni_hasi(-5))           # kweli (negative)
+andika("ni_sifuri(0) = ", ni_sifuri(0))         # kweli (zero)
+
+# Prime check
+andika("ni_namba_kuu(7) = ", ni_namba_kuu(7))   # kweli (7 is prime)
+andika("ni_namba_kuu(4) = ", ni_namba_kuu(4))   # uwongo (4 is not prime)
+
+# Perfect square check
+andika("ni_mraba_kamili(9) = ", ni_mraba_kamili(9))      # kweli (9 = 3²)
+andika("ni_mraba_kamili(10) = ", ni_mraba_kamili(10))    # uwongo (10 is not perfect square)
+```
+
+#### Utility Functions
+
+These functions perform common operations on numbers:
+
+```swahili
+# Absolute value
+andika("kiwango(-5) = ", kiwango(-5))           # 5
+
+# Sign function - returns -1, 0, or 1
+andika("ishara(-5) = ", ishara(-5))             # -1
+andika("ishara(0) = ", ishara(0))               # 0
+andika("ishara(5) = ", ishara(5))               # 1
+
+# Maximum and minimum (support multiple arguments)
+andika("max(3, 7, 2, 9) = ", max(3, 7, 2, 9))   # 9
+andika("min(3, 7, 2, 9) = ", min(3, 7, 2, 9))   # 2
+```
+
+#### Mathematical Functions
+
+```swahili
+# Greatest Common Divisor
+andika("kigawanyaji_kikuu(12, 8) = ", kigawanyaji_kikuu(12, 8))   # 4
+
+# Least Common Multiple
+andika("kigawanyaji_ndogo(12, 8) = ", kigawanyaji_ndogo(12, 8))   # 24
+
+# Factorial
+andika("ukweli(5) = ", ukweli(5))               # 120
+andika("ukweli(0) = ", ukweli(0))               # 1
+
+# Power
+andika("tweza(2, 8) = ", tweza(2, 8))           # 256
+andika("tweza(2, -1) = ", tweza(2, -1))         # 0.5
+```
+
+#### Practical Applications
+
+**Checking Number Properties:**
+
+```swahili
+# Check if a number is prime and even
+namba n = 7
+kama (ni_namba_kuu(n)) && ni_shufwa(n) {
+    andika(n, " is prime and even (impossible!)")
+} sivyo {
+    andika(n, " is not both prime and even")
+}
+
+# Find all primes up to 20
+dor = 2
+wakati (dor <= 20) {
+    kama (ni_namba_kuu(dor)) {
+        andika(dor, " is prime")
+    }
+    dor = dor + 1
+}
+```
+
+**Fraction Simplification:**
+
+```swahili
+# Simplify a fraction using GCD
+namba numerator = 36
+namba denominator = 24
+namba gcd_val = kigawanyaji_kikuu(numerator, denominator)
+
+andika("Original: ", numerator, "/", denominator)
+andika("Simplified: ", numerator / gcd_val, "/", denominator / gcd_val)  # 3/2
+```
+
+**Finding Common Multiples:**
+
+```swahili
+# Find LCM for scheduling
+namba task1_interval = 6    # Every 6 days
+namba task2_interval = 9    # Every 9 days
+namba common_day = kigawanyaji_ndogo(task1_interval, task2_interval)
+
+andika("Both tasks repeat every ", common_day, " days")  # 18 days
+```
+
+**Powers of Numbers:**
+
+```swahili
+# Calculate powers (useful for bit operations)
+andika("2^10 = ", tweza(2, 10))                 # 1024 (max for 10 bits)
+andika("Memory size (bytes) = ", tweza(2, 20)) # 1048576 (1 MB)
+
+# Calculate roots using negative exponents
+andika("Square root of 16 = ", tweza(16, 0.5))  # 4
+andika("Cube root of 27 = ", tweza(27, 1/3))    # 3
+```
+
+**Extremes and Comparisons:**
+
+```swahili
+# Find min and max values
+namba scores = [85, 92, 78, 88, 95]
+andika("Highest score: ", max(85, 92, 78, 88, 95))    # 95
+andika("Lowest score: ", min(85, 92, 78, 88, 95))     # 78
+
+# Find absolute differences
+namba a = -15
+namba b = 8
+andika("Distance between ", a, " and ", b, ": ", kiwango(a - b))  # 23
+```
+
+#### Error Handling
+
+```swahili
+# Factorial only works with non-negative integers
+jaribu {
+    namba bad = ukweli(-5)  # ERROR
+} shika kosa {
+    andika("Cannot compute factorial of negative number")
+}
+
+# Power function checks for overflow
+jaribu {
+    namba big = tweza(10, 1000)  # ERROR - result too large
+} shika kosa {
+    andika("Result would overflow")
+}
+```
+
+#### Comparison Table
+
+| Function | Swahili Name | Input | Output | Use Case |
+|----------|--------------|-------|--------|----------|
+| `ni_shufwa` | is_even | Number | Boolean | Check if divisible by 2 |
+| `ni_witiri` | is_odd | Number | Boolean | Check if not divisible by 2 |
+| `ni_chanya` | is_positive | Number | Boolean | Check if > 0 |
+| `ni_hasi` | is_negative | Number | Boolean | Check if < 0 |
+| `ni_sifuri` | is_zero | Number | Boolean | Check if == 0 |
+| `ni_namba_kuu` | is_prime | Number | Boolean | Check primality (trial division) |
+| `ni_mraba_kamili` | is_perfect_square | Number | Boolean | Check if perfect square |
+| `kiwango` | abs | Number | Number | Absolute value |
+| `ishara` | sign | Number | -1/0/1 | Sign of number |
+| `max` | maximum | Numbers... | Number | Largest of multiple values |
+| `min` | minimum | Numbers... | Number | Smallest of multiple values |
+| `kigawanyaji_kikuu` | gcd | Two numbers | Number | Greatest common divisor |
+| `kigawanyaji_ndogo` | lcm | Two numbers | Number | Least common multiple |
+| `ukweli` | factorial | Non-neg int | Number | n! product |
+| `tweza` | power | Base, exponent | Number | Base raised to exponent |
+
+**Key Characteristics:**
+- Property checkers return boolean (true/false)
+- All functions preserve number types (int returns int when appropriate)
+- `max` and `min` support any number of arguments
+- `kigawanyaji_kikuu(0, n) = n` (GCD definition)
+- Primes detected via trial division up to √n
+- Factorial limited to prevent overflow
+- Power function handles fractional exponents (e.g., `tweza(4, 0.5)` = 2)
+
 ### Comments
 
 Kwenda supports single-line comments using the `#` character. Comments can appear:

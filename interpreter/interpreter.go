@@ -1801,6 +1801,470 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// Number Property Functions
+		if n.Name == "ni_shufwa" && len(n.Args) == 1 {
+			// Check if number is even (ni_shufwa = is_even)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			// Convert to integer for modulo operation
+			intNum := int64(num)
+			return intNum % 2 == 0
+		}
+
+		if n.Name == "ni_shufwa" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_shufwa inahitaji hoja moja (ni_shufwa requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_shufwa': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_witiri" && len(n.Args) == 1 {
+			// Check if number is odd (ni_witiri = is_odd)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			// Convert to integer for modulo operation
+			intNum := int64(num)
+			return intNum % 2 != 0
+		}
+
+		if n.Name == "ni_witiri" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_witiri inahitaji hoja moja (ni_witiri requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_witiri': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_chanya" && len(n.Args) == 1 {
+			// Check if number is positive (ni_chanya = is_positive)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			return num > 0
+		}
+
+		if n.Name == "ni_chanya" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_chanya inahitaji hoja moja (ni_chanya requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_chanya': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_hasi" && len(n.Args) == 1 {
+			// Check if number is negative (ni_hasi = is_negative)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			return num < 0
+		}
+
+		if n.Name == "ni_hasi" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_hasi inahitaji hoja moja (ni_hasi requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_hasi': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_sifuri" && len(n.Args) == 1 {
+			// Check if number is zero (ni_sifuri = is_zero)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			return num == 0
+		}
+
+		if n.Name == "ni_sifuri" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_sifuri inahitaji hoja moja (ni_sifuri requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_sifuri': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_namba_kuu" && len(n.Args) == 1 {
+			// Check if number is prime (ni_namba_kuu = is_prime)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			// Convert to integer
+			intNum := int64(num)
+			
+			// Numbers less than 2 are not prime
+			if intNum < 2 {
+				return false
+			}
+			
+			// 2 is prime
+			if intNum == 2 {
+				return true
+			}
+			
+			// Even numbers are not prime
+			if intNum % 2 == 0 {
+				return false
+			}
+			
+			// Check for odd divisors up to sqrt(intNum)
+			for i := int64(3); i*i <= intNum; i += 2 {
+				if intNum % i == 0 {
+					return false
+				}
+			}
+			
+			return true
+		}
+
+		if n.Name == "ni_namba_kuu" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_namba_kuu inahitaji hoja moja (ni_namba_kuu requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_namba_kuu': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_mraba_kamili" && len(n.Args) == 1 {
+			// Check if number is a perfect square (ni_mraba_kamili = is_perfect_square)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			// Only non-negative numbers can be perfect squares
+			if num < 0 {
+				return false
+			}
+			
+			// Get the square root
+			sqrt := math.Sqrt(num)
+			
+			// Check if square root is an integer
+			return sqrt == math.Floor(sqrt)
+		}
+
+		if n.Name == "ni_mraba_kamili" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_mraba_kamili inahitaji hoja moja (ni_mraba_kamili requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_mraba_kamili': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		// Utility Functions
+		if n.Name == "kiwango" && len(n.Args) == 1 {
+			// Absolute value (kiwango = absolute value)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+			
+			result := math.Abs(num)
+			
+			// Return int if input was int and result is perfect integer
+			if !isFloat && result == math.Floor(result) {
+				return int(result)
+			}
+			return result
+		}
+
+		if n.Name == "kiwango" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "kiwango inahitaji hoja moja (kiwango requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'kiwango': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ishara" && len(n.Args) == 1 {
+			// Sign function (ishara = sign) - returns -1, 0, or 1
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			if num > 0 {
+				return 1
+			} else if num < 0 {
+				return -1
+			}
+			return 0
+		}
+
+		if n.Name == "ishara" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ishara inahitaji hoja moja (ishara requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ishara': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "max" && len(n.Args) >= 1 {
+			// Maximum value - can take multiple arguments
+			if len(n.Args) == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: "max inahitaji angalau hoja moja (max requires at least one argument)",
+						Context: "Katika kazi 'max': Angalau hoja moja inahitajika",
+					},
+				}
+			}
+			
+			maxVal, isFloat := toNumber(Interpret(n.Args[0], env))
+			
+			for i := 1; i < len(n.Args); i++ {
+				val, valIsFloat := toNumber(Interpret(n.Args[i], env))
+				if val > maxVal {
+					maxVal = val
+					isFloat = isFloat || valIsFloat
+				}
+			}
+			
+			// Return int if all inputs were ints
+			if !isFloat && maxVal == math.Floor(maxVal) {
+				return int(maxVal)
+			}
+			return maxVal
+		}
+
+		if n.Name == "max" && len(n.Args) == 0 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "max inahitaji angalau hoja moja (max requires at least one argument)",
+					Context: "Katika kazi 'max': Angalau hoja moja inahitajika",
+				},
+			}
+		}
+
+		if n.Name == "min" && len(n.Args) >= 1 {
+			// Minimum value - can take multiple arguments
+			if len(n.Args) == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: "min inahitaji angalau hoja moja (min requires at least one argument)",
+						Context: "Katika kazi 'min': Angalau hoja moja inahitajika",
+					},
+				}
+			}
+			
+			minVal, isFloat := toNumber(Interpret(n.Args[0], env))
+			
+			for i := 1; i < len(n.Args); i++ {
+				val, valIsFloat := toNumber(Interpret(n.Args[i], env))
+				if val < minVal {
+					minVal = val
+					isFloat = isFloat || valIsFloat
+				}
+			}
+			
+			// Return int if all inputs were ints
+			if !isFloat && minVal == math.Floor(minVal) {
+				return int(minVal)
+			}
+			return minVal
+		}
+
+		if n.Name == "min" && len(n.Args) == 0 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "min inahitaji angalau hoja moja (min requires at least one argument)",
+					Context: "Katika kazi 'min': Angalau hoja moja inahitajika",
+				},
+			}
+		}
+
+		// Mathematical Utility Functions
+		if n.Name == "kigawanyaji_kikuu" && len(n.Args) == 2 {
+			// Greatest Common Divisor (kigawanyaji_kikuu = gcd)
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			a, _ := toNumber(arg1)
+			b, _ := toNumber(arg2)
+			
+			// Convert to positive integers
+			a = math.Abs(a)
+			b = math.Abs(b)
+			aInt := int64(a)
+			bInt := int64(b)
+			
+			// Euclidean algorithm
+			for bInt != 0 {
+				temp := bInt
+				bInt = aInt % bInt
+				aInt = temp
+			}
+			
+			return aInt
+		}
+
+		if n.Name == "kigawanyaji_kikuu" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "kigawanyaji_kikuu inahitaji hoja mbili (kigawanyaji_kikuu requires two arguments)",
+					Context: fmt.Sprintf("Katika kazi 'kigawanyaji_kikuu': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "kigawanyaji_ndogo" && len(n.Args) == 2 {
+			// Least Common Multiple (kigawanyaji_ndogo = lcm)
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			a, _ := toNumber(arg1)
+			b, _ := toNumber(arg2)
+			
+			// Convert to positive integers
+			a = math.Abs(a)
+			b = math.Abs(b)
+			aInt := int64(a)
+			bInt := int64(b)
+			
+			// LCM = (a * b) / GCD(a, b)
+			// First calculate GCD
+			origA := aInt
+			origB := bInt
+			for bInt != 0 {
+				temp := bInt
+				bInt = aInt % bInt
+				aInt = temp
+			}
+			gcd := aInt
+			
+			// Avoid division by zero
+			if gcd == 0 {
+				return 0
+			}
+			
+			lcm := (origA * origB) / gcd
+			return lcm
+		}
+
+		if n.Name == "kigawanyaji_ndogo" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "kigawanyaji_ndogo inahitaji hoja mbili (kigawanyaji_ndogo requires two arguments)",
+					Context: fmt.Sprintf("Katika kazi 'kigawanyaji_ndogo': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ukweli" && len(n.Args) == 1 {
+			// Factorial (ukweli = factorial)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			// Convert to integer
+			n := int64(num)
+			
+			// Factorial is only defined for non-negative integers
+			if n < 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("ukweli(%v) haiwezekani (Factorial not defined for negative numbers)", n),
+						Context: "Katika kazi 'ukweli': Factorial requires non-negative integer",
+					},
+				}
+			}
+			
+			// Calculate factorial
+			result := int64(1)
+			for i := int64(2); i <= n; i++ {
+				result *= i
+				
+				// Check for overflow
+				if result < 0 {
+					return ControlFlowResult{
+						Type: ControlThrow,
+						Value: ErrorValue{
+							Message: fmt.Sprintf("ukweli(%v) ni kubwa sana (Factorial too large)", num),
+							Context: "Katika kazi 'ukweli': Result overflows",
+						},
+					}
+				}
+			}
+			
+			return result
+		}
+
+		if n.Name == "ukweli" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ukweli inahitaji hoja moja (ukweli requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ukweli': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "tweza" && len(n.Args) == 2 {
+			// Power function (tweza = power)
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			base, baseIsFloat := toNumber(arg1)
+			exponent, expIsFloat := toNumber(arg2)
+			
+			result := math.Pow(base, exponent)
+			
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("tweza(%v, %v) si sahihi (Result is not a valid number)", base, exponent),
+						Context: "Katika kazi 'tweza': Result is NaN",
+					},
+				}
+			}
+			
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("tweza(%v, %v) ni kubwa sana (Result is too large)", base, exponent),
+						Context: "Katika kazi 'tweza': Result overflows",
+					},
+				}
+			}
+			
+			// Return int if both inputs were ints and result is perfect integer
+			if !baseIsFloat && !expIsFloat && result == math.Floor(result) && result >= -9223372036854775808 && result <= 9223372036854775807 {
+				return int(result)
+			}
+			return result
+		}
+
+		if n.Name == "tweza" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "tweza inahitaji hoja mbili (tweza requires two arguments: base and exponent)",
+					Context: fmt.Sprintf("Katika kazi 'tweza': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)

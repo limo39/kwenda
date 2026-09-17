@@ -1,0 +1,239 @@
+# Comprehensive Number Properties & Utilities Test
+# Tests: ni_shufwa, ni_witiri, ni_chanya, ni_hasi, ni_sifuri, ni_namba_kuu, ni_mraba_kamili
+#        kiwango, ishara, max, min, kigawanyaji_kikuu, kigawanyaji_ndogo, ukweli, tweza
+
+kazi kuu() {
+    andika("=== NUMBER PROPERTIES & UTILITIES TEST ===")
+    andika("")
+    
+    # Test 1: Even and Odd Checks
+    andika("Test 1: Parity Checks")
+    andika("ni_shufwa(0) = ", ni_shufwa(0))       # kweli
+    andika("ni_shufwa(2) = ", ni_shufwa(2))       # kweli
+    andika("ni_shufwa(4) = ", ni_shufwa(4))       # kweli
+    andika("ni_shufwa(3) = ", ni_shufwa(3))       # uwongo
+    andika("ni_shufwa(5) = ", ni_shufwa(5))       # uwongo
+    andika("ni_shufwa(-2) = ", ni_shufwa(-2))     # kweli
+    andika("")
+    
+    andika("ni_witiri(0) = ", ni_witiri(0))       # uwongo
+    andika("ni_witiri(1) = ", ni_witiri(1))       # kweli
+    andika("ni_witiri(3) = ", ni_witiri(3))       # kweli
+    andika("ni_witiri(5) = ", ni_witiri(5))       # kweli
+    andika("ni_witiri(2) = ", ni_witiri(2))       # uwongo
+    andika("ni_witiri(-3) = ", ni_witiri(-3))     # kweli
+    andika("")
+    
+    # Test 2: Sign Checks
+    andika("Test 2: Sign Checks")
+    andika("ni_chanya(5) = ", ni_chanya(5))       # kweli
+    andika("ni_chanya(0.5) = ", ni_chanya(0.5))   # kweli
+    andika("ni_chanya(0) = ", ni_chanya(0))       # uwongo
+    andika("ni_chanya(-5) = ", ni_chanya(-5))     # uwongo
+    andika("")
+    
+    andika("ni_hasi(-5) = ", ni_hasi(-5))         # kweli
+    andika("ni_hasi(-0.5) = ", ni_hasi(-0.5))     # kweli
+    andika("ni_hasi(0) = ", ni_hasi(0))           # uwongo
+    andika("ni_hasi(5) = ", ni_hasi(5))           # uwongo
+    andika("")
+    
+    andika("ni_sifuri(0) = ", ni_sifuri(0))       # kweli
+    andika("ni_sifuri(0.0) = ", ni_sifuri(0.0))   # kweli
+    andika("ni_sifuri(1) = ", ni_sifuri(1))       # uwongo
+    andika("ni_sifuri(-1) = ", ni_sifuri(-1))     # uwongo
+    andika("")
+    
+    # Test 3: Prime Checks
+    andika("Test 3: Prime Number Checks")
+    andika("ni_namba_kuu(2) = ", ni_namba_kuu(2))     # kweli
+    andika("ni_namba_kuu(3) = ", ni_namba_kuu(3))     # kweli
+    andika("ni_namba_kuu(5) = ", ni_namba_kuu(5))     # kweli
+    andika("ni_namba_kuu(7) = ", ni_namba_kuu(7))     # kweli
+    andika("ni_namba_kuu(11) = ", ni_namba_kuu(11))   # kweli
+    andika("ni_namba_kuu(13) = ", ni_namba_kuu(13))   # kweli
+    andika("ni_namba_kuu(4) = ", ni_namba_kuu(4))     # uwongo
+    andika("ni_namba_kuu(6) = ", ni_namba_kuu(6))     # uwongo
+    andika("ni_namba_kuu(9) = ", ni_namba_kuu(9))     # uwongo
+    andika("ni_namba_kuu(15) = ", ni_namba_kuu(15))   # uwongo
+    andika("ni_namba_kuu(1) = ", ni_namba_kuu(1))     # uwongo
+    andika("ni_namba_kuu(0) = ", ni_namba_kuu(0))     # uwongo
+    andika("ni_namba_kuu(-5) = ", ni_namba_kuu(-5))   # uwongo
+    andika("")
+    
+    # Test 4: Perfect Square Checks
+    andika("Test 4: Perfect Square Checks")
+    andika("ni_mraba_kamili(0) = ", ni_mraba_kamili(0))     # kweli
+    andika("ni_mraba_kamili(1) = ", ni_mraba_kamili(1))     # kweli
+    andika("ni_mraba_kamili(4) = ", ni_mraba_kamili(4))     # kweli
+    andika("ni_mraba_kamili(9) = ", ni_mraba_kamili(9))     # kweli
+    andika("ni_mraba_kamili(16) = ", ni_mraba_kamili(16))   # kweli
+    andika("ni_mraba_kamili(25) = ", ni_mraba_kamili(25))   # kweli
+    andika("ni_mraba_kamili(100) = ", ni_mraba_kamili(100)) # kweli
+    andika("ni_mraba_kamili(2) = ", ni_mraba_kamili(2))     # uwongo
+    andika("ni_mraba_kamili(3) = ", ni_mraba_kamili(3))     # uwongo
+    andika("ni_mraba_kamili(5) = ", ni_mraba_kamili(5))     # uwongo
+    andika("ni_mraba_kamili(-4) = ", ni_mraba_kamili(-4))   # uwongo
+    andika("")
+    
+    # Test 5: Absolute Value
+    andika("Test 5: Absolute Value (kiwango)")
+    andika("kiwango(5) = ", kiwango(5))           # 5
+    andika("kiwango(-5) = ", kiwango(-5))         # 5
+    andika("kiwango(0) = ", kiwango(0))           # 0
+    andika("kiwango(-3.5) = ", kiwango(-3.5))     # 3.5
+    andika("kiwango(3.14) = ", kiwango(3.14))     # 3.14
+    andika("")
+    
+    # Test 6: Sign Function
+    andika("Test 6: Sign Function (ishara)")
+    andika("ishara(5) = ", ishara(5))             # 1
+    andika("ishara(-5) = ", ishara(-5))           # -1
+    andika("ishara(0) = ", ishara(0))             # 0
+    andika("ishara(0.001) = ", ishara(0.001))     # 1
+    andika("ishara(-0.001) = ", ishara(-0.001))   # -1
+    andika("")
+    
+    # Test 7: Max Function
+    andika("Test 7: Maximum Function (max)")
+    andika("max(5) = ", max(5))                   # 5
+    andika("max(5, 3) = ", max(5, 3))             # 5
+    andika("max(3, 5) = ", max(3, 5))             # 5
+    andika("max(5, 3, 7, 2) = ", max(5, 3, 7, 2)) # 7
+    andika("max(-5, -3, -10) = ", max(-5, -3, -10)) # -3
+    andika("max(1.5, 2.5, 0.5) = ", max(1.5, 2.5, 0.5)) # 2.5
+    andika("")
+    
+    # Test 8: Min Function
+    andika("Test 8: Minimum Function (min)")
+    andika("min(5) = ", min(5))                   # 5
+    andika("min(5, 3) = ", min(5, 3))             # 3
+    andika("min(3, 5) = ", min(3, 5))             # 3
+    andika("min(5, 3, 7, 2) = ", min(5, 3, 7, 2)) # 2
+    andika("min(-5, -3, -10) = ", min(-5, -3, -10)) # -10
+    andika("min(1.5, 2.5, 0.5) = ", min(1.5, 2.5, 0.5)) # 0.5
+    andika("")
+    
+    # Test 9: GCD (Greatest Common Divisor)
+    andika("Test 9: GCD - Greatest Common Divisor (kigawanyaji_kikuu)")
+    andika("kigawanyaji_kikuu(12, 8) = ", kigawanyaji_kikuu(12, 8))     # 4
+    andika("kigawanyaji_kikuu(15, 10) = ", kigawanyaji_kikuu(15, 10))   # 5
+    andika("kigawanyaji_kikuu(48, 18) = ", kigawanyaji_kikuu(48, 18))   # 6
+    andika("kigawanyaji_kikuu(100, 50) = ", kigawanyaji_kikuu(100, 50)) # 50
+    andika("kigawanyaji_kikuu(17, 19) = ", kigawanyaji_kikuu(17, 19))   # 1 (coprime)
+    andika("kigawanyaji_kikuu(0, 5) = ", kigawanyaji_kikuu(0, 5))       # 5
+    andika("")
+    
+    # Test 10: LCM (Least Common Multiple)
+    andika("Test 10: LCM - Least Common Multiple (kigawanyaji_ndogo)")
+    andika("kigawanyaji_ndogo(12, 8) = ", kigawanyaji_ndogo(12, 8))     # 24
+    andika("kigawanyaji_ndogo(15, 10) = ", kigawanyaji_ndogo(15, 10))   # 30
+    andika("kigawanyaji_ndogo(4, 6) = ", kigawanyaji_ndogo(4, 6))       # 12
+    andika("kigawanyaji_ndogo(3, 7) = ", kigawanyaji_ndogo(3, 7))       # 21
+    andika("kigawanyaji_ndogo(12, 12) = ", kigawanyaji_ndogo(12, 12))   # 12
+    andika("")
+    
+    # Test 11: Factorial
+    andika("Test 11: Factorial (ukweli)")
+    andika("ukweli(0) = ", ukweli(0))             # 1
+    andika("ukweli(1) = ", ukweli(1))             # 1
+    andika("ukweli(2) = ", ukweli(2))             # 2
+    andika("ukweli(3) = ", ukweli(3))             # 6
+    andika("ukweli(4) = ", ukweli(4))             # 24
+    andika("ukweli(5) = ", ukweli(5))             # 120
+    andika("ukweli(10) = ", ukweli(10))           # 3628800
+    andika("")
+    
+    # Test 12: Power Function
+    andika("Test 12: Power Function (tweza)")
+    andika("tweza(2, 0) = ", tweza(2, 0))         # 1
+    andika("tweza(2, 1) = ", tweza(2, 1))         # 2
+    andika("tweza(2, 3) = ", tweza(2, 3))         # 8
+    andika("tweza(2, 8) = ", tweza(2, 8))         # 256
+    andika("tweza(3, 3) = ", tweza(3, 3))         # 27
+    andika("tweza(10, 2) = ", tweza(10, 2))       # 100
+    andika("tweza(5, -1) = ", tweza(5, -1))       # 0.2
+    andika("tweza(2, 0.5) = ", tweza(2, 0.5))     # 1.414... (sqrt(2))
+    andika("tweza(4, 0.5) = ", tweza(4, 0.5))     # 2
+    andika("")
+    
+    # Test 13: Using Variables
+    andika("Test 13: Using Variables")
+    namba a = 12
+    namba b = 8
+    andika("For a = ", a, ", b = ", b, ":")
+    andika("  GCD = ", kigawanyaji_kikuu(a, b))
+    andika("  LCM = ", kigawanyaji_ndogo(a, b))
+    andika("  max(a, b) = ", max(a, b))
+    andika("  min(a, b) = ", min(a, b))
+    andika("")
+    
+    # Test 14: Using Expressions
+    andika("Test 14: Using Expressions")
+    andika("ni_shufwa(2 + 4) = ", ni_shufwa(2 + 4))           # kweli
+    andika("ni_witiri(3 * 3) = ", ni_witiri(3 * 3))           # uwongo (9 is odd)
+    andika("kiwango(5 - 10) = ", kiwango(5 - 10))             # 5
+    andika("max(2 * 3, 4 + 5) = ", max(2 * 3, 4 + 5))         # 9
+    andika("min(10 / 2, 3 * 2) = ", min(10 / 2, 3 * 2))       # 5
+    andika("")
+    
+    # Test 15: Combining Functions
+    andika("Test 15: Combining Functions")
+    andika("kiwango(kigawanyaji_kikuu(36, 24)) = ", kiwango(kigawanyaji_kikuu(36, 24))) # 12
+    andika("max(ni_chanya(5), ni_hasi(-5)) = ", max(kweli, kweli))  # 1 (true coerces to 1)
+    andika("ni_mraba_kamili(tweza(4, 2)) = ", ni_mraba_kamili(tweza(4, 2)))  # kweli (16 is perfect square)
+    andika("")
+    
+    # Test 16: Practical - Finding GCD/LCM for Fractions
+    andika("Test 16: Practical - Fraction Simplification")
+    namba numerator = 36
+    namba denominator = 24
+    namba divisor = kigawanyaji_kikuu(numerator, denominator)
+    andika("Fraction: ", numerator, "/", denominator)
+    andika("GCD: ", divisor)
+    andika("Simplified: ", numerator / divisor, "/", denominator / divisor)
+    andika("")
+    
+    # Test 17: Practical - Powers of 2
+    andika("Test 17: Practical - Powers of 2")
+    andika("Number of bits needed to represent values 1 to 1000:")
+    andika("  2^9 = ", tweza(2, 9), " (512)")
+    andika("  2^10 = ", tweza(2, 10), " (1024)")
+    andika("So we need 10 bits to represent any value up to 1000")
+    andika("")
+    
+    # Test 18: Error Handling - Negative Factorial
+    andika("Test 18: Error Handling - Negative Factorial")
+    jaribu {
+        andika("Trying ukweli(-5) - should fail...")
+        result = ukweli(-5)
+        andika("ERROR: Should have thrown an error!")
+    } shika kosa {
+        andika("✓ Correctly caught error: ", kosa)
+    }
+    andika("")
+    
+    # Test 19: Checking Combination of Properties
+    andika("Test 19: Checking Properties of Numbers")
+    dor = 1
+    wakati (dor <= 10) {
+        kama (ni_namba_kuu(dor)) {
+            andika(dor, " is prime, even:", ni_shufwa(dor))
+        }
+        dor = dor + 1
+    }
+    andika("")
+    
+    # Test 20: Finding Smallest Multiple
+    andika("Test 20: Practical - Finding Smallest Common Multiple")
+    n1 = 6
+    n2 = 9
+    n3 = 15
+    lcm_all = kigawanyaji_ndogo(n1, kigawanyaji_ndogo(n2, n3))
+    andika("LCM of ", n1, ", ", n2, ", and ", n3, " is: ", lcm_all)
+    andika("")
+    
+    andika("=== ALL NUMBER UTILITIES TESTS COMPLETE ===")
+}
+
+kuu()
