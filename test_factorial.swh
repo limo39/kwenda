@@ -1,0 +1,7 @@
+// Test factorial function
+andika "Testing factorial (ukweli):"
+andika "ukweli(0) =", ukweli(0)
+andika "ukweli(1) =", ukweli(1)
+andika "ukweli(5) =", ukweli(5)
+andika "ukweli(10) =", ukweli(10)
+andika "Done"

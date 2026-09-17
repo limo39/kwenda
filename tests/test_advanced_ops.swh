@@ -1,0 +1,36 @@
+kazi kuu() {
+    andika("=== ADVANCED OPERATIONS TEST ===")
+    andika("")
+    
+    andika("BITWISE OPERATIONS")
+    andika("na_kidogo(12, 10) = ", na_kidogo(12, 10))
+    andika("au_kidogo(12, 10) = ", au_kidogo(12, 10))
+    andika("ama_kidogo(12, 10) = ", ama_kidogo(12, 10))
+    andika("si_kidogo(5) = ", si_kidogo(5))
+    andika("gezo_kushoto(5, 1) = ", gezo_kushoto(5, 1))
+    andika("gezo_kulia(10, 1) = ", gezo_kulia(10, 1))
+    andika("")
+    
+    andika("MODULAR ARITHMETIC")
+    andika("modulo(10, 3) = ", modulo(10, 3))
+    andika("baki(10, 3) = ", baki(10, 3))
+    andika("tweza_modulo(2, 3, 5) = ", tweza_modulo(2, 3, 5))
+    andika("")
+    
+    andika("ROUNDING FUNCTIONS")
+    andika("pindika(3.4) = ", pindika(3.4))
+    andika("pindika(3.5) = ", pindika(3.5))
+    andika("sakafu(3.9) = ", sakafu(3.9))
+    andika("dari(3.1) = ", dari(3.1))
+    andika("kata(3.9) = ", kata(3.9))
+    andika("")
+    
+    andika("RANDOM NUMBER GENERATION")
+    weka_mbegu(42)
+    andika("nasibu() = ", nasibu())
+    andika("nasibu(10) = ", nasibu(10))
+    andika("nasibu(1, 10) = ", nasibu(1, 10))
+    andika("")
+    
+    andika("=== ALL TESTS COMPLETED ===")
+}

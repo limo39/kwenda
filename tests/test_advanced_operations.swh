@@ -1,0 +1,132 @@
+// Test Advanced Operations - Bitwise, Modular Arithmetic, Rounding, Random
+
+andika "==============================================="
+andika "ADVANCED OPERATIONS TEST SUITE"
+andika "==============================================="
+
+// ==================== BITWISE OPERATIONS ====================
+andika ""
+andika "--- BITWISE OPERATIONS ---"
+
+// Bitwise AND
+andika "Bitwise AND (na_kidogo):"
+andika "na_kidogo(12, 10) = ", na_kidogo(12, 10)  // 1100 & 1010 = 1000 = 8
+andika "na_kidogo(15, 7) = ", na_kidogo(15, 7)    // 1111 & 0111 = 0111 = 7
+andika "na_kidogo(8, 4) = ", na_kidogo(8, 4)      // 1000 & 0100 = 0000 = 0
+
+// Bitwise OR
+andika "Bitwise OR (au_kidogo):"
+andika "au_kidogo(12, 10) = ", au_kidogo(12, 10)  // 1100 | 1010 = 1110 = 14
+andika "au_kidogo(8, 4) = ", au_kidogo(8, 4)      // 1000 | 0100 = 1100 = 12
+andika "au_kidogo(1, 2) = ", au_kidogo(1, 2)      // 0001 | 0010 = 0011 = 3
+
+// Bitwise XOR
+andika "Bitwise XOR (ama_kidogo):"
+andika "ama_kidogo(12, 10) = ", ama_kidogo(12, 10) // 1100 ^ 1010 = 0110 = 6
+andika "ama_kidogo(15, 15) = ", ama_kidogo(15, 15) // 1111 ^ 1111 = 0000 = 0
+andika "ama_kidogo(7, 3) = ", ama_kidogo(7, 3)     // 0111 ^ 0011 = 0100 = 4
+
+// Bitwise NOT
+andika "Bitwise NOT (si_kidogo):"
+andika "si_kidogo(0) = ", si_kidogo(0)
+andika "si_kidogo(1) = ", si_kidogo(1)
+andika "si_kidogo(5) = ", si_kidogo(5)
+
+// Left Shift
+andika "Left Shift (gezo_kushoto):"
+andika "gezo_kushoto(5, 1) = ", gezo_kushoto(5, 1)  // 0101 << 1 = 1010 = 10
+andika "gezo_kushoto(3, 2) = ", gezo_kushoto(3, 2)  // 0011 << 2 = 1100 = 12
+andika "gezo_kushoto(1, 4) = ", gezo_kushoto(1, 4)  // 0001 << 4 = 10000 = 16
+
+// Right Shift
+andika "Right Shift (gezo_kulia):"
+andika "gezo_kulia(10, 1) = ", gezo_kulia(10, 1)   // 1010 >> 1 = 0101 = 5
+andika "gezo_kulia(12, 2) = ", gezo_kulia(12, 2)   // 1100 >> 2 = 0011 = 3
+andika "gezo_kulia(16, 3) = ", gezo_kulia(16, 3)   // 10000 >> 3 = 0010 = 2
+
+// ==================== MODULAR ARITHMETIC ====================
+andika ""
+andika "--- MODULAR ARITHMETIC ---"
+
+// Modulo
+andika "Modulo (modulo):"
+andika "modulo(10, 3) = ", modulo(10, 3)          // 1
+andika "modulo(20, 6) = ", modulo(20, 6)          // 2
+andika "modulo(7, 7) = ", modulo(7, 7)            // 0
+andika "modulo(15, 4) = ", modulo(15, 4)          // 3
+
+// Remainder (baki)
+andika "Remainder (baki):"
+andika "baki(10, 3) = ", baki(10, 3)              // 1
+andika "baki(25, 5) = ", baki(25, 5)              // 0
+andika "baki(17, 5) = ", baki(17, 5)              // 2
+andika "baki(100, 7) = ", baki(100, 7)            // 2
+
+// Modular Power (tweza_modulo)
+andika "Modular Power (tweza_modulo):"
+andika "tweza_modulo(2, 3, 5) = ", tweza_modulo(2, 3, 5)       // 2^3 mod 5 = 8 mod 5 = 3
+andika "tweza_modulo(3, 4, 5) = ", tweza_modulo(3, 4, 5)       // 3^4 mod 5 = 81 mod 5 = 1
+andika "tweza_modulo(7, 2, 11) = ", tweza_modulo(7, 2, 11)     // 7^2 mod 11 = 49 mod 11 = 5
+andika "tweza_modulo(2, 10, 1000) = ", tweza_modulo(2, 10, 1000) // 2^10 mod 1000 = 1024 mod 1000 = 24
+
+// ==================== ROUNDING FUNCTIONS ====================
+andika ""
+andika "--- ROUNDING FUNCTIONS ---"
+
+// Round
+andika "Round (pindika):"
+andika "pindika(3.4) = ", pindika(3.4)            // 3
+andika "pindika(3.5) = ", pindika(3.5)            // 4
+andika "pindika(3.6) = ", pindika(3.6)            // 4
+andika "pindika(-2.7) = ", pindika(-2.7)          // -3
+
+// Floor
+andika "Floor (sakafu):"
+andika "sakafu(3.9) = ", sakafu(3.9)              // 3
+andika "sakafu(3.1) = ", sakafu(3.1)              // 3
+andika "sakafu(-2.3) = ", sakafu(-2.3)            // -3
+andika "sakafu(-2.9) = ", sakafu(-2.9)            // -3
+
+// Ceiling
+andika "Ceiling (dari):"
+andika "dari(3.1) = ", dari(3.1)                  // 4
+andika "dari(3.9) = ", dari(3.9)                  // 4
+andika "dari(-2.1) = ", dari(-2.1)                // -2
+andika "dari(-2.9) = ", dari(-2.9)                // -2
+
+// Truncate
+andika "Truncate (kata):"
+andika "kata(3.9) = ", kata(3.9)                  // 3
+andika "kata(3.1) = ", kata(3.1)                  // 3
+andika "kata(-2.7) = ", kata(-2.7)                // -2
+andika "kata(-2.1) = ", kata(-2.1)                // -2
+
+// ==================== RANDOM NUMBER GENERATION ====================
+andika ""
+andika "--- RANDOM NUMBER GENERATION ---"
+
+// Set seed for reproducibility
+andika "Setting seed to 42 for reproducibility:"
+weka_mbegu(42)
+
+// Random float 0-1
+andika "Random float [0, 1): nasibu()"
+andika "nasibu() = ", nasibu()
+andika "nasibu() = ", nasibu()
+
+// Random integer 0 to n-1
+andika "Random integer [0, n): nasibu(10)"
+andika "nasibu(10) = ", nasibu(10)
+andika "nasibu(10) = ", nasibu(10)
+andika "nasibu(100) = ", nasibu(100)
+
+// Random integer in range [min, max]
+andika "Random integer [min, max]: nasibu(1, 10)"
+andika "nasibu(1, 10) = ", nasibu(1, 10)
+andika "nasibu(1, 10) = ", nasibu(1, 10)
+andika "nasibu(50, 100) = ", nasibu(50, 100)
+
+andika ""
+andika "==============================================="
+andika "ALL ADVANCED OPERATIONS TESTS COMPLETED"
+andika "==============================================="

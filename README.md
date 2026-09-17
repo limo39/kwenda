@@ -1965,3 +1965,388 @@ Kwenda believes that programming should be accessible in one's native language. 
 
 **Kwenda ni zaidi ya lugha ya programu - ni daraja kuelekea teknolojia kwa wote.**
 *(Kwenda is more than a programming language - it's a bridge to technology for everyone.)*
+
+
+## 🔧 Advanced Operations
+
+### Bitwise Operations
+
+Kwenda provides six bitwise operations for manipulating individual bits in integers. These are useful for low-level programming, optimization, flags, and cryptography.
+
+#### Basic Bitwise Operations
+
+```swahili
+# Bitwise AND - na_kidogo(a, b)
+# Returns 1 where both operands have 1, else 0
+namba result1 = na_kidogo(12, 10)      # 1100 & 1010 = 1000 = 8
+namba result2 = na_kidogo(15, 7)       # 1111 & 0111 = 0111 = 7
+
+# Bitwise OR - au_kidogo(a, b)
+# Returns 1 where at least one operand has 1
+namba result3 = au_kidogo(12, 10)      # 1100 | 1010 = 1110 = 14
+namba result4 = au_kidogo(8, 4)        # 1000 | 0100 = 1100 = 12
+
+# Bitwise XOR - ama_kidogo(a, b)
+# Returns 1 where operands differ, else 0
+namba result5 = ama_kidogo(12, 10)     # 1100 ^ 1010 = 0110 = 6
+namba result6 = ama_kidogo(15, 15)     # 1111 ^ 1111 = 0000 = 0
+
+# Bitwise NOT - si_kidogo(a)
+# Inverts all bits
+namba result7 = si_kidogo(0)           # ~0 = -1
+namba result8 = si_kidogo(5)           # ~5 = -6
+
+# Left Shift - gezo_kushoto(a, n)
+# Shifts bits left by n positions (equivalent to multiplying by 2^n)
+namba result9 = gezo_kushoto(5, 1)     # 0101 << 1 = 1010 = 10
+namba result10 = gezo_kushoto(3, 2)    # 0011 << 2 = 1100 = 12
+namba result11 = gezo_kushoto(1, 8)    # 0001 << 8 = 100000000 = 256
+
+# Right Shift - gezo_kulia(a, n)
+# Shifts bits right by n positions (equivalent to dividing by 2^n)
+namba result12 = gezo_kulia(10, 1)     # 1010 >> 1 = 0101 = 5
+namba result13 = gezo_kulia(12, 2)     # 1100 >> 2 = 0011 = 3
+namba result14 = gezo_kulia(256, 8)    # >> 8 = 1
+```
+
+#### Practical Applications
+
+**Flag Management:**
+```swahili
+# Using bits as boolean flags
+namba flags = 0
+namba READ = gezo_kushoto(1, 0)        # Bit 0
+namba WRITE = gezo_kushoto(1, 1)       # Bit 1
+namba EXECUTE = gezo_kushoto(1, 2)     # Bit 2
+
+# Set flags (OR operation)
+flags = au_kidogo(flags, READ)         # Enable read
+flags = au_kidogo(flags, WRITE)        # Enable write
+
+# Check if flag is set (AND operation)
+kama na_kidogo(flags, READ) == READ {
+    andika("Read permission granted")
+}
+
+# Clear a flag (AND with NOT)
+flags = na_kidogo(flags, si_kidogo(WRITE))  # Disable write
+```
+
+**Bit Counting:**
+```swahili
+# Count number of set bits (population count)
+namba num = 15
+namba count = 0
+
+wakati num > 0 {
+    kama na_kidogo(num, 1) == 1 {
+        count = count + 1
+    }
+    num = gezo_kulia(num, 1)
+}
+andika("Set bits:", count)  # 4 (15 = 1111 in binary)
+```
+
+**Swapping Values Without Temp Variable:**
+```swahili
+namba a = 5
+namba b = 7
+
+# XOR swap
+a = ama_kidogo(a, b)
+b = ama_kidogo(a, b)
+a = ama_kidogo(a, b)
+
+andika("a =", a, ", b =", b)  # a = 7, b = 5
+```
+
+**Bitwise Comparison Table:**
+| Operation | Example | Result | Binary |
+|-----------|---------|--------|--------|
+| AND | na_kidogo(12, 10) | 8 | 1000 |
+| OR | au_kidogo(12, 10) | 14 | 1110 |
+| XOR | ama_kidogo(12, 10) | 6 | 0110 |
+| NOT | si_kidogo(5) | -6 | ...11111010 |
+| Left Shift | gezo_kushoto(5, 1) | 10 | 1010 |
+| Right Shift | gezo_kulia(10, 1) | 5 | 0101 |
+
+### Modular Arithmetic
+
+Modular arithmetic is essential for working with remainders, cryptography, and cyclic calculations. Kwenda provides three modular operations.
+
+#### Basic Modular Operations
+
+```swahili
+# Modulo - modulo(a, b)
+# Returns remainder after division (handles floats)
+namba r1 = modulo(10, 3)               # 1
+namba r2 = modulo(20, 6)               # 2
+namba r3 = modulo(7, 7)                # 0
+namba r4 = modulo(15, 4)               # 3
+namba r5 = modulo(100, 10)             # 0
+
+# Remainder - baki(a, b)
+# Returns remainder for integers
+namba rem1 = baki(10, 3)               # 1
+namba rem2 = baki(25, 5)               # 0
+namba rem3 = baki(17, 5)               # 2
+namba rem4 = baki(100, 7)              # 2
+
+# Modular Power - tweza_modulo(base, exponent, modulus)
+# Calculates (base^exponent) mod modulus efficiently
+namba mp1 = tweza_modulo(2, 3, 5)      # 2^3 mod 5 = 8 mod 5 = 3
+namba mp2 = tweza_modulo(3, 4, 5)      # 3^4 mod 5 = 81 mod 5 = 1
+namba mp3 = tweza_modulo(7, 2, 11)     # 7^2 mod 11 = 49 mod 11 = 5
+namba mp4 = tweza_modulo(2, 10, 1000)  # 2^10 mod 1000 = 1024 mod 1000 = 24
+```
+
+#### Practical Applications
+
+**Cyclic Sequences:**
+```swahili
+# Generate a repeating pattern
+kwa i = 0; i < 20; i = i + 1 {
+    namba pattern = modulo(i, 3)
+    andika("Index", i, "-> Pattern", pattern)  # 0,1,2,0,1,2,...
+}
+```
+
+**Day of Week Calculation:**
+```swahili
+# Calculate day of week (0-6) for scheduling
+namba days_since_epoch = 5000
+namba day_of_week = modulo(days_since_epoch, 7)
+orodha siku = ["Jumapili", "Jumatatu", "Jumatano", "Kamis", "Ijumaa", "Jumamosi", "Jumapili"]
+andika("Day:", siku(day_of_week))
+```
+
+**Modular Inverse (via Extended Euclidean Algorithm):**
+```swahili
+# Find modular multiplicative inverse
+# If a * x ≡ 1 (mod m), then x is the inverse of a
+# For prime moduli, use: tweza_modulo(a, m-2, m)
+
+namba a = 3
+namba m = 7
+namba inverse = tweza_modulo(a, m - 2, m)
+andika("Modular inverse of", a, "mod", m, "is", inverse)  # 5
+andika("Verification:", modulo(a * inverse, m))  # 1
+```
+
+**Cryptographic Applications:**
+```swahili
+# RSA-style modular exponentiation (simplified)
+namba message = 42
+namba exponent = 17
+namba modulus = 1000000007
+
+namba encrypted = tweza_modulo(message, exponent, modulus)
+andika("Encrypted:", encrypted)
+```
+
+### Rounding Functions
+
+Four rounding functions provide different strategies for converting floating-point numbers to integers, each with distinct behavior for negative numbers.
+
+#### Rounding Operations
+
+```swahili
+# Round - pindika(x)
+# Rounds to nearest integer
+namba a1 = pindika(3.4)                # 3
+namba a2 = pindika(3.5)                # 4
+namba a3 = pindika(3.6)                # 4
+namba a4 = pindika(-2.7)               # -3
+
+# Floor - sakafu(x)
+# Rounds down toward negative infinity
+namba b1 = sakafu(3.9)                 # 3
+namba b2 = sakafu(3.1)                 # 3
+namba b3 = sakafu(-2.3)                # -3
+namba b4 = sakafu(-2.9)                # -3
+
+# Ceiling - dari(x)
+# Rounds up toward positive infinity
+namba c1 = dari(3.1)                   # 4
+namba c2 = dari(3.9)                   # 4
+namba c3 = dari(-2.1)                  # -2
+namba c4 = dari(-2.9)                  # -2
+
+# Truncate - kata(x)
+# Rounds toward zero (removes decimal part)
+namba d1 = kata(3.9)                   # 3
+namba d2 = kata(3.1)                   # 3
+namba d3 = kata(-2.7)                  # -2
+namba d4 = kata(-2.1)                  # -2
+```
+
+#### Comparison Table
+
+| Value | pindika | sakafu | dari | kata |
+|-------|---------|--------|------|------|
+| 3.2 | 3 | 3 | 4 | 3 |
+| 3.7 | 4 | 3 | 4 | 3 |
+| -2.3 | -2 | -3 | -2 | -2 |
+| -2.7 | -3 | -3 | -2 | -2 |
+
+#### Practical Applications
+
+**Currency Rounding:**
+```swahili
+namba price = 19.95
+namba quantity = 3
+namba total = price * quantity  # 59.85
+
+namba rounded_total = pindika(total * 100) / 100  # 59.85
+andika("Total to charge: TSh", rounded_total)
+```
+
+**Grid Positioning:**
+```swahili
+namba x_float = 3.7
+namba y_float = 2.2
+
+# Snap to grid (floor)
+namba grid_x = sakafu(x_float)         # 3
+namba grid_y = sakafu(y_float)         # 2
+andika("Snapped to grid: (", grid_x, ", ", grid_y, ")")
+
+# Snap to nearest grid (round)
+namba snap_x = pindika(x_float)        # 4
+namba snap_y = pindika(y_float)        # 2
+andika("Snapped nearest: (", snap_x, ", ", snap_y, ")")
+```
+
+**Data Compression - Quantization:**
+```swahili
+# Reduce precision to 1 decimal place
+namba sensor_value = 3.14159
+namba quantized = pindika(sensor_value * 10) / 10  # 3.1
+andika("Quantized value:", quantized)
+```
+
+### Random Number Generation
+
+Generate random numbers with optional seeding for reproducible results. Three modes: float [0,1), integer [0,n), and integer range [min,max].
+
+#### Basic Random Operations
+
+```swahili
+# Random float [0.0, 1.0)
+namba rand1 = nasibu()                 # 0.372... 
+namba rand2 = nasibu()                 # 0.814...
+namba rand3 = nasibu()                 # 0.521...
+
+# Random integer [0, n)
+namba rand_int1 = nasibu(10)           # 0-9
+namba rand_int2 = nasibu(100)          # 0-99
+namba rand_int3 = nasibu(6) + 1        # 1-6 (dice roll)
+
+# Random integer [min, max]
+namba rand_range1 = nasibu(1, 10)      # 1-10
+namba rand_range2 = nasibu(50, 100)    # 50-100
+namba rand_range3 = nasibu(-10, 10)    # -10 to 10
+```
+
+#### Seeding for Reproducibility
+
+```swahili
+# Set seed for reproducible sequences
+weka_mbegu(42)
+
+namba val1 = nasibu(100)
+namba val2 = nasibu(100)
+andika("First run:", val1, val2)
+
+# Reset seed to same value - get same sequence
+weka_mbegu(42)
+namba val3 = nasibu(100)
+namba val4 = nasibu(100)
+andika("Second run:", val3, val4)  # Same as first run!
+```
+
+#### Practical Applications
+
+**Dice Simulator:**
+```swahili
+kazi kufa_sita() {
+    rudisha nasibu(1, 6)  # Roll 1-6
+}
+
+kazi kufa_kumi_ishirini() {
+    rudisha nasibu(1, 20)  # Roll 1-20
+}
+
+namba roll1 = kufa_sita()
+namba roll2 = kufa_sita()
+andika("Rolling two six-sided dice:", roll1, "+", roll2, "=", roll1 + roll2)
+```
+
+**Shuffle Array:**
+```swahili
+kazi kweneza_orodha(orodha arr) {
+    namba i = urefu_orodha(arr) - 1
+    
+    wakati i > 0 {
+        namba j = nasibu(0, i)
+        
+        # Swap arr[i] and arr[j]
+        namba temp = pata(arr, i)
+        arr = ondoa(arr, i)
+        ongeza(arr, temp)
+        
+        i = i - 1
+    }
+}
+```
+
+**Random Color Generator:**
+```swahili
+kazi rangi_nasibu() {
+    namba r = nasibu(0, 256)
+    namba g = nasibu(0, 256)
+    namba b = nasibu(0, 256)
+    
+    rudisha "#" + maneno_namba(r) + maneno_namba(g) + maneno_namba(b)
+}
+```
+
+**Sampling from List:**
+```swahili
+orodha fruits = ["apple", "banana", "orange", "mango"]
+
+kazi sampuli(orodha list) {
+    namba index = nasibu(urefu_orodha(list))
+    rudisha pata(list, index)
+}
+
+andika("Random fruit:", sampuli(fruits))
+```
+
+#### Error Handling
+
+```swahili
+# Error: nasibu with invalid range
+jaribu {
+    namba bad = nasibu(10, 10)  # min = max, invalid
+} shika (error) {
+    andika("Error: min must be less than max")
+}
+
+# Error: nasibu with non-positive number (1 arg)
+jaribu {
+    namba bad = nasibu(0)       # max must be positive
+} shika (error) {
+    andika("Error: max must be positive")
+}
+```
+
+#### Comparison: Random Function Modes
+
+| Function | Usage | Range | Type |
+|----------|-------|-------|------|
+| nasibu() | Random float | [0.0, 1.0) | float |
+| nasibu(n) | Random 0 to n | [0, n) | integer |
+| nasibu(min, max) | Random in range | [min, max] | integer |
+| weka_mbegu(seed) | Set seed | - | void |
+
