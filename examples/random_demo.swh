@@ -1,0 +1,249 @@
+# Random Number Generation Examples
+
+# Example 1: Simple random floats
+kazi mifano_nasibu_desimali() {
+    andika("=== Nasibu: Random Floats ===")
+    andika("")
+    
+    andika("Generating 5 random floats in [0.0, 1.0):")
+    namba i = 0
+    wakati i < 5 {
+        namba rand = nasibu()
+        andika("  Random float", i + 1, ":", rand)
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 2: Random integers (simulating dice rolls)
+kazi mifano_kufa() {
+    andika("=== Random Integers: Dice Rolling ===")
+    andika("")
+    
+    andika("Rolling a 6-sided die 10 times:")
+    namba i = 0
+    namba jumla = 0
+    wakati i < 10 {
+        namba roll = nasibu(1, 6)
+        andika("  Roll", i + 1, ":", roll)
+        jumla = jumla + roll
+        i = i + 1
+    }
+    andika("Total:", jumla)
+    andika("")
+}
+
+# Example 3: Reproducible sequences with seeding
+kazi mifano_mbegu() {
+    andika("=== Weka Mbegu: Reproducible Sequences ===")
+    andika("")
+    
+    andika("Setting seed to 12345 and generating sequence 1:")
+    weka_mbegu(12345)
+    namba j = 0
+    wakati j < 3 {
+        andika("  Value:", nasibu(100))
+        j = j + 1
+    }
+    andika("")
+    
+    andika("Setting seed to 12345 again - should get same sequence:")
+    weka_mbegu(12345)
+    namba k = 0
+    wakati k < 3 {
+        andika("  Value:", nasibu(100))
+        k = k + 1
+    }
+    andika("")
+}
+
+# Example 4: Random selection from list
+kazi mifano_sampuli() {
+    andika("=== Random Selection from List ===")
+    andika("")
+    
+    orodha maneno fruits = ["apple", "banana", "cherry", "date", "elderberry"]
+    
+    andika("Selecting 5 random fruits from list:")
+    namba i = 0
+    wakati i < 5 {
+        namba index = nasibu(0, 4)  # 0-4 for 5 fruits
+        andika("  Random index", i + 1, ":", index)
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 5: Coin flip simulation
+kazi mifano_sarafu() {
+    andika("=== Coin Flip Simulation ===")
+    andika("")
+    
+    namba heads = 0
+    namba tails = 0
+    namba i = 0
+    
+    andika("Flipping coin 20 times:")
+    wakati i < 20 {
+        namba flip = nasibu(0, 1)  # 0 or 1
+        kama flip == 0 {
+            andika("  Flip", i + 1, ": Heads")
+            heads = heads + 1
+        } sivyo {
+            andika("  Flip", i + 1, ": Tails")
+            tails = tails + 1
+        }
+        i = i + 1
+    }
+    andika("")
+    andika("Results: Heads =", heads, ", Tails =", tails)
+    andika("")
+}
+
+# Example 6: Lottery number generator
+kazi mifano_bahati() {
+    andika("=== Lottery Number Generator (Pick 6 from 1-49) ===")
+    andika("")
+    
+    andika("Generating lottery numbers:")
+    namba i = 0
+    wakati i < 6 {
+        namba number = nasibu(1, 49)
+        andika("  Number", i + 1, ":", number)
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 7: Random walk simulation
+kazi mifano_safari_nasibu() {
+    andika("=== Random Walk Simulation ===")
+    andika("")
+    
+    namba x = 0
+    namba y = 0
+    
+    andika("Starting position: (0, 0)")
+    andika("Taking 10 random steps (each step is -1, 0, or +1 in each direction):")
+    andika("")
+    
+    namba step = 0
+    wakati step < 10 {
+        namba dx = nasibu(-1, 1)    # -1, 0, or 1
+        namba dy = nasibu(-1, 1)    # -1, 0, or 1
+        
+        x = x + dx
+        y = y + dy
+        
+        andika("  Step", step + 1, ": moved (", dx, ",", dy, ") -> now at (", x, ",", y, ")")
+        step = step + 1
+    }
+    andika("")
+    andika("Final position: (", x, ",", y, ")")
+    andika("")
+}
+
+# Example 8: Password-like random string
+kazi mifano_nenosiri_nasibu() {
+    andika("=== Random Password Generator ===")
+    andika("")
+    
+    andika("Generating random codes (simulated with numbers):")
+    namba i = 0
+    wakati i < 5 {
+        andika("  Password", i + 1, ":", nasibu(100000, 999999))
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 9: Weighted probability (not perfectly weighted, but simulated)
+kazi mifano_kasi() {
+    andika("=== Weighted Probability Simulation ===")
+    andika("")
+    
+    namba common_count = 0
+    namba rare_count = 0
+    namba legendary_count = 0
+    
+    andika("Simulating 100 item drops (70% common, 25% rare, 5% legendary):")
+    andika("")
+    
+    namba i = 0
+    wakati i < 100 {
+        namba roll = nasibu(0, 99)
+        
+        kama roll < 70 {
+            common_count = common_count + 1
+        } sivyo_kama roll < 95 {
+            rare_count = rare_count + 1
+        } sivyo {
+            legendary_count = legendary_count + 1
+        }
+        
+        i = i + 1
+    }
+    
+    andika("Results:")
+    andika("  Common:", common_count, "/100")
+    andika("  Rare:", rare_count, "/100")
+    andika("  Legendary:", legendary_count, "/100")
+    andika("")
+}
+
+# Example 10: Multiple dice rolls with statistics
+kazi mifano_takwimu_kufa() {
+    andika("=== Dice Roll Statistics ===")
+    andika("")
+    
+    namba rolls = 0
+    namba total = 0
+    namba min_roll = 6
+    namba max_roll = 1
+    
+    andika("Rolling two 6-sided dice 10 times:")
+    andika("")
+    
+    namba i = 0
+    wakati i < 10 {
+        namba die1 = nasibu(1, 6)
+        namba die2 = nasibu(1, 6)
+        namba sum = die1 + die2
+        
+        andika("  Roll", i + 1, ":", die1, "+", die2, "=", sum)
+        
+        total = total + sum
+        rolls = rolls + 1
+        
+        kama sum < min_roll {
+            min_roll = sum
+        }
+        
+        kama sum > max_roll {
+            max_roll = sum
+        }
+        
+        i = i + 1
+    }
+    
+    andika("")
+    andika("Statistics:")
+    andika("  Average:", total / rolls)
+    andika("  Minimum sum:", min_roll)
+    andika("  Maximum sum:", max_roll)
+    andika("")
+}
+
+# Main execution
+kazi kuu() {
+    mifano_nasibu_desimali()
+    mifano_kufa()
+    mifano_mbegu()
+    mifano_sampuli()
+    mifano_sarafu()
+    mifano_bahati()
+    mifano_safari_nasibu()
+    mifano_nenosiri_nasibu()
+    mifano_kasi()
+    mifano_takwimu_kufa()
+}

@@ -1,0 +1,74 @@
+# Simple Random Number Generation Tests
+
+kazi kuu() {
+    andika("=== Random Number Generation ===")
+    andika("")
+    
+    # Test 1: Random float
+    andika("Test 1: Random floats [0.0, 1.0)")
+    andika("  nasibu() =", nasibu())
+    andika("  nasibu() =", nasibu())
+    andika("  nasibu() =", nasibu())
+    andika("")
+    
+    # Test 2: Random integer [0, n)
+    andika("Test 2: Random integers [0, n)")
+    andika("  nasibu(10) =", nasibu(10))
+    andika("  nasibu(10) =", nasibu(10))
+    andika("  nasibu(10) =", nasibu(10))
+    andika("")
+    
+    # Test 3: Random integer [min, max]
+    andika("Test 3: Random integers [min, max]")
+    andika("  nasibu(1, 6) =", nasibu(1, 6))
+    andika("  nasibu(1, 6) =", nasibu(1, 6))
+    andika("  nasibu(1, 6) =", nasibu(1, 6))
+    andika("")
+    
+    # Test 4: Seeding
+    andika("Test 4: Seeding for reproducibility")
+    weka_mbegu(42)
+    andika("  With seed 42:")
+    andika("    nasibu(100) =", nasibu(100))
+    andika("    nasibu(100) =", nasibu(100))
+    andika("    nasibu(100) =", nasibu(100))
+    andika("")
+    
+    andika("  Reset seed to 42:")
+    weka_mbegu(42)
+    andika("    nasibu(100) =", nasibu(100))
+    andika("    nasibu(100) =", nasibu(100))
+    andika("    nasibu(100) =", nasibu(100))
+    andika("")
+    
+    # Test 5: Dice rolls
+    andika("Test 5: Simulating dice rolls")
+    andika("  6-sided die: nasibu(1, 6) =", nasibu(1, 6))
+    andika("  6-sided die: nasibu(1, 6) =", nasibu(1, 6))
+    andika("  6-sided die: nasibu(1, 6) =", nasibu(1, 6))
+    andika("  20-sided die: nasibu(1, 20) =", nasibu(1, 20))
+    andika("")
+    
+    # Test 6: Negative ranges
+    andika("Test 6: Negative ranges")
+    andika("  nasibu(-10, 10) =", nasibu(-10, 10))
+    andika("  nasibu(-50, -10) =", nasibu(-50, -10))
+    andika("")
+    
+    # Test 7: Large ranges
+    andika("Test 7: Large ranges")
+    andika("  nasibu(1, 1000000) =", nasibu(1, 1000000))
+    andika("  nasibu(1, 1000000) =", nasibu(1, 1000000))
+    andika("")
+    
+    # Test 8: Coin flips
+    andika("Test 8: Coin flips (0=heads, 1=tails)")
+    andika("  Flip:", nasibu(0, 1))
+    andika("  Flip:", nasibu(0, 1))
+    andika("  Flip:", nasibu(0, 1))
+    andika("  Flip:", nasibu(0, 1))
+    andika("  Flip:", nasibu(0, 1))
+    andika("")
+    
+    andika("=== All Tests Complete ===")
+}

@@ -1,0 +1,128 @@
+# Test random number generation functions
+
+kazi kuu() {
+    andika("=== Random Number Generation Tests ===")
+    andika("")
+    
+    # Test 1: Random float [0.0, 1.0)
+    andika("Test 1: Random float [0.0, 1.0)")
+    namba rand1 = nasibu()
+    namba rand2 = nasibu()
+    namba rand3 = nasibu()
+    andika("  nasibu() =", rand1)
+    andika("  nasibu() =", rand2)
+    andika("  nasibu() =", rand3)
+    
+    # Verify floats are in range [0, 1)
+    kama (rand1 >= 0) && (rand1 < 1) {
+        andika("  ✓ Random float in valid range")
+    } sivyo {
+        andika("  ✗ ERROR: Random float out of range!")
+    }
+    andika("")
+    
+    # Test 2: Random integer [0, n)
+    andika("Test 2: Random integer [0, n)")
+    namba rand_int1 = nasibu(10)
+    namba rand_int2 = nasibu(10)
+    namba rand_int3 = nasibu(10)
+    andika("  nasibu(10) =", rand_int1)
+    andika("  nasibu(10) =", rand_int2)
+    andika("  nasibu(10) =", rand_int3)
+    
+    kama (rand_int1 >= 0) && (rand_int1 < 10) {
+        andika("  ✓ Random integer in valid range [0, 10)")
+    } sivyo {
+        andika("  ✗ ERROR: Random integer out of range!")
+    }
+    andika("")
+    
+    # Test 3: Random integer in range [min, max]
+    andika("Test 3: Random integer [min, max]")
+    namba rand_range1 = nasibu(1, 6)
+    namba rand_range2 = nasibu(1, 6)
+    namba rand_range3 = nasibu(1, 6)
+    andika("  nasibu(1, 6) =", rand_range1)
+    andika("  nasibu(1, 6) =", rand_range2)
+    andika("  nasibu(1, 6) =", rand_range3)
+    
+    kama (rand_range1 >= 1) && (rand_range1 <= 6) {
+        andika("  ✓ Random integer in valid range [1, 6]")
+    } sivyo {
+        andika("  ✗ ERROR: Random integer out of range!")
+    }
+    andika("")
+    
+    # Test 4: Seeding for reproducibility
+    andika("Test 4: Seeding for reproducibility")
+    
+    weka_mbegu(42)
+    namba seq1_val1 = nasibu(100)
+    namba seq1_val2 = nasibu(100)
+    namba seq1_val3 = nasibu(100)
+    andika("  Sequence 1 with seed 42:")
+    andika("    ", seq1_val1, seq1_val2, seq1_val3)
+    
+    weka_mbegu(42)
+    namba seq2_val1 = nasibu(100)
+    namba seq2_val2 = nasibu(100)
+    namba seq2_val3 = nasibu(100)
+    andika("  Sequence 2 with seed 42:")
+    andika("    ", seq2_val1, seq2_val2, seq2_val3)
+    
+    kama (seq1_val1 == seq2_val1) && (seq1_val2 == seq2_val2) && (seq1_val3 == seq2_val3) {
+        andika("  ✓ Seed reproducibility works correctly")
+    } sivyo {
+        andika("  ✗ ERROR: Seed reproducibility failed!")
+    }
+    andika("")
+    
+    # Test 5: Dice rolling simulation
+    andika("Test 5: Dice rolling simulation")
+    kazi kufa_sita() {
+        rudisha nasibu(1, 6)
+    }
+    
+    namba die1 = kufa_sita()
+    namba die2 = kufa_sita()
+    namba die3 = kufa_sita()
+    andika("  Die roll 1:", die1)
+    andika("  Die roll 2:", die2)
+    andika("  Die roll 3:", die3)
+    andika("  Total:", die1 + die2 + die3)
+    
+    kama (die1 >= 1) && (die1 <= 6) && (die2 >= 1) && (die2 <= 6) && (die3 >= 1) && (die3 <= 6) {
+        andika("  ✓ Dice rolls in valid range [1, 6]")
+    } sivyo {
+        andika("  ✗ ERROR: Dice roll out of range!")
+    }
+    andika("")
+    
+    # Test 6: Negative range
+    andika("Test 6: Random in negative range")
+    namba neg_rand1 = nasibu(-10, 10)
+    namba neg_rand2 = nasibu(-50, -10)
+    andika("  nasibu(-10, 10) =", neg_rand1)
+    andika("  nasibu(-50, -10) =", neg_rand2)
+    
+    kama (neg_rand1 >= -10) && (neg_rand1 <= 10) {
+        andika("  ✓ Negative range works correctly")
+    } sivyo {
+        andika("  ✗ ERROR: Negative range failed!")
+    }
+    andika("")
+    
+    # Test 7: Large numbers
+    andika("Test 7: Large numbers")
+    namba large_rand = nasibu(1, 1000000)
+    andika("  nasibu(1, 1000000) =", large_rand)
+    
+    kama (large_rand >= 1) && (large_rand <= 1000000) {
+        andika("  ✓ Large number range works")
+    } sivyo {
+        andika("  ✗ ERROR: Large number range failed!")
+    }
+    andika("")
+    
+    andika("=== All Random Tests Complete ===")
+}
