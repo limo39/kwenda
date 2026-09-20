@@ -1,0 +1,209 @@
+# Math Constants Examples
+
+leta "modules/math.swh"
+
+# Example 1: Circle calculations with PI
+kazi mifano_pi_duara() {
+    andika("=== PI: Circle Calculations ===")
+    andika("")
+    
+    namba radius = 10
+    namba circumference = 2 * math.PI * radius
+    namba area = math.PI * radius * radius
+    
+    andika("Circle with radius:", radius)
+    andika("  Circumference: 2πr =", circumference)
+    andika("  Area: πr² =", area)
+    andika("")
+}
+
+# Example 2: Sphere calculations with PI
+kazi mifano_pi_tufe() {
+    andika("=== PI: Sphere Calculations ===")
+    andika("")
+    
+    namba radius = 5
+    namba surface_area = 4 * math.PI * radius * radius
+    namba volume = (4.0 / 3.0) * math.PI * radius * radius * radius
+    
+    andika("Sphere with radius:", radius)
+    andika("  Surface area: 4πr² =", surface_area)
+    andika("  Volume: (4/3)πr³ =", volume)
+    andika("")
+}
+
+# Example 3: Angular velocity with PI
+kazi mifano_pi_pembe() {
+    andika("=== PI: Angles and Rotation ===")
+    andika("")
+    
+    andika("Full rotation in radians: 2π =", 2 * math.PI)
+    andika("Half rotation (π) =", math.PI)
+    andika("Quarter rotation (π/2) =", math.PI / 2)
+    andika("180 degrees in radians (π) =", math.PI)
+    andika("360 degrees in radians (2π) =", 2 * math.PI)
+    andika("")
+}
+
+# Example 4: Euler's number in compound interest
+kazi mifano_e_riba() {
+    andika("=== E: Compound Interest (Continuous Compounding) ===")
+    andika("")
+    
+    namba principal = 1000
+    namba rate = 0.05
+    
+    andika("Principal: TSh", principal)
+    andika("Annual interest rate:", rate)
+    andika("")
+    
+    namba i = 0
+    wakati i <= 10 {
+        namba amount = principal * exp(rate * i)
+        andika("  After", i, "years: TSh", amount)
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 5: Euler's number in exponential growth
+kazi mifano_e_ukuaji() {
+    andika("=== E: Exponential Growth and Decay ===")
+    andika("")
+    
+    # Exponential growth: N(t) = N0 * e^(kt)
+    andika("Bacterial population growth (doubles every hour):")
+    andika("  N(t) = 100 * e^(t * ln(2))")
+    andika("")
+    
+    namba growth_rate = log_asili(2)  # ln(2) for doubling
+    namba initial = 100
+    
+    namba t = 0
+    wakati t <= 5 {
+        namba population = initial * exp(growth_rate * t)
+        andika("  After", t, "hours:", population, "bacteria")
+        t = t + 1
+    }
+    andika("")
+}
+
+# Example 6: Half-life decay with E
+kazi mifano_e_nusu_maisha() {
+    andika("=== E: Radioactive Decay (Half-life) ===")
+    andika("")
+    
+    # Half-life formula: N(t) = N0 * e^(-t * ln(2) / half_life)
+    namba half_life = 5730  # Carbon-14 half-life in years
+    namba initial = 100
+    namba decay_rate = log_asili(2) / half_life
+    
+    andika("Carbon-14 radioactive decay:")
+    andika("  Half-life:", half_life, "years")
+    andika("  Initial amount: 100g")
+    andika("")
+    
+    namba times = [0, 5730, 11460, 17190, 22920]
+    
+    namba i = 0
+    wakati i < 5 {
+        namba time = times.at(i) kama times.at != <nil> sivyo 0
+        # Simplified: show values at specific times
+        namba t_show = i * 5730
+        namba remaining = initial * exp(0 - decay_rate * t_show)
+        andika("  After", t_show, "years:", remaining, "g")
+        i = i + 1
+    }
+    andika("")
+}
+
+# Example 7: Natural logarithm with E
+kazi mifano_e_logarithmu() {
+    andika("=== E: Natural Logarithm ===")
+    andika("")
+    
+    andika("The inverse of e^x is ln(x) = log_asili(x)")
+    andika("")
+    
+    andika("Examples:")
+    andika("  ln(1) = log_asili(1) =", log_asili(1))
+    andika("  ln(e) = log_asili(", math.E, ") =", log_asili(math.E))
+    andika("  ln(e²) = log_asili(", math.E * math.E, ") =", log_asili(math.E * math.E))
+    andika("  ln(10) = log_asili(10) =", log_asili(10))
+    andika("")
+}
+
+# Example 8: Trigonometric values with PI
+kazi mifano_pi_trigonometri() {
+    andika("=== PI: Trigonometric Values ===")
+    andika("")
+    
+    andika("Key angles (in radians):")
+    andika("  sin(0) =", sin(0))
+    andika("  sin(π/6) =", sin(math.PI / 6))
+    andika("  sin(π/4) =", sin(math.PI / 4))
+    andika("  sin(π/3) =", sin(math.PI / 3))
+    andika("  sin(π/2) =", sin(math.PI / 2))
+    andika("")
+    andika("  cos(0) =", cos(0))
+    andika("  cos(π/3) =", cos(math.PI / 3))
+    andika("  cos(π/2) =", cos(math.PI / 2))
+    andika("  cos(π) =", cos(math.PI))
+    andika("")
+}
+
+# Example 9: Pythagorean identity with PI
+kazi mifano_pi_pythagorean() {
+    andika("=== PI: Pythagorean Identity ===")
+    andika("")
+    
+    andika("sin²(x) + cos²(x) = 1 for all x")
+    andika("")
+    
+    namba angle = math.PI / 4
+    namba sin_val = sin(angle)
+    namba cos_val = cos(angle)
+    namba identity = sin_val * sin_val + cos_val * cos_val
+    
+    andika("At angle π/4:")
+    andika("  sin(π/4) =", sin_val)
+    andika("  cos(π/4) =", cos_val)
+    andika("  sin²(π/4) + cos²(π/4) =", identity)
+    andika("")
+}
+
+# Example 10: Using both PI and E together
+kazi mifano_pi_at_e() {
+    andika("=== Using PI and E Together ===")
+    andika("")
+    
+    andika("Interesting mathematical relationships:")
+    andika("")
+    andika("  PI =", math.PI)
+    andika("  E =", math.E)
+    andika("  PI + E =", math.PI + math.E)
+    andika("  PI * E =", math.PI * math.E)
+    andika("  PI / E =", math.PI / math.E)
+    andika("  E^PI =", exp(math.PI))
+    andika("  PI^E =", tweza(math.PI, math.E))
+    andika("")
+    
+    # Euler's identity approximation
+    andika("Euler's formula: e^(i*PI) = -1")
+    andika("  e^(PI) ≈", exp(math.PI))
+    andika("")
+}
+
+# Main execution
+kazi kuu() {
+    mifano_pi_duara()
+    mifano_pi_tufe()
+    mifano_pi_pembe()
+    mifano_e_riba()
+    mifano_e_ukuaji()
+    mifano_e_nusu_maisha()
+    mifano_e_logarithmu()
+    mifano_pi_trigonometri()
+    mifano_pi_pythagorean()
+    mifano_pi_at_e()
+}

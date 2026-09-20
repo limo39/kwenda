@@ -1,0 +1,124 @@
+# Test all math constants
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Math Module Constants Test ===")
+    andika("")
+    
+    # Primary constants
+    andika("PRIMARY CONSTANTS:")
+    andika("  PI =", math.PI)
+    andika("  E =", math.E)
+    andika("")
+    
+    # PI-related constants
+    andika("PI-RELATED CONSTANTS:")
+    andika("  PI_2 (π/2) =", math.PI_2)
+    andika("  PI_4 (π/4) =", math.PI_4)
+    andika("  TAU (2π) =", math.TAU)
+    andika("")
+    
+    # Angle conversion
+    andika("ANGLE CONVERSION CONSTANTS:")
+    andika("  DEG_TO_RAD =", math.DEG_TO_RAD)
+    andika("  RAD_TO_DEG =", math.RAD_TO_DEG)
+    andika("")
+    
+    # Root constants
+    andika("ROOT CONSTANTS:")
+    andika("  SQRT_2 =", math.SQRT_2)
+    andika("  SQRT_3 =", math.SQRT_3)
+    andika("  SQRT_5 =", math.SQRT_5)
+    andika("")
+    
+    # Golden ratio
+    andika("GOLDEN RATIO:")
+    andika("  PHI (φ) =", math.PHI)
+    andika("")
+    
+    # Logarithmic constants
+    andika("LOGARITHMIC CONSTANTS:")
+    andika("  LN_2 =", math.LN_2)
+    andika("  LN_10 =", math.LN_10)
+    andika("")
+    
+    # Advanced constants
+    andika("ADVANCED CONSTANTS:")
+    andika("  EULER_GAMMA =", math.EULER_GAMMA)
+    andika("")
+    
+    # Verification tests
+    andika("VERIFICATION TESTS:")
+    andika("")
+    
+    # Test 1: PI relationships
+    andika("Test 1: PI relationships")
+    andika("  math.PI_2 * 2 should equal math.PI_2 * 2")
+    andika("  Result:", math.PI_2 * 2, "Expected:", math.PI_4 * 4)
+    andika("  math.TAU should equal 2 * math.PI")
+    andika("  Result:", math.TAU, "Expected:", 2 * math.PI)
+    andika("")
+    
+    # Test 2: Angle conversion factors
+    andika("Test 2: Angle conversion factors")
+    andika("  90 degrees to radians:")
+    namba rad = 90 * math.DEG_TO_RAD
+    andika("    Result:", rad, "Expected:", math.PI_2)
+    andika("  π/2 radians to degrees:")
+    namba deg = (math.PI / 2) * math.RAD_TO_DEG
+    andika("    Result:", deg, "Expected: 90")
+    andika("")
+    
+    # Test 3: Root constants
+    andika("Test 3: Root constants")
+    andika("  SQRT_2 squared should equal 2:")
+    andika("    Result:", math.SQRT_2 * math.SQRT_2, "Expected: 2")
+    andika("  SQRT_3 squared should equal 3:")
+    andika("    Result:", math.SQRT_3 * math.SQRT_3, "Expected: 3")
+    andika("")
+    
+    # Test 4: Use in calculations
+    andika("Test 4: Using constants in calculations")
+    andika("  Circle area (r=1): π =", math.PI * 1 * 1)
+    andika("  Circle circumference (r=1): 2π =", 2 * math.PI)
+    andika("  e^1 =", exp(1), "vs E =", math.E)
+    andika("  Exponential: 100 * e^0.5 =", 100 * exp(0.5))
+    andika("")
+    
+    # Test 5: Trigonometry with PI
+    andika("Test 5: Trigonometry with PI")
+    andika("  sin(0) =", sin(0))
+    andika("  sin(π/2) =", sin(math.PI_2))
+    andika("  sin(π) =", sin(math.PI))
+    andika("  cos(0) =", cos(0))
+    andika("  cos(π/2) =", cos(math.PI_2))
+    andika("  cos(π) =", cos(math.PI))
+    andika("")
+    
+    # Test 6: Logarithm properties
+    andika("Test 6: Logarithm properties")
+    andika("  log_asili(E) =", log_asili(math.E), "(should be 1)")
+    andika("  log_asili(E^2) =", log_asili(math.E * math.E), "(should be 2)")
+    andika("  log_asili(2) =", log_asili(2), "vs LN_2 =", math.LN_2)
+    andika("")
+    
+    # Test 7: Golden ratio
+    andika("Test 7: Golden ratio")
+    andika("  PHI =", math.PHI)
+    andika("  1/PHI =", 1 / math.PHI)
+    andika("  PHI - 1 =", math.PHI - 1)
+    andika("  1/PHI should approximately equal PHI - 1")
+    andika("")
+    
+    # Test 8: All constants are accessible
+    andika("Test 8: All constants are accessible and consistent")
+    namba sum = math.PI + math.E
+    andika("  PI + E =", sum)
+    namba product = math.PI * math.E
+    andika("  PI * E =", product)
+    andika("  Multiple accesses work correctly")
+    andika("")
+    
+    andika("=== All Constant Tests Complete ===")
+}

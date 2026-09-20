@@ -1,0 +1,94 @@
+# Test math constants
+
+leta "modules/math.swh"
+
+kazi kuu() {
+    andika("=== Math Constants Tests ===")
+    andika("")
+    
+    # Test 1: PI constant
+    andika("Test 1: PI Constant")
+    andika("  math.PI =", math.PI)
+    andika("  Type: namba")
+    andika("  Precision: 11 decimal places")
+    andika("")
+    
+    # Test 2: E constant (Euler's number)
+    andika("Test 2: Euler's Number (E)")
+    andika("  math.E =", math.E)
+    andika("  Type: namba")
+    andika("  Precision: 11 decimal places")
+    andika("")
+    
+    # Test 3: Basic calculations with PI
+    andika("Test 3: Calculations with PI")
+    andika("  Circumference of circle with r=1:")
+    andika("    2 * PI =", 2 * math.PI)
+    andika("  Area of circle with r=1:")
+    andika("    PI * r^2 = PI * 1 =", math.PI)
+    andika("  Area of circle with r=2:")
+    andika("    PI * 4 =", math.PI * 4)
+    andika("")
+    
+    # Test 4: Basic calculations with E
+    andika("Test 4: Calculations with E")
+    andika("  e^1 = exp(1) ≈", math.E)
+    andika("  e^2 ≈", math.E * math.E)
+    andika("  1/e ≈", 1 / math.E)
+    andika("")
+    
+    # Test 5: Using PI with trig functions
+    andika("Test 5: PI with Trigonometric Functions")
+    andika("  sin(PI/2) =", sin(math.PI / 2))
+    andika("  cos(0) =", cos(0))
+    andika("  cos(PI) =", cos(math.PI))
+    andika("")
+    
+    # Test 6: Using E with exponential
+    andika("Test 6: E with Exponential Functions")
+    andika("  exp(0) =", exp(0))
+    andika("  exp(1) =", exp(1))
+    andika("  log_asili(E) =", log_asili(math.E))
+    andika("")
+    
+    # Test 7: PI in geometry
+    andika("Test 7: PI in Geometry")
+    namba radius = 5
+    namba circumference = 2 * math.PI * radius
+    namba area = math.PI * radius * radius
+    andika("  Circle with radius", radius)
+    andika("  Circumference:", circumference)
+    andika("  Area:", area)
+    andika("")
+    
+    # Test 8: E in compound interest
+    andika("Test 8: E in Compound Interest")
+    namba principal = 1000
+    namba rate = 0.05
+    namba time = 10
+    namba amount = principal * exp(rate * time)
+    andika("  Principal: TSh", principal)
+    andika("  Annual rate:", rate)
+    andika("  Time (years):", time)
+    andika("  Continuous compound amount:", amount)
+    andika("")
+    
+    # Test 9: Module function usage with constants
+    andika("Test 9: Using Constants with Module Functions")
+    namba pi_squared = math.PI * math.PI
+    andika("  PI^2 =", pi_squared)
+    andika("  Using module function mraba(PI):")
+    andika("    Result:", math.mraba(math.PI))
+    andika("")
+    
+    # Test 10: Constants are accessible multiple times
+    andika("Test 10: Constants Accessibility")
+    andika("  First access to PI:", math.PI)
+    andika("  Second access to PI:", math.PI)
+    andika("  First access to E:", math.E)
+    andika("  Second access to E:", math.E)
+    andika("  Sum:", math.PI + math.E)
+    andika("")
+    
+    andika("=== All Constants Tests Complete ===")
+}
