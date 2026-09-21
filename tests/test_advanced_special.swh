@@ -1,0 +1,28 @@
+andika("Testing gamma function:")
+andika("gamma(5) =", gamma(5))
+andika("gamma(1) =", gamma(1))
+andika("gamma(0.5) ≈", gamma(0.5))
+
+andika("\nTesting error function (erf):")
+andika("erf(0) =", erf(0))
+andika("erf(1) ≈", erf(1))
+andika("erf(2) ≈", erf(2))
+
+andika("\nTesting complementary error function (erfc):")
+andika("erfc(0) =", erfc(0))
+andika("erfc(1) ≈", erfc(1))
+andika("erfc(2) ≈", erfc(2))
+
+andika("\nTesting Bessel functions of the first kind:")
+andika("j0(0) =", j0(0))
+andika("j0(1) ≈", j0(1))
+andika("j1(0) =", j1(0))
+andika("j1(1) ≈", j1(1))
+
+andika("\nTesting Bessel functions of the second kind:")
+andika("y0(1) ≈", y0(1))
+andika("y0(2) ≈", y0(2))
+andika("y1(1) ≈", y1(1))
+andika("y1(2) ≈", y1(2))
+
+andika("\nAll tests completed!")

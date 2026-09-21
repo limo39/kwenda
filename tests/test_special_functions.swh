@@ -1,0 +1,107 @@
+# Test special mathematical functions
+
+kazi kuu() {
+    andika("=== Special Mathematical Functions Tests ===")
+    andika("")
+    
+    # Test 1: Factorial (ukweli)
+    andika("Test 1: Factorial (ukweli)")
+    andika("  ukweli(0) =", ukweli(0))
+    andika("  ukweli(1) =", ukweli(1))
+    andika("  ukweli(5) =", ukweli(5))
+    andika("  ukweli(10) =", ukweli(10))
+    andika("")
+    
+    # Test 2: GCD (kigawanyaji_kikuu)
+    andika("Test 2: GCD - Greatest Common Divisor (kigawanyaji_kikuu)")
+    andika("  kigawanyaji_kikuu(12, 8) =", kigawanyaji_kikuu(12, 8))
+    andika("  kigawanyaji_kikuu(48, 18) =", kigawanyaji_kikuu(48, 18))
+    andika("  kigawanyaji_kikuu(100, 50) =", kigawanyaji_kikuu(100, 50))
+    andika("  kigawanyaji_kikuu(17, 19) =", kigawanyaji_kikuu(17, 19))
+    andika("")
+    
+    # Test 3: LCM (kigawanyaji_ndogo)
+    andika("Test 3: LCM - Least Common Multiple (kigawanyaji_ndogo)")
+    andika("  kigawanyaji_ndogo(12, 8) =", kigawanyaji_ndogo(12, 8))
+    andika("  kigawanyaji_ndogo(6, 9) =", kigawanyaji_ndogo(6, 9))
+    andika("  kigawanyaji_ndogo(4, 6) =", kigawanyaji_ndogo(4, 6))
+    andika("  kigawanyaji_ndogo(5, 7) =", kigawanyaji_ndogo(5, 7))
+    andika("")
+    
+    # Test 4: Power (tweza)
+    andika("Test 4: Power - exponentiation (tweza)")
+    andika("  tweza(2, 3) =", tweza(2, 3))
+    andika("  tweza(2, 8) =", tweza(2, 8))
+    andika("  tweza(3, 3) =", tweza(3, 3))
+    andika("  tweza(10, 2) =", tweza(10, 2))
+    andika("  tweza(2, -2) =", tweza(2, -2))
+    andika("")
+    
+    # Test 5: Modular Power (tweza_modulo)
+    andika("Test 5: Modular Power (tweza_modulo)")
+    andika("  tweza_modulo(2, 3, 5) =", tweza_modulo(2, 3, 5))
+    andika("  tweza_modulo(3, 4, 7) =", tweza_modulo(3, 4, 7))
+    andika("  tweza_modulo(10, 100, 7) =", tweza_modulo(10, 100, 7))
+    andika("")
+    
+    # Test 6: Number property - even/odd
+    andika("Test 6: Number Properties - Even/Odd")
+    andika("  ni_shufwa(4) =", ni_shufwa(4), "(even)")
+    andika("  ni_shufwa(7) =", ni_shufwa(7), "(odd)")
+    andika("  ni_witiri(5) =", ni_witiri(5), "(odd)")
+    andika("  ni_witiri(10) =", ni_witiri(10), "(even)")
+    andika("")
+    
+    # Test 7: Number property - sign
+    andika("Test 7: Number Properties - Sign")
+    andika("  ni_chanya(5) =", ni_chanya(5))
+    andika("  ni_chanya(-3) =", ni_chanya(-3))
+    andika("  ni_hasi(-5) =", ni_hasi(-5))
+    andika("  ni_hasi(3) =", ni_hasi(3))
+    andika("  ni_sifuri(0) =", ni_sifuri(0))
+    andika("  ni_sifuri(1) =", ni_sifuri(1))
+    andika("")
+    
+    # Test 8: Prime checking
+    andika("Test 8: Prime Checking (ni_namba_kuu)")
+    andika("  ni_namba_kuu(2) =", ni_namba_kuu(2))
+    andika("  ni_namba_kuu(3) =", ni_namba_kuu(3))
+    andika("  ni_namba_kuu(4) =", ni_namba_kuu(4))
+    andika("  ni_namba_kuu(7) =", ni_namba_kuu(7))
+    andika("  ni_namba_kuu(17) =", ni_namba_kuu(17))
+    andika("  ni_namba_kuu(100) =", ni_namba_kuu(100))
+    andika("")
+    
+    # Test 9: Perfect square checking
+    andika("Test 9: Perfect Square Checking (ni_mraba_kamili)")
+    andika("  ni_mraba_kamili(4) =", ni_mraba_kamili(4))
+    andika("  ni_mraba_kamili(9) =", ni_mraba_kamili(9))
+    andika("  ni_mraba_kamili(10) =", ni_mraba_kamili(10))
+    andika("  ni_mraba_kamili(16) =", ni_mraba_kamili(16))
+    andika("  ni_mraba_kamili(25) =", ni_mraba_kamili(25))
+    andika("")
+    
+    # Test 10: Absolute value
+    andika("Test 10: Absolute Value (kiwango)")
+    andika("  kiwango(5) =", kiwango(5))
+    andika("  kiwango(-5) =", kiwango(-5))
+    andika("  kiwango(-3.14) =", kiwango(-3.14))
+    andika("")
+    
+    # Test 11: Min and Max
+    andika("Test 11: Minimum and Maximum")
+    andika("  min(5, 3, 8, 1) =", min(5, 3, 8, 1))
+    andika("  max(5, 3, 8, 1) =", max(5, 3, 8, 1))
+    andika("  min(-5, -3, -8) =", min(-5, -3, -8))
+    andika("  max(-5, -3, -8) =", max(-5, -3, -8))
+    andika("")
+    
+    # Test 12: Sign function
+    andika("Test 12: Sign Function (ishara)")
+    andika("  ishara(5) =", ishara(5))
+    andika("  ishara(-5) =", ishara(-5))
+    andika("  ishara(0) =", ishara(0))
+    andika("")
+    
+    andika("=== All Special Function Tests Complete ===")
+}

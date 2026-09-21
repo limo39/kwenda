@@ -105,7 +105,36 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			}
 			i = end
 		} else {
-			i++
+			// Handle plain statements at the top level (function calls, assignments, etc.)
+			end := i + 1
+			parenCount := 0
+			
+			// If starting with identifier followed by paren, parse function call
+			if tokens[i].Type == lexer.TokenIdentifier && end < len(tokens) && tokens[end].Value == "(" {
+				parenCount = 1 // Start count at 1 since we're at the opening paren
+				end++ // Move past the opening paren
+				
+				// Find matching closing paren, accounting for nested function calls
+				for end < len(tokens) && parenCount > 0 {
+					if tokens[end].Value == "(" {
+						parenCount++
+					} else if tokens[end].Value == ")" {
+						parenCount--
+					}
+					end++
+				}
+			} else {
+				// For other statements, find next keyword
+				for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" && tokens[end].Value != "darasa" && tokens[end].Value != "andika" && tokens[end].Value != "wakati" && tokens[end].Value != "kama" && tokens[end].Value != "kwa" {
+					end++
+				}
+			}
+			
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				functions = append(functions, stmt)
+			}
+			i = end
 		}
 	}
 

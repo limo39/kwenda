@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "kwenda/ast"
     "kwenda/lexer"
     "kwenda/parser"
     "kwenda/interpreter"
@@ -216,9 +217,19 @@ func main() {
     
     var result interface{}
     
-    // First pass: register all functions
+    // First pass: register all functions and execute non-function statements
     for _, function := range program.Functions {
-        interpreter.Interpret(function, env)
+        // Check if this is a function definition
+        if _, isFunctionNode := function.(ast.FunctionNode); isFunctionNode {
+            // Register the function
+            interpreter.Interpret(function, env)
+        } else if _, isClassNode := function.(ast.ClassNode); isClassNode {
+            // Register the class
+            interpreter.Interpret(function, env)
+        } else {
+            // Execute other statements immediately
+            interpreter.Interpret(function, env)
+        }
     }
     
     // Second pass: execute main function if it exists

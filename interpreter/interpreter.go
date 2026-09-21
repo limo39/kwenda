@@ -2,12 +2,12 @@ package interpreter
 
 import (
 	"fmt"
+	"kwenda/ast"
 	"math"
 	"math/rand"
 	"os"
 	"strconv"
 	"strings"
-	"kwenda/ast"
 )
 
 // Special control flow values
@@ -28,8 +28,8 @@ type ControlFlowResult struct {
 
 // ErrorValue represents a runtime error
 type ErrorValue struct {
-	Message  string
-	Context  string // Additional context about where the error occurred
+	Message string
+	Context string // Additional context about where the error occurred
 }
 
 // Environment stores variables and their values
@@ -37,8 +37,8 @@ type Environment struct {
 	Variables map[string]interface{}
 	Functions map[string]ast.FunctionNode
 	Classes   map[string]ast.ClassNode // Class definitions
-	Modules   map[string]*Environment // Module namespaces
-	Parent    *Environment // For function scope
+	Modules   map[string]*Environment  // Module namespaces
+	Parent    *Environment             // For function scope
 }
 
 func NewEnvironment() *Environment {
@@ -193,7 +193,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle array access (e.g., arr[0]) or dictionary access (e.g., dict["key"])
 		arrayValue := Interpret(n.Array, env)
 		indexValue := Interpret(n.Index, env)
-		
+
 		// Check if it's a dictionary
 		if dict, ok := arrayValue.(map[string]interface{}); ok {
 			keyStr := fmt.Sprintf("%v", indexValue)
@@ -202,7 +202,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			return nil
 		}
-		
+
 		// Otherwise treat as array
 		if arr, ok := arrayValue.([]interface{}); ok {
 			if idx, ok := indexValue.(int); ok {
@@ -218,14 +218,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		arrayValue := Interpret(n.Array, env)
 		indexValue := Interpret(n.Index, env)
 		newValue := Interpret(n.Value, env)
-		
+
 		// Check if it's a dictionary
 		if dict, ok := arrayValue.(map[string]interface{}); ok {
 			keyStr := fmt.Sprintf("%v", indexValue)
 			dict[keyStr] = newValue
 			return newValue
 		}
-		
+
 		// Otherwise treat as array
 		if arr, ok := arrayValue.([]interface{}); ok {
 			if idx, ok := indexValue.(int); ok {
@@ -277,13 +277,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if len(n.Value) >= 2 && n.Value[0] == '"' && n.Value[len(n.Value)-1] == '"' {
 			return n.Value[1 : len(n.Value)-1] // Remove quotes
 		}
-		
+
 		// Check if it's a module access (e.g., math.PI or math.ongeza_kubwa)
 		if strings.Contains(n.Value, ".") {
 			parts := strings.SplitN(n.Value, ".", 2)
 			moduleName := parts[0]
 			memberName := parts[1]
-			
+
 			if moduleEnv, exists := env.Modules[moduleName]; exists {
 				// Try to get variable first
 				if value := moduleEnv.Get(memberName); value != nil {
@@ -298,7 +298,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Module or member not found, return as-is for debugging
 			return n.Value
 		}
-		
+
 		// Look up the identifier in the environment
 		value := env.Get(n.Value)
 		if value == nil {
@@ -310,13 +310,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.BinaryOpNode:
 		left := Interpret(n.Left, env)
 		right := Interpret(n.Right, env)
-		
+
 		// Handle logical operators first
 		if n.Op == "na" || n.Op == "au" {
 			// Convert to boolean
 			leftBool := toBool(left)
 			rightBool := toBool(right)
-			
+
 			switch n.Op {
 			case "na": // AND
 				return leftBool && rightBool
@@ -324,7 +324,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				return leftBool || rightBool
 			}
 		}
-		
+
 		// Handle comparison operators that can work with booleans
 		if n.Op == "==" || n.Op == "!=" {
 			// If both are booleans, compare as booleans
@@ -338,14 +338,14 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 		}
-		
+
 		// Convert to numeric values (int or float64)
 		leftFloat, leftIsFloat := toNumber(left)
 		rightFloat, rightIsFloat := toNumber(right)
-		
+
 		// If either is float, use float arithmetic
 		useFloat := leftIsFloat || rightIsFloat
-		
+
 		switch n.Op {
 		case "+":
 			// Handle string concatenation
@@ -431,7 +431,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		} else {
 			fmt.Print("Ingiza thamani: ")
 		}
-		
+
 		var input string
 		fmt.Scanln(&input)
 
@@ -445,7 +445,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.MethodCallNode:
 		// Handle method calls with dot notation (e.g., object.method(args))
 		objectValue := Interpret(n.Object, env)
-		
+
 		// Get the object's class type
 		if dict, ok := objectValue.(map[string]interface{}); ok {
 			// Check if this is a class instance with a __class__ field
@@ -461,10 +461,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						Modules:   env.Modules,
 						Parent:    env,
 					}
-					
+
 					// Set 'hii' to refer to the current instance
 					methodEnv.Set("hii", objectValue)
-					
+
 					// Bind parameters
 					for i, param := range method.Parameters {
 						if i < len(n.Args) {
@@ -472,12 +472,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 							methodEnv.Set(param.Name, argValue)
 						}
 					}
-					
+
 					// Execute method body
 					var result interface{}
 					for _, stmt := range method.Body {
 						result = Interpret(stmt, methodEnv)
-						
+
 						// Handle control flow
 						if cf, ok := result.(ControlFlowResult); ok {
 							if cf.Type == ControlReturn {
@@ -490,7 +490,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					}
 					return result
 				}
-				
+
 				// Method not found
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -501,7 +501,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 		}
-		
+
 		// If not a class instance, return error
 		return ControlFlowResult{
 			Type: ControlThrow,
@@ -553,7 +553,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if n.Name == "ongeza" && len(n.Args) == 2 {
 			// Add element to array: ongeza(array, element)
 			element := Interpret(n.Args[1], env)
-			
+
 			// Update the original array variable if it's an identifier
 			if arrayNode, ok := n.Args[0].(ast.IdentifierNode); ok {
 				arrayArg := env.Get(arrayNode.Value)
@@ -569,7 +569,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if n.Name == "ondoa" && len(n.Args) == 2 {
 			// Remove element at index: ondoa(array, index)
 			indexArg := Interpret(n.Args[1], env)
-			
+
 			// Update the original array variable if it's an identifier
 			if arrayNode, ok := n.Args[0].(ast.IdentifierNode); ok {
 				arrayArg := env.Get(arrayNode.Value)
@@ -600,7 +600,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Get element at index: pata(array, index)
 			arrayArg := Interpret(n.Args[0], env)
 			indexArg := Interpret(n.Args[1], env)
-			
+
 			if arr, ok := arrayArg.([]interface{}); ok {
 				if idx, ok := indexArg.(int); ok {
 					if idx >= 0 && idx < len(arr) {
@@ -640,7 +640,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Write to file: andika_faili("filename.txt", "content") or andika_faili("filename.txt", "content", kweli) for append
 			filenameArg := Interpret(n.Args[0], env)
 			contentArg := Interpret(n.Args[1], env)
-			
+
 			if filename, ok := filenameArg.(string); ok {
 				// Convert content to string if it's not already
 				var content string
@@ -649,7 +649,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				} else {
 					content = fmt.Sprintf("%v", contentArg)
 				}
-				
+
 				// Check if append mode is specified
 				append := false
 				if len(n.Args) >= 3 {
@@ -658,7 +658,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						append = appendVal
 					}
 				}
-				
+
 				var err error
 				if append {
 					// Append to file
@@ -668,13 +668,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						return false
 					}
 					defer file.Close()
-					
+
 					_, err = file.WriteString(content)
 				} else {
 					// Overwrite file
 					err = os.WriteFile(filename, []byte(content), 0644)
 				}
-				
+
 				if err != nil {
 					fmt.Printf("Hitilafu ya kuandika faili '%s': %v\n", filename, err)
 					return false
@@ -751,13 +751,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Substring function: kata(string, start) or kata(string, start, length)
 			str := Interpret(n.Args[0], env)
 			start := Interpret(n.Args[1], env)
-			
+
 			if strVal, ok := str.(string); ok {
 				if startVal, ok := start.(int); ok {
 					if startVal < 0 || startVal >= len(strVal) {
 						return ""
 					}
-					
+
 					if len(n.Args) == 3 {
 						// kata(string, start, length)
 						length := Interpret(n.Args[2], env)
@@ -782,7 +782,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			str := Interpret(n.Args[0], env)
 			old := Interpret(n.Args[1], env)
 			new := Interpret(n.Args[2], env)
-			
+
 			if strVal, ok := str.(string); ok {
 				if oldVal, ok := old.(string); ok {
 					if newVal, ok := new.(string); ok {
@@ -797,7 +797,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Find function: tafuta(string, substring) - returns index or -1
 			str := Interpret(n.Args[0], env)
 			substr := Interpret(n.Args[1], env)
-			
+
 			if strVal, ok := str.(string); ok {
 				if substrVal, ok := substr.(string); ok {
 					return strings.Index(strVal, substrVal)
@@ -810,7 +810,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Starts with function: awali(string, prefix) - returns boolean
 			str := Interpret(n.Args[0], env)
 			prefix := Interpret(n.Args[1], env)
-			
+
 			if strVal, ok := str.(string); ok {
 				if prefixVal, ok := prefix.(string); ok {
 					return strings.HasPrefix(strVal, prefixVal)
@@ -823,7 +823,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Ends with function: mwisho(string, suffix) - returns boolean
 			str := Interpret(n.Args[0], env)
 			suffix := Interpret(n.Args[1], env)
-			
+
 			if strVal, ok := str.(string); ok {
 				if suffixVal, ok := suffix.(string); ok {
 					return strings.HasSuffix(strVal, suffixVal)
@@ -885,7 +885,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
 			result := math.Floor(num)
-			
+
 			// Return integer if input was integer, float if input was float
 			if isFloat {
 				return result
@@ -908,7 +908,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
 			result := math.Ceil(num)
-			
+
 			// Return integer if input was integer, float if input was float
 			if isFloat {
 				return result
@@ -931,7 +931,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
 			result := math.Round(num)
-			
+
 			// Return integer if input was integer, float if input was float
 			if isFloat {
 				return result
@@ -954,7 +954,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
 			result := math.Trunc(num)
-			
+
 			// Return integer if input was integer, float if input was float
 			if isFloat {
 				return result
@@ -977,7 +977,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Square root function: mzizi_mraba(number)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check for negative numbers
 			if num < 0 {
 				return ControlFlowResult{
@@ -988,9 +988,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Sqrt(num)
-			
+
 			// Always return float for square roots to maintain precision
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1012,9 +1012,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Cube root function: mzizi_mchemraba(number)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Cbrt(num)
-			
+
 			// Always return float for cube roots to maintain precision
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1037,10 +1037,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Equivalent to: number^(1/n)
 			argNum := Interpret(n.Args[0], env)
 			argRoot := Interpret(n.Args[1], env)
-			
+
 			num, isFloatNum := toNumber(argNum)
 			root, _ := toNumber(argRoot)
-			
+
 			// Check for invalid root
 			if root == 0 {
 				return ControlFlowResult{
@@ -1051,7 +1051,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for even root of negative number
 			if num < 0 && int(root)%2 == 0 {
 				return ControlFlowResult{
@@ -1062,7 +1062,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Calculate nth root: x^(1/n)
 			// For negative numbers with odd roots, handle specially
 			var result float64
@@ -1072,7 +1072,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			} else {
 				result = math.Pow(num, 1.0/root)
 			}
-			
+
 			// Always return float for nth roots to maintain precision
 			if isFloatNum || result != math.Floor(result) {
 				return result
@@ -1095,9 +1095,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Exponential function: exp(x) returns e^x
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Exp(num)
-			
+
 			// Check for infinity (overflow)
 			if math.IsInf(result, 1) {
 				return ControlFlowResult{
@@ -1108,7 +1108,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1119,7 +1119,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for exponential unless it's a perfect integer
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1141,7 +1141,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Natural logarithm function: log_asili(x) returns ln(x)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check for invalid input
 			if num <= 0 {
 				return ControlFlowResult{
@@ -1152,9 +1152,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Log(num)
-			
+
 			// Always return float for logarithm
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1176,7 +1176,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Base-10 logarithm function: log10(x)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check for invalid input
 			if num <= 0 {
 				return ControlFlowResult{
@@ -1187,9 +1187,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Log10(num)
-			
+
 			// Always return float for logarithm
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1211,7 +1211,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Base-2 logarithm function: log2(x)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check for invalid input
 			if num <= 0 {
 				return ControlFlowResult{
@@ -1222,9 +1222,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Log2(num)
-			
+
 			// Always return float for logarithm
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1247,9 +1247,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Sine function: sin(x) where x is in radians
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Sin(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1260,7 +1260,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1282,9 +1282,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Cosine function: cos(x) where x is in radians
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Cos(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1295,7 +1295,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1317,9 +1317,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Tangent function: tan(x) where x is in radians
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Tan(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1330,7 +1330,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for infinity (happens at π/2 + nπ)
 			if math.IsInf(result, 0) {
 				return ControlFlowResult{
@@ -1341,7 +1341,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1364,7 +1364,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Arc sine function: asin(x) returns angle in radians, domain [-1, 1]
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check domain: asin only works for -1 <= x <= 1
 			if num < -1 || num > 1 {
 				return ControlFlowResult{
@@ -1375,9 +1375,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Asin(num)
-			
+
 			// Always return float for inverse trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1399,7 +1399,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Arc cosine function: acos(x) returns angle in radians, domain [-1, 1]
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check domain: acos only works for -1 <= x <= 1
 			if num < -1 || num > 1 {
 				return ControlFlowResult{
@@ -1410,9 +1410,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Acos(num)
-			
+
 			// Always return float for inverse trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1434,9 +1434,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Arc tangent function: atan(x) returns angle in radians, domain all real numbers
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Atan(num)
-			
+
 			// Always return float for inverse trig functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1461,9 +1461,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			xArg := Interpret(n.Args[1], env)
 			y, yIsFloat := toNumber(yArg)
 			x, xIsFloat := toNumber(xArg)
-			
+
 			result := math.Atan2(y, x)
-			
+
 			// Always return float for inverse trig functions
 			if yIsFloat || xIsFloat || result != math.Floor(result) {
 				return result
@@ -1486,10 +1486,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Convert degrees to radians: radians(degrees)
 			arg := Interpret(n.Args[0], env)
 			degrees, isFloat := toNumber(arg)
-			
+
 			// Formula: radians = degrees × π / 180
 			result := degrees * math.Pi / 180.0
-			
+
 			// Always return float for conversion
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1511,10 +1511,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Convert radians to degrees: degrees(radians)
 			arg := Interpret(n.Args[0], env)
 			radians, isFloat := toNumber(arg)
-			
+
 			// Formula: degrees = radians × 180 / π
 			result := radians * 180.0 / math.Pi
-			
+
 			// Always return float for conversion
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1537,9 +1537,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Hyperbolic sine function: sinh(x) = (e^x - e^-x) / 2
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Sinh(num)
-			
+
 			// Check for infinity (overflow)
 			if math.IsInf(result, 0) {
 				return ControlFlowResult{
@@ -1550,7 +1550,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1561,7 +1561,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1583,9 +1583,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Hyperbolic cosine function: cosh(x) = (e^x + e^-x) / 2
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Cosh(num)
-			
+
 			// Check for infinity (overflow)
 			if math.IsInf(result, 0) {
 				return ControlFlowResult{
@@ -1596,7 +1596,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1607,7 +1607,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1629,9 +1629,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Hyperbolic tangent function: tanh(x) = sinh(x) / cosh(x)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Tanh(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1642,7 +1642,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1666,9 +1666,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Domain: all real numbers
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Asinh(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1679,7 +1679,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for inverse hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1702,7 +1702,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Domain: x >= 1
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check domain: acosh only works for x >= 1
 			if num < 1 {
 				return ControlFlowResult{
@@ -1713,9 +1713,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Acosh(num)
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1726,7 +1726,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for inverse hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1749,7 +1749,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Domain: -1 < x < 1 (strictly between -1 and 1)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			// Check domain: atanh only works for -1 < x < 1
 			if num <= -1 || num >= 1 {
 				return ControlFlowResult{
@@ -1760,9 +1760,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Atanh(num)
-			
+
 			// Check for infinity
 			if math.IsInf(result, 0) {
 				return ControlFlowResult{
@@ -1773,7 +1773,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Check for NaN
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -1784,7 +1784,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Always return float for inverse hyperbolic functions
 			if isFloat || result != math.Floor(result) {
 				return result
@@ -1807,10 +1807,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Check if number is even (ni_shufwa = is_even)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			// Convert to integer for modulo operation
 			intNum := int64(num)
-			return intNum % 2 == 0
+			return intNum%2 == 0
 		}
 
 		if n.Name == "ni_shufwa" && len(n.Args) != 1 {
@@ -1827,10 +1827,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Check if number is odd (ni_witiri = is_odd)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			// Convert to integer for modulo operation
 			intNum := int64(num)
-			return intNum % 2 != 0
+			return intNum%2 != 0
 		}
 
 		if n.Name == "ni_witiri" && len(n.Args) != 1 {
@@ -1898,32 +1898,32 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Check if number is prime (ni_namba_kuu = is_prime)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			// Convert to integer
 			intNum := int64(num)
-			
+
 			// Numbers less than 2 are not prime
 			if intNum < 2 {
 				return false
 			}
-			
+
 			// 2 is prime
 			if intNum == 2 {
 				return true
 			}
-			
+
 			// Even numbers are not prime
-			if intNum % 2 == 0 {
+			if intNum%2 == 0 {
 				return false
 			}
-			
+
 			// Check for odd divisors up to sqrt(intNum)
 			for i := int64(3); i*i <= intNum; i += 2 {
-				if intNum % i == 0 {
+				if intNum%i == 0 {
 					return false
 				}
 			}
-			
+
 			return true
 		}
 
@@ -1941,15 +1941,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Check if number is a perfect square (ni_mraba_kamili = is_perfect_square)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			// Only non-negative numbers can be perfect squares
 			if num < 0 {
 				return false
 			}
-			
+
 			// Get the square root
 			sqrt := math.Sqrt(num)
-			
+
 			// Check if square root is an integer
 			return sqrt == math.Floor(sqrt)
 		}
@@ -1969,9 +1969,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Absolute value (kiwango = absolute value)
 			arg := Interpret(n.Args[0], env)
 			num, isFloat := toNumber(arg)
-			
+
 			result := math.Abs(num)
-			
+
 			// Return int if input was int and result is perfect integer
 			if !isFloat && result == math.Floor(result) {
 				return int(result)
@@ -1993,7 +1993,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Sign function (ishara = sign) - returns -1, 0, or 1
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			if num > 0 {
 				return 1
 			} else if num < 0 {
@@ -2023,9 +2023,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			maxVal, isFloat := toNumber(Interpret(n.Args[0], env))
-			
+
 			for i := 1; i < len(n.Args); i++ {
 				val, valIsFloat := toNumber(Interpret(n.Args[i], env))
 				if val > maxVal {
@@ -2033,7 +2033,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					isFloat = isFloat || valIsFloat
 				}
 			}
-			
+
 			// Return int if all inputs were ints
 			if !isFloat && maxVal == math.Floor(maxVal) {
 				return int(maxVal)
@@ -2062,9 +2062,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			minVal, isFloat := toNumber(Interpret(n.Args[0], env))
-			
+
 			for i := 1; i < len(n.Args); i++ {
 				val, valIsFloat := toNumber(Interpret(n.Args[i], env))
 				if val < minVal {
@@ -2072,7 +2072,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					isFloat = isFloat || valIsFloat
 				}
 			}
-			
+
 			// Return int if all inputs were ints
 			if !isFloat && minVal == math.Floor(minVal) {
 				return int(minVal)
@@ -2095,23 +2095,23 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Greatest Common Divisor (kigawanyaji_kikuu = gcd)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			// Convert to positive integers
 			a = math.Abs(a)
 			b = math.Abs(b)
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			// Euclidean algorithm
 			for bInt != 0 {
 				temp := bInt
 				bInt = aInt % bInt
 				aInt = temp
 			}
-			
+
 			return aInt
 		}
 
@@ -2129,16 +2129,16 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Least Common Multiple (kigawanyaji_ndogo = lcm)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			// Convert to positive integers
 			a = math.Abs(a)
 			b = math.Abs(b)
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			// LCM = (a * b) / GCD(a, b)
 			// First calculate GCD
 			origA := aInt
@@ -2149,12 +2149,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				aInt = temp
 			}
 			gcd := aInt
-			
+
 			// Avoid division by zero
 			if gcd == 0 {
 				return 0
 			}
-			
+
 			lcm := (origA * origB) / gcd
 			return lcm
 		}
@@ -2173,10 +2173,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Factorial (ukweli = factorial)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			// Convert to integer
 			n := int64(num)
-			
+
 			// Factorial is only defined for non-negative integers
 			if n < 0 {
 				return ControlFlowResult{
@@ -2187,12 +2187,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Calculate factorial
 			result := int64(1)
 			for i := int64(2); i <= n; i++ {
 				result *= i
-				
+
 				// Check for overflow
 				if result < 0 {
 					return ControlFlowResult{
@@ -2204,7 +2204,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					}
 				}
 			}
-			
+
 			return result
 		}
 
@@ -2222,12 +2222,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Power function (tweza = power)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			base, baseIsFloat := toNumber(arg1)
 			exponent, expIsFloat := toNumber(arg2)
-			
+
 			result := math.Pow(base, exponent)
-			
+
 			// Check for special cases
 			if math.IsNaN(result) {
 				return ControlFlowResult{
@@ -2238,7 +2238,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			if math.IsInf(result, 0) {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2248,7 +2248,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Return int if both inputs were ints and result is perfect integer
 			if !baseIsFloat && !expIsFloat && result == math.Floor(result) && result >= -9223372036854775808 && result <= 9223372036854775807 {
 				return int(result)
@@ -2272,13 +2272,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Bitwise AND (na_kidogo = bitwise AND)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			return aInt & bInt
 		}
 
@@ -2296,13 +2296,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Bitwise OR (au_kidogo = bitwise OR)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			return aInt | bInt
 		}
 
@@ -2320,13 +2320,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Bitwise XOR (ama_kidogo = bitwise XOR)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			return aInt ^ bInt
 		}
 
@@ -2343,10 +2343,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if n.Name == "si_kidogo" && len(n.Args) == 1 {
 			// Bitwise NOT (si_kidogo = bitwise NOT)
 			arg := Interpret(n.Args[0], env)
-			
+
 			a, _ := toNumber(arg)
 			aInt := int64(a)
-			
+
 			return ^aInt
 		}
 
@@ -2364,13 +2364,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Left shift (gezo_kushoto = left shift)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			shift, _ := toNumber(arg2)
-			
+
 			aInt := int64(a)
 			shiftInt := uint(shift)
-			
+
 			return aInt << shiftInt
 		}
 
@@ -2388,13 +2388,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Right shift (gezo_kulia = right shift)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			shift, _ := toNumber(arg2)
-			
+
 			aInt := int64(a)
 			shiftInt := uint(shift)
-			
+
 			return aInt >> shiftInt
 		}
 
@@ -2414,10 +2414,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Modulo operation (modulo = modulo remainder)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, aIsFloat := toNumber(arg1)
 			b, bIsFloat := toNumber(arg2)
-			
+
 			if b == 0 {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2427,9 +2427,9 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			result := math.Mod(a, b)
-			
+
 			// Return int if both inputs were ints
 			if !aIsFloat && !bIsFloat && result == math.Floor(result) {
 				return int(result)
@@ -2451,10 +2451,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Remainder operation (baki = remainder)
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
-			
+
 			a, _ := toNumber(arg1)
 			b, _ := toNumber(arg2)
-			
+
 			if b == 0 {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2464,11 +2464,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// For integers, use modulo directly
 			aInt := int64(a)
 			bInt := int64(b)
-			
+
 			result := aInt % bInt
 			return result
 		}
@@ -2488,15 +2488,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			arg1 := Interpret(n.Args[0], env)
 			arg2 := Interpret(n.Args[1], env)
 			arg3 := Interpret(n.Args[2], env)
-			
+
 			baseNum, _ := toNumber(arg1)
 			expNum, _ := toNumber(arg2)
 			modNum, _ := toNumber(arg3)
-			
+
 			base := int64(baseNum)
 			exponent := int64(expNum)
 			modulus := int64(modNum)
-			
+
 			if modulus == 0 {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2506,7 +2506,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Handle negative exponent
 			if exponent < 0 {
 				return ControlFlowResult{
@@ -2517,11 +2517,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			// Simple modular exponentiation
 			result := int64(1)
 			base = ((base % modulus) + modulus) % modulus
-			
+
 			for exponent > 0 {
 				if exponent%2 == 1 {
 					result = (result * base) % modulus
@@ -2529,7 +2529,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				exponent = exponent >> 1
 				base = (base * base) % modulus
 			}
-			
+
 			return result
 		}
 
@@ -2549,7 +2549,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Round (pindika = round to nearest integer)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			result := math.Round(num)
 			return int(result)
 		}
@@ -2568,7 +2568,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Floor (sakafu = floor - round down)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			result := math.Floor(num)
 			return int(result)
 		}
@@ -2587,7 +2587,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Ceiling (dari = ceil - round up)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			result := math.Ceil(num)
 			return int(result)
 		}
@@ -2606,7 +2606,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Truncate (kata = truncate - remove decimal part)
 			arg := Interpret(n.Args[0], env)
 			num, _ := toNumber(arg)
-			
+
 			result := math.Trunc(num)
 			return int(result)
 		}
@@ -2633,7 +2633,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			maxArg := Interpret(n.Args[0], env)
 			maxNum, _ := toNumber(maxArg)
 			maxInt := int64(maxNum)
-			
+
 			if maxInt <= 0 {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2643,7 +2643,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			return rand.Int63n(maxInt)
 		}
 
@@ -2651,13 +2651,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			// Random integer between min and max (inclusive on both ends)
 			minArg := Interpret(n.Args[0], env)
 			maxArg := Interpret(n.Args[1], env)
-			
+
 			minNum, _ := toNumber(minArg)
 			maxNum, _ := toNumber(maxArg)
-			
+
 			minInt := int64(minNum)
 			maxInt := int64(maxNum)
-			
+
 			if minInt >= maxInt {
 				return ControlFlowResult{
 					Type: ControlThrow,
@@ -2667,7 +2667,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					},
 				}
 			}
-			
+
 			return minInt + rand.Int63n(maxInt-minInt+1)
 		}
 
@@ -2686,7 +2686,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			seedArg := Interpret(n.Args[0], env)
 			seedNum, _ := toNumber(seedArg)
 			seedInt := int64(seedNum)
-			
+
 			rand.Seed(seedInt)
 			return nil
 		}
@@ -2701,12 +2701,298 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// ==================== ADVANCED SPECIAL FUNCTIONS ====================
+
+		if n.Name == "gamma" && len(n.Args) == 1 {
+			// Gamma function (gamma = gamma function)
+			// Gamma(n) = (n-1)! for positive integers
+			// Extends factorial to real and complex numbers
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			result := math.Gamma(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("gamma(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'gamma': Result is NaN",
+					},
+				}
+			}
+
+			if math.IsInf(result, 0) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("gamma(%v) ni kubwa sana (Result is infinite)", num),
+						Context: "Katika kazi 'gamma': Result is infinite at poles",
+					},
+				}
+			}
+
+			// Always return float for gamma function
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "gamma" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "gamma inahitaji hoja moja (gamma requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'gamma': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "erf" && len(n.Args) == 1 {
+			// Error function (erf = error function)
+			// Used in statistics and probability theory
+			// erf(x) is the probability integral of a normal distribution
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			result := math.Erf(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("erf(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'erf': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for erf function
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "erf" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "erf inahitaji hoja moja (erf requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'erf': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "erfc" && len(n.Args) == 1 {
+			// Complementary error function (erfc = complementary error function)
+			// erfc(x) = 1 - erf(x)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			result := math.Erfc(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("erfc(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'erfc': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for erfc function
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "erfc" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "erfc inahitaji hoja moja (erfc requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'erfc': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "j0" && len(n.Args) == 1 {
+			// Bessel function of the first kind order 0 (j0 = Bessel J0)
+			// Used in physics and engineering (waves, oscillations, etc.)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			result := math.J0(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("j0(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'j0': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for Bessel functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "j0" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "j0 inahitaji hoja moja (j0 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'j0': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "j1" && len(n.Args) == 1 {
+			// Bessel function of the first kind order 1 (j1 = Bessel J1)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			result := math.J1(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("j1(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'j1': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for Bessel functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "j1" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "j1 inahitaji hoja moja (j1 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'j1': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "y0" && len(n.Args) == 1 {
+			// Bessel function of the second kind order 0 (y0 = Bessel Y0)
+			// Y0 is also called Neumann function N0
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			// Y0 is undefined for non-positive numbers
+			if num <= 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("y0(%v) haiwezekani (Y0 only defined for positive numbers)", num),
+						Context: "Katika kazi 'y0': Bessel Y functions require positive arguments",
+					},
+				}
+			}
+
+			result := math.Y0(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("y0(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'y0': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for Bessel functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "y0" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "y0 inahitaji hoja moja (y0 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'y0': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "y1" && len(n.Args) == 1 {
+			// Bessel function of the second kind order 1 (y1 = Bessel Y1)
+			arg := Interpret(n.Args[0], env)
+			num, isFloat := toNumber(arg)
+
+			// Y1 is undefined for non-positive numbers
+			if num <= 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("y1(%v) haiwezekani (Y1 only defined for positive numbers)", num),
+						Context: "Katika kazi 'y1': Bessel Y functions require positive arguments",
+					},
+				}
+			}
+
+			result := math.Y1(num)
+
+			// Check for special cases
+			if math.IsNaN(result) {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("y1(%v) si sahihi (Result is not a valid number)", num),
+						Context: "Katika kazi 'y1': Result is NaN",
+					},
+				}
+			}
+
+			// Always return float for Bessel functions
+			if isFloat || result != math.Floor(result) {
+				return result
+			}
+			return int(result)
+		}
+
+		if n.Name == "y1" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "y1 inahitaji hoja moja (y1 requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'y1': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// Check if it's a module function call (e.g., math.ongeza_kubwa)
 		if strings.Contains(n.Name, ".") {
 			parts := strings.SplitN(n.Name, ".", 2)
 			moduleName := parts[0]
 			functionName := parts[1]
-			
+
 			if moduleEnv, exists := env.Modules[moduleName]; exists {
 				if function, exists := moduleEnv.GetFunction(functionName); exists {
 					// Create new environment for function execution
@@ -2750,10 +3036,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					parameters := lambda["__parameters__"].([]ast.Parameter)
 					body := lambda["__body__"].([]ast.ASTNode)
 					closureEnv := lambda["__env__"].(*Environment)
-					
+
 					// Create new environment for lambda execution (with closure)
 					lambdaEnv := NewChildEnvironment(closureEnv)
-					
+
 					// Evaluate arguments and bind to parameters
 					for i, param := range parameters {
 						if i < len(n.Args) {
@@ -2761,12 +3047,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 							lambdaEnv.Set(param.Name, argValue)
 						}
 					}
-					
+
 					// Execute lambda body
 					var result interface{}
 					for _, statement := range body {
 						result = Interpret(statement, lambdaEnv)
-						
+
 						// Check for return statement or throw
 						if cf, ok := result.(ControlFlowResult); ok {
 							if cf.Type == ControlReturn {
@@ -2776,7 +3062,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 							}
 						}
 					}
-					
+
 					return result
 				}
 			}
@@ -2827,10 +3113,10 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.IfNode:
 		// Handle conditional statements (kama ... { ... } sivyo { ... })
 		condition := Interpret(n.Condition, env)
-		
+
 		// Convert condition to boolean
 		conditionBool := toBool(condition)
-		
+
 		if conditionBool {
 			// Execute then body
 			var result interface{}
@@ -2861,19 +3147,19 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		var result interface{}
 		for {
 			condition := Interpret(n.Condition, env)
-			
+
 			// Convert condition to boolean
 			conditionBool := toBool(condition)
-			
+
 			if !conditionBool {
 				break
 			}
-			
+
 			// Execute loop body
 			shouldBreak := false
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
-				
+
 				// Check for control flow
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlBreak {
@@ -2888,7 +3174,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					}
 				}
 			}
-			
+
 			if shouldBreak {
 				break
 			}
@@ -2898,32 +3184,32 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.ForNode:
 		// Handle for loops (kwa init; condition; update { ... })
 		var result interface{}
-		
+
 		// Execute initialization if present
 		if n.Init != nil {
 			Interpret(n.Init, env)
 		}
-		
+
 		// Loop while condition is true
 		for {
 			// Check condition if present
 			if n.Condition != nil {
 				condition := Interpret(n.Condition, env)
-				
+
 				// Convert condition to boolean
 				conditionBool := toBool(condition)
-				
+
 				if !conditionBool {
 					break
 				}
 			}
-			
+
 			// Execute loop body
 			shouldBreak := false
 			shouldContinue := false
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
-				
+
 				// Check for control flow
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlBreak {
@@ -2939,11 +3225,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 					}
 				}
 			}
-			
+
 			if shouldBreak {
 				break
 			}
-			
+
 			// Execute update if present and not continuing
 			if !shouldContinue && n.Update != nil {
 				Interpret(n.Update, env)
@@ -2951,7 +3237,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				// Still execute update on continue
 				Interpret(n.Update, env)
 			}
-			
+
 			// If no condition, break after first iteration to prevent infinite loop
 			if n.Condition == nil {
 				break
@@ -2971,11 +3257,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle try-catch blocks (jaribu ... shika ...)
 		var result interface{}
 		var caughtError interface{}
-		
+
 		// Execute try block
 		for _, statement := range n.TryBody {
 			result = Interpret(statement, env)
-			
+
 			// Check for thrown errors or other control flow
 			if cf, ok := result.(ControlFlowResult); ok {
 				if cf.Type == ControlThrow {
@@ -2993,7 +3279,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 		}
-		
+
 		// If an error was caught, execute catch block
 		if caughtError != nil && len(n.CatchBody) > 0 {
 			// Create new environment for catch block with error variable
@@ -3001,11 +3287,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			if n.CatchVar != "" {
 				catchEnv.Set(n.CatchVar, caughtError)
 			}
-			
+
 			// Execute catch block
 			for _, statement := range n.CatchBody {
 				result = Interpret(statement, catchEnv)
-				
+
 				// Handle control flow in catch block
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlReturn {
@@ -3020,12 +3306,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 		}
-		
+
 		// Execute finally block if present
 		if len(n.FinallyBody) > 0 {
 			for _, statement := range n.FinallyBody {
 				finallyResult := Interpret(statement, env)
-				
+
 				// Finally block can override return values
 				if cf, ok := finallyResult.(ControlFlowResult); ok {
 					if cf.Type == ControlReturn {
@@ -3034,12 +3320,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 		}
-		
+
 		// If error wasn't caught, re-throw it
 		if caughtError != nil && len(n.CatchBody) == 0 {
 			return ControlFlowResult{Type: ControlThrow, Value: caughtError}
 		}
-		
+
 		return result
 
 	case ast.ThrowNode:
@@ -3066,7 +3352,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 
 		// Collect properties from inheritance chain (parent first, then child)
 		allProperties := collectInheritedProperties(classDef, env)
-		
+
 		// Initialize properties with default values
 		for _, prop := range allProperties {
 			instance[prop.Name] = nil
@@ -3076,7 +3362,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		if classDef.Constructor != nil {
 			// Create environment for constructor
 			constructorEnv := NewChildEnvironment(env)
-			
+
 			// Set 'hii' to refer to the instance
 			constructorEnv.Set("hii", instance)
 
@@ -3108,11 +3394,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle lambda functions - return the lambda as a callable value
 		// Store the lambda with its closure environment
 		lambdaValue := map[string]interface{}{
-			"__type__":      "lambda",
-			"__parameters__": n.Parameters,
+			"__type__":        "lambda",
+			"__parameters__":  n.Parameters,
 			"__return_type__": n.ReturnType,
-			"__body__":      n.Body,
-			"__env__":       env, // Capture closure
+			"__body__":        n.Body,
+			"__env__":         env, // Capture closure
 		}
 		return lambdaValue
 
@@ -3123,7 +3409,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			var result interface{}
 			for _, statement := range n.Body {
 				result = Interpret(statement, env)
-				
+
 				// Handle return from main function
 				if cf, ok := result.(ControlFlowResult); ok {
 					if cf.Type == ControlReturn {
@@ -3164,7 +3450,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 // collectInheritedProperties collects all properties from the class and its parent chain
 func collectInheritedProperties(class ast.ClassNode, env *Environment) []ast.PropertyNode {
 	var properties []ast.PropertyNode
-	
+
 	// First, collect parent properties if there's a parent
 	if class.Parent != "" {
 		parentClass, exists := env.GetClass(class.Parent)
@@ -3172,17 +3458,17 @@ func collectInheritedProperties(class ast.ClassNode, env *Environment) []ast.Pro
 			properties = append(properties, collectInheritedProperties(parentClass, env)...)
 		}
 	}
-	
+
 	// Then add this class's properties
 	properties = append(properties, class.Properties...)
-	
+
 	return properties
 }
 
 // collectInheritedMethods collects all methods from the class and its parent chain
 func collectInheritedMethods(class ast.ClassNode, env *Environment) []ast.FunctionNode {
 	methodMap := make(map[string]ast.FunctionNode)
-	
+
 	// First, collect parent methods if there's a parent
 	if class.Parent != "" {
 		parentClass, exists := env.GetClass(class.Parent)
@@ -3193,18 +3479,18 @@ func collectInheritedMethods(class ast.ClassNode, env *Environment) []ast.Functi
 			}
 		}
 	}
-	
+
 	// Then add/override with this class's methods
 	for _, method := range class.Methods {
 		methodMap[method.Name] = method
 	}
-	
+
 	// Convert map back to slice
 	var methods []ast.FunctionNode
 	for _, method := range methodMap {
 		methods = append(methods, method)
 	}
-	
+
 	return methods
 }
 
@@ -3214,18 +3500,18 @@ func findMethodInClass(className string, methodName string, env *Environment) *a
 	if !exists {
 		return nil
 	}
-	
+
 	// Check this class's methods
 	for _, method := range classDef.Methods {
 		if method.Name == methodName {
 			return &method
 		}
 	}
-	
+
 	// Check parent class if exists
 	if classDef.Parent != "" {
 		return findMethodInClass(classDef.Parent, methodName, env)
 	}
-	
+
 	return nil
 }

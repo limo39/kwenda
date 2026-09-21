@@ -1,0 +1,7 @@
+andika("Testing gamma:")
+andika(gamma(5))
+andika("Testing erf:")
+andika(erf(1))
+andika("Testing j0:")
+andika(j0(0))
+andika("Done!")

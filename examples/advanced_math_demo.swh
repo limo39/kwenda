@@ -1,0 +1,67 @@
+andika("╔════════════════════════════════════════════════════╗")
+andika("║     Advanced Mathematical Functions in Kwenda     ║")
+andika("╚════════════════════════════════════════════════════╝")
+
+andika("\n" + "="*50)
+andika("1. GAMMA FUNCTION - Generalized Factorial")
+andika("="*50)
+andika("The Gamma function extends factorial to real numbers")
+andika("For positive integers: Γ(n) = (n-1)!")
+andika("")
+andika("Examples:")
+andika("  gamma(1) = ", gamma(1), " (which is 0!)")
+andika("  gamma(5) = ", gamma(5), " (which is 4! = 24)")
+andika("  gamma(0.5) = ", gamma(0.5), " (√π)")
+
+andika("\n" + "="*50)
+andika("2. ERROR FUNCTION - Statistical Applications")
+andika("="*50)
+andika("The error function appears in statistics & probability")
+andika("Used for normal distribution calculations")
+andika("")
+andika("Comparison:")
+andika("  erf(x)  +  erfc(x)  =  1")
+andika("")
+andika("  x       | erf(x)    | erfc(x)")
+andika("  --------|-----------|----------")
+andika("  0       | ", erf(0), "     | ", erfc(0))
+andika("  0.5     | ", erf(0.5), " | ", erfc(0.5))
+andika("  1.0     | ", erf(1), " | ", erfc(1))
+
+andika("\n" + "="*50)
+andika("3. BESSEL FUNCTIONS - Cylindrical Wave Problems")
+andika("="*50)
+andika("Bessel functions solve Laplace's equation in cylindrical coordinates")
+andika("Used in physics, engineering, and wave mechanics")
+andika("")
+andika("J (first kind) - Regular oscillations")
+andika("  j0(0) = 1,  j0(1) ≈ 0.765,  j0(2) ≈ 0.224")
+andika("  j1(0) = 0,  j1(1) ≈ 0.440,  j1(2) ≈ 0.577")
+andika("")
+andika("Y (second kind) - Singular oscillations (x > 0 only)")
+andika("  y0(1) ≈ 0.088,  y0(2) ≈ 0.510")
+andika("  y1(1) ≈ -0.781, y1(2) ≈ -0.107")
+
+andika("\n" + "="*50)
+andika("4. REAL-WORLD APPLICATION EXAMPLE")
+andika("="*50)
+andika("Suppose you're analyzing a vibrating circular drum head")
+andika("with radius a = 1, at time t = 0.5, position r = 0.5:")
+andika("")
+
+namba t = 0.5
+namba r = 0.5
+namba lambda = 2.4
+
+namba amplitude = j0(lambda * r)
+namba decay = exp(-t)
+namba result = amplitude * decay
+
+andika("  Mode shape: J₀(λr) = J₀(", lambda, "×", r, ") = ", amplitude)
+andika("  Time decay: e^(-t) = e^(-", t, ") = ", decay)
+andika("  Wave amplitude: ", amplitude, " × ", decay, " = ", result)
+
+andika("\n" + "="*50)
+andika("╔════════════════════════════════════════════════════╗")
+andika("║        All advanced functions working!             ║")
+andika("╚════════════════════════════════════════════════════╝")
