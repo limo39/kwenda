@@ -1,0 +1,8 @@
+andika("Testing Float Utilities")
+andika("Rounded:", pindika(3.7))
+andika("Floor:", sakafu(3.7))
+andika("Ceiling:", dari(3.7))
+andika("Modulo:", bakiza(10, 3))
+andika("Clamp:", upeo(150, 0, 100))
+andika("Interpolate:", mzunguko(0, 100, 0.25))
+andika("Done!")

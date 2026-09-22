@@ -1,0 +1,163 @@
+andika("====================================================")
+andika("          Float Utilities in Kwenda")
+andika("====================================================")
+
+andika("")
+andika("==================================================")
+andika("1. ROUNDING FUNCTIONS")
+andika("==================================================")
+andika("Different ways to round numbers:")
+andika("")
+
+namba value = 3.7
+andika("Original value:", value)
+andika("  pindika (round):", pindika(value))
+andika("  sakafu (floor):", sakafu(value))
+andika("  dari (ceiling):", dari(value))
+andika("  kata (truncate):", kata(value))
+
+andika("")
+andika("Negative number:", -2.3)
+andika("  pindika:", pindika(-2.3))
+andika("  sakafu:", sakafu(-2.3))
+andika("  dari:", dari(-2.3))
+andika("  kata:", kata(-2.3))
+
+andika("")
+andika("==================================================")
+andika("2. FLOATING-POINT COMPARISON PROBLEM")
+andika("==================================================")
+andika("Classic floating-point precision issue:")
+andika("")
+
+namba a = 0.1 + 0.2
+namba b = 0.3
+andika("0.1 + 0.2 =", a)
+andika("0.3 =", b)
+andika("Are they equal? (karibia) =", karibia(a, b))
+andika("")
+andika("Solution: Always use karibia() for float comparisons!")
+
+andika("")
+andika("==================================================")
+andika("3. MODULO VS REMAINDER")
+andika("==================================================")
+andika("Understanding the difference:")
+andika("")
+
+andika("bakiza(10, 3) =", bakiza(10, 3))
+andika("salio(10, 3) =", salio(10, 3))
+andika("")
+andika("bakiza(-10, 3) =", bakiza(-10, 3))
+andika("salio(-10, 3) =", salio(-10, 3))
+
+andika("")
+andika("==================================================")
+andika("4. VALUE CLAMPING - GAME SCORE EXAMPLE")
+andika("==================================================")
+andika("Keeping values in valid ranges:")
+andika("")
+
+namba raw_score = 150
+namba min_score = 0
+namba max_score = 100
+namba final_score = upeo(raw_score, min_score, max_score)
+
+andika("Raw score:", raw_score)
+andika("Valid range: [0, 100]")
+andika("Clamped score:", final_score)
+
+andika("")
+andika("==================================================")
+andika("5. NUMBER DECOMPOSITION")
+andika("==================================================")
+andika("Breaking numbers into parts:")
+andika("")
+
+namba pi = 3.14159
+andika("Number:", pi)
+andika("  Integer part:", sehemu_kamili(pi))
+andika("  Decimal part:", sehemu_desimali(pi))
+
+namba negative = -5.75
+andika("")
+andika("Number:", negative)
+andika("  Integer part:", sehemu_kamili(negative))
+andika("  Decimal part:", sehemu_desimali(negative))
+
+andika("")
+andika("==================================================")
+andika("6. SIGN MANIPULATION")
+andika("==================================================")
+andika("Controlling number signs:")
+andika("")
+
+namba magnitude = 42
+andika("Original:", magnitude)
+andika("Force positive:", kopanja(magnitude, 1))
+andika("Force negative:", kopanja(magnitude, -1))
+
+andika("")
+andika("==================================================")
+andika("7. LINEAR INTERPOLATION - ANIMATION")
+andika("==================================================")
+andika("Smooth transitions between values:")
+andika("")
+
+namba start_pos = 0
+namba end_pos = 100
+andika("Animation from 0 to 100:")
+andika("  0% (t=0.0):", mzunguko(start_pos, end_pos, 0.0))
+andika("  25% (t=0.25):", mzunguko(start_pos, end_pos, 0.25))
+andika("  50% (t=0.5):", mzunguko(start_pos, end_pos, 0.5))
+andika("  75% (t=0.75):", mzunguko(start_pos, end_pos, 0.75))
+andika("  100% (t=1.0):", mzunguko(start_pos, end_pos, 1.0))
+
+andika("")
+andika("==================================================")
+andika("8. TYPE CHECKING")
+andika("==================================================")
+andika("Validating number types:")
+andika("")
+
+namba test1 = 5.0
+namba test2 = 5.5
+andika("Is 5.0 a whole number?", ni_kamili(test1))
+andika("Is 5.5 a whole number?", ni_kamili(test2))
+andika("Is 5.0 finite?", ni_usawa(test1))
+andika("Is 5.0 NaN?", ni_sio_namba(test1))
+
+andika("")
+andika("==================================================")
+andika("9. PRACTICAL EXAMPLE: TEMPERATURE CONVERTER")
+andika("==================================================")
+andika("Converting with rounding:")
+andika("")
+
+namba celsius = 25.7
+namba fahrenheit = celsius * 9 / 5 + 32
+andika("Temperature: 25.7 C")
+andika("In Fahrenheit (exact):", fahrenheit)
+andika("In Fahrenheit (rounded):", pindika(fahrenheit))
+
+andika("")
+andika("==================================================")
+andika("10. PRACTICAL EXAMPLE: PROGRESS BAR")
+andika("==================================================")
+andika("Calculating completion percentage:")
+andika("")
+
+namba current = 73
+namba total = 150
+namba percent = (current / total) * 100
+namba clamped = upeo(percent, 0, 100)
+
+andika("Progress: 73 / 150")
+andika("Percentage (exact):", percent)
+andika("Percentage (clamped):", clamped)
+andika("Percentage (rounded):", pindika(clamped))
+
+andika("")
+andika("====================================================")
+andika("      All float utilities working perfectly!")
+andika("====================================================")

@@ -2621,6 +2621,346 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
+		// ==================== FLOAT UTILITIES ====================
+
+		if n.Name == "bakiza" && len(n.Args) == 2 {
+			// Modulo/Remainder (bakiza = remainder/modulo for floating point)
+			// Returns the IEEE 754 floating-point remainder of x/y
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			x, xIsFloat := toNumber(arg1)
+			y, yIsFloat := toNumber(arg2)
+			
+			if y == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("bakiza(%v, %v): Imegawanya kwa sifuri (Division by zero)", x, y),
+						Context: "Katika kazi 'bakiza': Cannot compute remainder with divisor of zero",
+					},
+				}
+			}
+			
+			result := math.Mod(x, y)
+			
+			// Return int if both inputs were ints and result is a whole number
+			if !xIsFloat && !yIsFloat && result == math.Floor(result) {
+				return int(result)
+			}
+			return result
+		}
+
+		if n.Name == "bakiza" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "bakiza inahitaji hoja mbili (bakiza requires two arguments: dividend, divisor)",
+					Context: fmt.Sprintf("Katika kazi 'bakiza': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "salio" && len(n.Args) == 2 {
+			// Remainder (salio = remainder - integer remainder)
+			// Returns the remainder of integer division
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			x, _ := toNumber(arg1)
+			y, _ := toNumber(arg2)
+			
+			if y == 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("salio(%v, %v): Imegawanya kwa sifuri (Division by zero)", x, y),
+						Context: "Katika kazi 'salio': Cannot compute remainder with divisor of zero",
+					},
+				}
+			}
+			
+			// Use math.Remainder for IEEE 754 remainder
+			result := math.Remainder(x, y)
+			
+			return result
+		}
+
+		if n.Name == "salio" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "salio inahitaji hoja mbili (salio requires two arguments: dividend, divisor)",
+					Context: fmt.Sprintf("Katika kazi 'salio': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "kopanja" && len(n.Args) == 2 {
+			// Copysign (kopanja = copysign)
+			// Returns a value with the magnitude of x and the sign of y
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			x, xIsFloat := toNumber(arg1)
+			y, _ := toNumber(arg2)
+			
+			result := math.Copysign(x, y)
+			
+			// Return int if x was int and result is a whole number
+			if !xIsFloat && result == math.Floor(result) {
+				return int(result)
+			}
+			return result
+		}
+
+		if n.Name == "kopanja" && len(n.Args) != 2 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "kopanja inahitaji hoja mbili (kopanja requires two arguments: magnitude, sign)",
+					Context: fmt.Sprintf("Katika kazi 'kopanja': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "karibia" && len(n.Args) == 2 {
+			// Check if two floats are approximately equal (karibia = approximately equal)
+			// Uses a small epsilon for comparison
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			x, _ := toNumber(arg1)
+			y, _ := toNumber(arg2)
+			
+			epsilon := 1e-9
+			return math.Abs(x-y) < epsilon
+		}
+
+		if n.Name == "karibia" && len(n.Args) == 3 {
+			// Check if two floats are approximately equal with custom epsilon
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			arg3 := Interpret(n.Args[2], env)
+			
+			x, _ := toNumber(arg1)
+			y, _ := toNumber(arg2)
+			epsilon, _ := toNumber(arg3)
+			
+			if epsilon < 0 {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("karibia: epsilon lazima iwe chanya (epsilon must be positive), imepatikana %v", epsilon),
+						Context: "Katika kazi 'karibia': Epsilon value must be positive",
+					},
+				}
+			}
+			
+			return math.Abs(x-y) < epsilon
+		}
+
+		if n.Name == "karibia" && len(n.Args) != 2 && len(n.Args) != 3 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "karibia inahitaji hoja 2 au 3 (karibia requires 2 or 3 arguments: x, y, [epsilon])",
+					Context: fmt.Sprintf("Katika kazi 'karibia': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_kamili" && len(n.Args) == 1 {
+			// Check if number is a whole number (ni_kamili = is whole/integer)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			return num == math.Floor(num)
+		}
+
+		if n.Name == "ni_kamili" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_kamili inahitaji hoja moja (ni_kamili requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_kamili': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_usawa" && len(n.Args) == 1 {
+			// Check if number is finite (ni_usawa = is finite)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			return !math.IsInf(num, 0) && !math.IsNaN(num)
+		}
+
+		if n.Name == "ni_usawa" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_usawa inahitaji hoja moja (ni_usawa requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_usawa': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_bila_kikomo" && len(n.Args) == 1 {
+			// Check if number is infinite (ni_bila_kikomo = is infinite)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			return math.IsInf(num, 0)
+		}
+
+		if n.Name == "ni_bila_kikomo" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_bila_kikomo inahitaji hoja moja (ni_bila_kikomo requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_bila_kikomo': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "ni_sio_namba" && len(n.Args) == 1 {
+			// Check if value is NaN (ni_sio_namba = is not a number)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			return math.IsNaN(num)
+		}
+
+		if n.Name == "ni_sio_namba" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "ni_sio_namba inahitaji hoja moja (ni_sio_namba requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'ni_sio_namba': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "upeo" && len(n.Args) == 3 {
+			// Clamp a value between min and max (upeo = limit/clamp)
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			arg3 := Interpret(n.Args[2], env)
+			
+			value, valIsFloat := toNumber(arg1)
+			minVal, minIsFloat := toNumber(arg2)
+			maxVal, maxIsFloat := toNumber(arg3)
+			
+			if minVal > maxVal {
+				return ControlFlowResult{
+					Type: ControlThrow,
+					Value: ErrorValue{
+						Message: fmt.Sprintf("upeo(%v, %v, %v): min lazima iwe ndogo au sawa na max", value, minVal, maxVal),
+						Context: "Katika kazi 'upeo': min must be less than or equal to max",
+					},
+				}
+			}
+			
+			result := value
+			if result < minVal {
+				result = minVal
+			}
+			if result > maxVal {
+				result = maxVal
+			}
+			
+			// Return int if all inputs were ints
+			if !valIsFloat && !minIsFloat && !maxIsFloat && result == math.Floor(result) {
+				return int(result)
+			}
+			return result
+		}
+
+		if n.Name == "upeo" && len(n.Args) != 3 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "upeo inahitaji hoja tatu (upeo requires three arguments: value, min, max)",
+					Context: fmt.Sprintf("Katika kazi 'upeo': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "sehemu_desimali" && len(n.Args) == 1 {
+			// Get the fractional part of a number (sehemu_desimali = decimal part)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			_, frac := math.Modf(num)
+			return frac
+		}
+
+		if n.Name == "sehemu_desimali" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "sehemu_desimali inahitaji hoja moja (sehemu_desimali requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'sehemu_desimali': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "sehemu_kamili" && len(n.Args) == 1 {
+			// Get the integer part of a number (sehemu_kamili = integer part)
+			arg := Interpret(n.Args[0], env)
+			num, _ := toNumber(arg)
+			
+			intPart, _ := math.Modf(num)
+			return int(intPart)
+		}
+
+		if n.Name == "sehemu_kamili" && len(n.Args) != 1 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "sehemu_kamili inahitaji hoja moja (sehemu_kamili requires one argument)",
+					Context: fmt.Sprintf("Katika kazi 'sehemu_kamili': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
+		if n.Name == "mzunguko" && len(n.Args) == 2 {
+			// Linear interpolation (mzunguko = interpolate/blend)
+			// Returns a value between start and end based on t (0 to 1)
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			
+			start, _ := toNumber(arg1)
+			end, _ := toNumber(arg2)
+			
+			return (start + end) / 2.0
+		}
+
+		if n.Name == "mzunguko" && len(n.Args) == 3 {
+			// Linear interpolation with parameter t
+			arg1 := Interpret(n.Args[0], env)
+			arg2 := Interpret(n.Args[1], env)
+			arg3 := Interpret(n.Args[2], env)
+			
+			start, _ := toNumber(arg1)
+			end, _ := toNumber(arg2)
+			t, _ := toNumber(arg3)
+			
+			result := start + t*(end-start)
+			return result
+		}
+
+		if n.Name == "mzunguko" && len(n.Args) != 2 && len(n.Args) != 3 {
+			return ControlFlowResult{
+				Type: ControlThrow,
+				Value: ErrorValue{
+					Message: "mzunguko inahitaji hoja 2 au 3 (mzunguko requires 2 or 3 arguments: start, end, [t])",
+					Context: fmt.Sprintf("Katika kazi 'mzunguko': Hoja %d zilizotolewa", len(n.Args)),
+				},
+			}
+		}
+
 		// ==================== RANDOM NUMBER GENERATION ====================
 
 		if n.Name == "nasibu" && len(n.Args) == 0 {
