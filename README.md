@@ -396,7 +396,7 @@ For comprehensive documentation of all mathematical functions, including roundin
 
 ## ?? Examples
 
-> **?? For comprehensive examples and tutorials, see [EXAMPLES.md](EXAMPLES.md)**
+> **?? For comprehensive examples and tutorials, see [EXAMPLES.md](markdown/EXAMPLES.md)**
 ### Hello World
 ```swahili
 kazi kuu() {
