@@ -179,6 +179,44 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		}
 		return elements
 
+	case ast.ListComprehensionNode:
+		// Handle list comprehensions (e.g., [x * 2 kwa x katika namba kama x > 5])
+		// Evaluate the iterable
+		iterableValue := Interpret(n.Iterable, env)
+		
+		// Create result array
+		var result []interface{}
+		
+		// Check if iterable is an array
+		if arr, ok := iterableValue.([]interface{}); ok {
+			// Create a new environment for the comprehension scope
+			compEnv := NewChildEnvironment(env)
+			
+			// Iterate over the array
+			for _, item := range arr {
+				// Set the loop variable
+				compEnv.Set(n.Variable, item)
+				
+				// Check the condition if present
+				if n.Condition != nil {
+					conditionValue := Interpret(n.Condition, compEnv)
+					// Skip if condition is false
+					if !toBool(conditionValue) {
+						continue
+					}
+				}
+				
+				// Evaluate the expression for this item
+				value := Interpret(n.Expression, compEnv)
+				result = append(result, value)
+			}
+			
+			return result
+		}
+		
+		// If iterable is not an array, return empty array
+		return []interface{}{}
+
 	case ast.ArrayDeclarationNode:
 		// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
 		var elements []interface{}

@@ -258,3 +258,13 @@ type LambdaNode struct {
 	ReturnType string      // Return type (optional)
 	Body       []ASTNode   // Lambda body
 }
+
+// ListComprehensionNode represents a list comprehension
+// Syntax: [expression kwa variable katika iterable kama condition]
+// Example: [x * 2 kwa x katika namba kama x > 5]
+type ListComprehensionNode struct {
+	Expression ASTNode // The expression to evaluate for each element
+	Variable   string  // The loop variable name
+	Iterable   ASTNode // The collection to iterate over
+	Condition  ASTNode // Optional filter condition (can be nil)
+}

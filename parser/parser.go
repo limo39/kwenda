@@ -1046,12 +1046,93 @@ func ParseArrayLiteral(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Check if this is a list comprehension by looking for "kwa" keyword
+	innerTokens := tokens[1:closingBracket]
+	kwaIndex := -1
+	for i, token := range innerTokens {
+		if token.Value == "kwa" {
+			kwaIndex = i
+			break
+		}
+	}
+
+	// If we found "kwa", this is a list comprehension
+	if kwaIndex != -1 {
+		return ParseListComprehension(innerTokens, kwaIndex)
+	}
+
+	// Otherwise, parse as regular array literal
 	var elements []ast.ASTNode
 	if closingBracket > 1 {
 		elements = ParseArrayElements(tokens[1:closingBracket])
 	}
 
 	return ast.ArrayNode{Elements: elements}
+}
+
+// ParseListComprehension parses list comprehension syntax
+// Syntax: [expression kwa variable katika iterable kama condition]
+func ParseListComprehension(tokens []lexer.Token, kwaIndex int) ast.ASTNode {
+	if kwaIndex < 1 {
+		return nil // Need expression before "kwa"
+	}
+
+	// Parse the expression (before "kwa")
+	expression := ParseExpression(tokens[0:kwaIndex])
+	if expression == nil {
+		return nil
+	}
+
+	// Find "katika" keyword after "kwa"
+	katikaIndex := -1
+	for i := kwaIndex + 1; i < len(tokens); i++ {
+		if tokens[i].Value == "katika" {
+			katikaIndex = i
+			break
+		}
+	}
+
+	if katikaIndex == -1 || katikaIndex != kwaIndex+2 {
+		return nil // Expected: kwa variable katika
+	}
+
+	// Get the variable name (between "kwa" and "katika")
+	if kwaIndex+1 >= len(tokens) || tokens[kwaIndex+1].Type != lexer.TokenIdentifier {
+		return nil
+	}
+	variable := tokens[kwaIndex+1].Value
+
+	// Find if there's a "kama" (condition) keyword
+	kamaIndex := -1
+	for i := katikaIndex + 1; i < len(tokens); i++ {
+		if tokens[i].Value == "kama" {
+			kamaIndex = i
+			break
+		}
+	}
+
+	var iterable, condition ast.ASTNode
+
+	if kamaIndex == -1 {
+		// No condition: [expression kwa variable katika iterable]
+		iterable = ParseExpression(tokens[katikaIndex+1:])
+		condition = nil
+	} else {
+		// With condition: [expression kwa variable katika iterable kama condition]
+		iterable = ParseExpression(tokens[katikaIndex+1 : kamaIndex])
+		condition = ParseExpression(tokens[kamaIndex+1:])
+	}
+
+	if iterable == nil {
+		return nil
+	}
+
+	return ast.ListComprehensionNode{
+		Expression: expression,
+		Variable:   variable,
+		Iterable:   iterable,
+		Condition:  condition,
+	}
 }
 
 // ParseArrayElements parses comma-separated array elements

@@ -1,0 +1,6 @@
+andika("Testing simple list comprehension")
+orodha namba nums = [1, 2, 3]
+andika("Original:", nums)
+orodha namba result = [x * 2 kwa x katika nums]
+andika("Result:", result)
+andika("Done!")

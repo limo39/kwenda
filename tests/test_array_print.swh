@@ -1,0 +1,3 @@
+andika("Test array printing")
+andika([1, 2, 3])
+andika("Done!")

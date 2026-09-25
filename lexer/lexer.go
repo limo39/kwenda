@@ -26,6 +26,7 @@ type Token struct {
 func isSwahiliKeyword(word string) bool {
 	keywords := []string{
 		"kazi", "kama", "sivyo", "kwa", "wakati", "rudisha", "namba", "andika", "ingiza",
+		"katika", // List comprehension keyword
 		"kweli", "uwongo", "na", "au", "vunja", "endelea", "boolean", "maneno",
 		// Array keywords
 		"orodha", "ongeza", "ondoa", "urefu_orodha", "pata",

@@ -1,0 +1,37 @@
+andika("=============================================")
+andika("Testing List Comprehensions")
+andika("=============================================")
+
+andika("\n--- Basic List Comprehension ---")
+orodha namba namba = [1, 2, 3, 4, 5]
+orodha namba doubled = [x * 2 kwa x katika namba]
+andika("Original:", namba)
+andika("Doubled:", doubled)
+
+andika("\n--- List Comprehension with Filter ---")
+orodha namba greater_than_two = [x kwa x katika namba kama x > 2]
+andika("Greater than 2:", greater_than_two)
+
+andika("\n--- Complex Expression ---")
+orodha namba squares = [x * x kwa x katika namba]
+andika("Squares:", squares)
+
+andika("\n--- Filter Even Numbers ---")
+orodha namba evens = [x kwa x katika namba kama x % 2 == 0]
+andika("Even numbers:", evens)
+
+andika("\n--- Multiple Operations ---")
+orodha namba range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+orodha namba filtered = [x * 3 kwa x katika range kama x > 5]
+andika("Range:", range)
+andika("Filtered (x>5) and tripled:", filtered)
+
+andika("\n--- String Operations ---")
+orodha namba small = [1, 2, 3]
+orodha namba big = [x * 10 kwa x katika small]
+andika("Small:", small)
+andika("Big:", big)
+
+andika("\n=============================================")
+andika("All List Comprehension tests completed!")
+andika("=============================================")

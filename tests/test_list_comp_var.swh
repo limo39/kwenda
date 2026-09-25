@@ -1,0 +1,9 @@
+andika("Testing list comprehension with variable")
+orodha namba input = [1, 2, 3, 4, 5]
+orodha namba output = [x * 2 kwa x katika input]
+andika("Input array created")
+andika("Output array created")
+andika("First element:", output[0])
+andika("Second element:", output[1])
+andika("Third element:", output[2])
+andika("Done!")

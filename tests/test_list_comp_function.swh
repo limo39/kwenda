@@ -1,0 +1,17 @@
+kazi test_list_comp() {
+    andika("Testing list comprehension in function")
+    orodha namba input = [1, 2, 3, 4, 5]
+    orodha namba doubled = [x * 2 kwa x katika input]
+    
+    andika("Input:", input)
+    andika("Doubled:", doubled)
+    
+    orodha namba filtered = [x kwa x katika input kama x > 2]
+    andika("Filtered (>2):", filtered)
+    
+    andika("Done!")
+}
+
+kazi kuu() {
+    test_list_comp()
+}
