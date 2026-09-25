@@ -48,6 +48,7 @@
 
 ### Data Structures
 - **Array Operations**: Add, remove, access, and get length
+- **List Comprehensions**: Create arrays with concise syntax `[expression kwa variable katika iterable kama condition]`
 - **Dictionary Operations**: Create, access, modify key-value pairs
 - **String Functions**: Length, substring, replace, find, case conversion, trim, split
 

@@ -1,0 +1,77 @@
+// Comprehensive test for list comprehensions
+
+kazi kuu() {
+    andika("=== List Comprehension Tests ===")
+    andika("")
+    
+    // Test 1: Basic identity comprehension
+    andika("Test 1: Identity comprehension")
+    orodha namba nums = [1, 2, 3, 4, 5]
+    orodha namba identity = [x kwa x katika nums]
+    andika("Original:", nums)
+    andika("Identity:", identity)
+    andika("")
+    
+    // Test 2: Simple arithmetic
+    andika("Test 2: Doubling each element")
+    orodha namba doubled = [x * 2 kwa x katika nums]
+    andika("Doubled:", doubled)
+    andika("")
+    
+    // Test 3: Squaring
+    andika("Test 3: Squaring each element")
+    orodha namba squared = [x * x kwa x katika nums]
+    andika("Squared:", squared)
+    andika("")
+    
+    // Test 4: Filtering with condition
+    andika("Test 4: Filter elements > 2")
+    orodha namba filtered = [x kwa x katika nums kama x > 2]
+    andika("Filtered (>2):", filtered)
+    andika("")
+    
+    // Test 5: Filter and transform
+    andika("Test 5: Double only elements > 2")
+    orodha namba doubledFiltered = [x * 2 kwa x katika nums kama x > 2]
+    andika("Doubled & Filtered:", doubledFiltered)
+    andika("")
+    
+    // Test 6: Even numbers
+    andika("Test 6: Filter even numbers")
+    orodha namba evens = [x kwa x katika nums kama x % 2 == 0]
+    andika("Even numbers:", evens)
+    andika("")
+    
+    // Test 7: Odd numbers multiplied by 3
+    andika("Test 7: Odd numbers * 3")
+    orodha namba oddTripled = [x * 3 kwa x katika nums kama x % 2 != 0]
+    andika("Odd * 3:", oddTripled)
+    andika("")
+    
+    // Test 8: Complex expression
+    andika("Test 8: Complex expression (x^2 + x)")
+    orodha namba complex = [x * x + x kwa x katika nums]
+    andika("x^2 + x:", complex)
+    andika("")
+    
+    // Test 9: Negative filter
+    andika("Test 9: Elements <= 3")
+    orodha namba small = [x kwa x katika nums kama x <= 3]
+    andika("Small (<=3):", small)
+    andika("")
+    
+    // Test 10: Empty result
+    andika("Test 10: Filter with no matches")
+    orodha namba empty = [x kwa x katika nums kama x > 10]
+    andika("Empty result:", empty)
+    andika("")
+    
+    // Test 11: Nested array iteration
+    andika("Test 11: Larger range")
+    orodha namba range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    orodha namba multiples = [x * 5 kwa x katika range kama x % 2 == 0]
+    andika("Even * 5:", multiples)
+    andika("")
+    
+    andika("=== All tests completed ===")
+}

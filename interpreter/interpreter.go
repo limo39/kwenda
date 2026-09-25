@@ -219,6 +219,19 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 
 	case ast.ArrayDeclarationNode:
 		// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
+		// Special case: if the first element is a ListComprehensionNode, evaluate it directly
+		if len(n.Elements) == 1 {
+			if _, ok := n.Elements[0].(ast.ListComprehensionNode); ok {
+				// Evaluate the list comprehension and use its result
+				result := Interpret(n.Elements[0], env)
+				if arr, ok := result.([]interface{}); ok {
+					env.Set(n.Name, arr)
+					return arr
+				}
+			}
+		}
+		
+		// Regular array declaration
 		var elements []interface{}
 		for _, element := range n.Elements {
 			value := Interpret(element, env)

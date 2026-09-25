@@ -279,6 +279,17 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle array declarations
 	if tokens[0].Value == "orodha" && len(tokens) >= 5 && tokens[3].Value == "=" {
 		arrayLiteral := ParseArrayLiteral(tokens[4:])
+		
+		// Check if it's a list comprehension or regular array
+		if listComp, ok := arrayLiteral.(ast.ListComprehensionNode); ok {
+			// For list comprehensions, store the comprehension node itself
+			return ast.ArrayDeclarationNode{
+				Name:     tokens[2].Value,
+				Type:     tokens[1].Value,
+				Elements: []ast.ASTNode{listComp}, // Wrap in slice to maintain structure
+			}
+		}
+		
 		var elements []ast.ASTNode
 		if arrayNode, ok := arrayLiteral.(ast.ArrayNode); ok {
 			elements = arrayNode.Elements
@@ -346,6 +357,17 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle array declarations
 	if tokens[0].Value == "orodha" && len(tokens) >= 5 && tokens[3].Value == "=" {
 		arrayLiteral := ParseArrayLiteral(tokens[4:])
+		
+		// Check if it's a list comprehension or regular array
+		if listComp, ok := arrayLiteral.(ast.ListComprehensionNode); ok {
+			// For list comprehensions, store the comprehension node itself
+			return ast.ArrayDeclarationNode{
+				Name:     tokens[2].Value,
+				Type:     tokens[1].Value,
+				Elements: []ast.ASTNode{listComp}, // Wrap in slice to maintain structure
+			}
+		}
+		
 		var elements []ast.ASTNode
 		if arrayNode, ok := arrayLiteral.(ast.ArrayNode); ok {
 			elements = arrayNode.Elements

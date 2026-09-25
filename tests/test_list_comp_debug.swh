@@ -1,0 +1,11 @@
+kazi kuu() {
+    andika("Debug list comprehension")
+    orodha namba nums = [1, 2, 3]
+    andika("Array:", nums)
+    
+    orodha namba result = [x kwa x katika nums]
+    andika("Identity result:", result)
+    
+    orodha namba doubled = [x * 2 kwa x katika nums]
+    andika("Doubled result:", doubled)
+}

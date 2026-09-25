@@ -7,6 +7,7 @@ This document contains comprehensive examples demonstrating all features of the 
 - [Control Flow](#control-flow)
 - [Functions](#functions)
 - [Arrays](#arrays)
+- [List Comprehensions](#list-comprehensions)
 - [Strings](#strings)
 - [File I/O](#file-io)
 - [Error Handling](#error-handling)
@@ -210,6 +211,63 @@ kazi kuu() {
     andika("After removing index 2:", namba_zangu)
 }
 ```
+
+## List Comprehensions
+
+### Example 9b: List Comprehensions
+```swahili
+kazi kuu() {
+    # Basic list comprehension - identity
+    orodha namba nums = [1, 2, 3, 4, 5]
+    orodha namba copy = [x kwa x katika nums]
+    andika("Original:", nums)
+    andika("Copy:", copy)
+    
+    # Transform each element - doubling
+    orodha namba doubled = [x * 2 kwa x katika nums]
+    andika("Doubled:", doubled)
+    
+    # Squaring each element
+    orodha namba squared = [x * x kwa x katika nums]
+    andika("Squared:", squared)
+    
+    # Filter with condition - only numbers > 2
+    orodha namba filtered = [x kwa x katika nums kama x > 2]
+    andika("Filtered (>2):", filtered)
+    
+    # Filter and transform - double only numbers > 2
+    orodha namba doubledFiltered = [x * 2 kwa x katika nums kama x > 2]
+    andika("Doubled & Filtered:", doubledFiltered)
+    
+    # Complex expressions
+    orodha namba complex = [x * x + x kwa x katika nums]
+    andika("x² + x:", complex)
+    
+    # Working with larger ranges
+    orodha namba range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    orodha namba result = [x * 3 kwa x katika range kama x > 5]
+    andika("(x * 3) for x > 5:", result)
+    
+    # Empty result when no matches
+    orodha namba empty = [x kwa x katika nums kama x > 10]
+    andika("Empty result:", empty)
+}
+```
+
+**Output:**
+```
+Original: [1, 2, 3, 4, 5]
+Copy: [1, 2, 3, 4, 5]
+Doubled: [2, 4, 6, 8, 10]
+Squared: [1, 4, 9, 16, 25]
+Filtered (>2): [3, 4, 5]
+Doubled & Filtered: [6, 8, 10]
+x² + x: [2, 6, 12, 20, 30]
+(x * 3) for x > 5: [18, 21, 24, 27, 30]
+Empty result: []
+```
+
+**See also:** [LIST_COMPREHENSIONS.md](LIST_COMPREHENSIONS.md) for detailed documentation.
 
 ## Strings
 

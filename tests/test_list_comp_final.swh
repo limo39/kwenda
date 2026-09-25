@@ -1,0 +1,70 @@
+// Final comprehensive test for list comprehensions
+
+kazi kuu() {
+    andika("=== List Comprehension Final Tests ===")
+    andika("")
+    
+    // Test 1: Identity
+    andika("Test 1: Identity [x kwa x katika nums]")
+    orodha namba nums = [1, 2, 3, 4, 5]
+    orodha namba identity = [x kwa x katika nums]
+    andika("Result:", identity)
+    andika("")
+    
+    // Test 2: Double
+    andika("Test 2: Double [x * 2 kwa x katika nums]")
+    orodha namba doubled = [x * 2 kwa x katika nums]
+    andika("Result:", doubled)
+    andika("")
+    
+    // Test 3: Square
+    andika("Test 3: Square [x * x kwa x katika nums]")
+    orodha namba squared = [x * x kwa x katika nums]
+    andika("Result:", squared)
+    andika("")
+    
+    // Test 4: Filter > 2
+    andika("Test 4: Filter [x kwa x katika nums kama x > 2]")
+    orodha namba filtered = [x kwa x katika nums kama x > 2]
+    andika("Result:", filtered)
+    andika("")
+    
+    // Test 5: Filter and transform
+    andika("Test 5: Filter & Transform [x * 2 kwa x katika nums kama x > 2]")
+    orodha namba doubledFiltered = [x * 2 kwa x katika nums kama x > 2]
+    andika("Result:", doubledFiltered)
+    andika("")
+    
+    // Test 6: Complex expression
+    andika("Test 6: Complex [x * x + x kwa x katika nums]")
+    orodha namba complex = [x * x + x kwa x katika nums]
+    andika("Result:", complex)
+    andika("")
+    
+    // Test 7: Filter <=
+    andika("Test 7: Filter <= [x kwa x katika nums kama x <= 3]")
+    orodha namba small = [x kwa x katika nums kama x <= 3]
+    andika("Result:", small)
+    andika("")
+    
+    // Test 8: Empty result
+    andika("Test 8: Empty [x kwa x katika nums kama x > 10]")
+    orodha namba empty = [x kwa x katika nums kama x > 10]
+    andika("Result:", empty)
+    andika("")
+    
+    // Test 9: Larger range
+    andika("Test 9: Large range [x * 3 kwa x katika range kama x > 5]")
+    orodha namba range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    orodha namba largeFiltered = [x * 3 kwa x katika range kama x > 5]
+    andika("Result:", largeFiltered)
+    andika("")
+    
+    // Test 10: Negative numbers
+    andika("Test 10: With negatives [x * -1 kwa x katika nums]")
+    orodha namba negated = [x * -1 kwa x katika nums]
+    andika("Result:", negated)
+    andika("")
+    
+    andika("=== All tests passed! ===")
+}

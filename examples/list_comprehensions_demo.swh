@@ -1,0 +1,157 @@
+// List Comprehensions Demo
+// Demonstrates the power and elegance of list comprehensions in Kwenda
+
+kazi kuu() {
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║   List Comprehensions Demo - Kwenda Language    ║")
+    andika("╚══════════════════════════════════════════════════╝")
+    andika("")
+    
+    // ==================== BASIC USAGE ====================
+    andika("📚 1. BASIC USAGE")
+    andika("─────────────────────────────────────────────────")
+    orodha namba nums = [1, 2, 3, 4, 5]
+    andika("Original array:", nums)
+    
+    orodha namba copy = [x kwa x katika nums]
+    andika("Identity [x kwa x katika nums]:", copy)
+    andika("")
+    
+    // ==================== TRANSFORMATIONS ====================
+    andika("🔄 2. TRANSFORMATIONS")
+    andika("─────────────────────────────────────────────────")
+    
+    orodha namba doubled = [x * 2 kwa x katika nums]
+    andika("Double each [x * 2]:", doubled)
+    
+    orodha namba squared = [x * x kwa x katika nums]
+    andika("Square each [x * x]:", squared)
+    
+    orodha namba cubed = [x * x * x kwa x katika nums]
+    andika("Cube each [x * x * x]:", cubed)
+    
+    orodha namba negated = [x * -1 kwa x katika nums]
+    andika("Negate each [x * -1]:", negated)
+    andika("")
+    
+    // ==================== FILTERING ====================
+    andika("🔍 3. FILTERING WITH CONDITIONS")
+    andika("─────────────────────────────────────────────────")
+    
+    orodha namba greaterThan2 = [x kwa x katika nums kama x > 2]
+    andika("Numbers > 2 [x kama x > 2]:", greaterThan2)
+    
+    orodha namba lessThanOrEqual3 = [x kwa x katika nums kama x <= 3]
+    andika("Numbers <= 3 [x kama x <= 3]:", lessThanOrEqual3)
+    
+    orodha namba notEqual3 = [x kwa x katika nums kama x != 3]
+    andika("Numbers != 3 [x kama x != 3]:", notEqual3)
+    andika("")
+    
+    // ==================== COMBINED OPERATIONS ====================
+    andika("⚡ 4. FILTER + TRANSFORM")
+    andika("─────────────────────────────────────────────────")
+    
+    orodha namba doubledFiltered = [x * 2 kwa x katika nums kama x > 2]
+    andika("Double numbers > 2 [x * 2 kama x > 2]:", doubledFiltered)
+    
+    orodha namba squaredSmall = [x * x kwa x katika nums kama x <= 3]
+    andika("Square numbers <= 3 [x * x kama x <= 3]:", squaredSmall)
+    
+    orodha namba tripleOdd = [x * 3 kwa x katika nums kama x != 2]
+    andika("Triple non-2s [x * 3 kama x != 2]:", tripleOdd)
+    andika("")
+    
+    // ==================== COMPLEX EXPRESSIONS ====================
+    andika("🧮 5. COMPLEX EXPRESSIONS")
+    andika("─────────────────────────────────────────────────")
+    
+    orodha namba polynomial = [x * x + x kwa x katika nums]
+    andika("Polynomial x² + x:", polynomial)
+    
+    orodha namba formula = [x * x + 2 * x + 1 kwa x katika nums]
+    andika("Formula (x + 1)²:", formula)
+    
+    orodha namba difference = [x * x - x kwa x katika nums]
+    andika("Difference x² - x:", difference)
+    andika("")
+    
+    // ==================== PRACTICAL EXAMPLES ====================
+    andika("💼 6. PRACTICAL EXAMPLES")
+    andika("─────────────────────────────────────────────────")
+    
+    // Convert temperatures (simplified Celsius to Fahrenheit: F = C * 2 + 30)
+    orodha namba celsius = [0, 10, 20, 30, 40]
+    orodha namba fahrenheit = [c * 2 + 30 kwa c katika celsius]
+    andika("Celsius:", celsius)
+    andika("Fahrenheit (approx):", fahrenheit)
+    andika("")
+    
+    // Calculate prices with tax (10% tax)
+    orodha namba prices = [100, 200, 500, 1000]
+    orodha namba withTax = [p + p / 10 kwa p katika prices]
+    andika("Prices:", prices)
+    andika("With 10% tax:", withTax)
+    andika("")
+    
+    // Discount for large purchases (20% off for items > 300)
+    orodha namba discounted = [p - p / 5 kwa p katika prices kama p > 300]
+    andika("Discounted (>300):", discounted)
+    andika("")
+    
+    // ==================== WORKING WITH RANGES ====================
+    andika("📊 7. WORKING WITH RANGES")
+    andika("─────────────────────────────────────────────────")
+    
+    orodha namba range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    
+    // Get multiples of 5 for numbers > 5
+    orodha namba multiples = [x * 5 kwa x katika range kama x > 5]
+    andika("Multiples of 5 (x > 5):", multiples)
+    
+    // First 10 squares
+    orodha namba squares = [x * x kwa x katika range]
+    andika("First 10 squares:", squares)
+    
+    // Fibonacci-like (x² - 1)
+    orodha namba fibLike = [x * x - 1 kwa x katika range kama x > 1]
+    andika("x² - 1 for x > 1:", fibLike)
+    andika("")
+    
+    // ==================== EDGE CASES ====================
+    andika("🎯 8. EDGE CASES")
+    andika("─────────────────────────────────────────────────")
+    
+    // Empty result - no matches
+    orodha namba noMatches = [x kwa x katika nums kama x > 100]
+    andika("No matches (x > 100):", noMatches)
+    
+    // All match
+    orodha namba allMatch = [x kwa x katika nums kama x > 0]
+    andika("All match (x > 0):", allMatch)
+    
+    // Single element
+    orodha namba single = [42]
+    orodha namba singleResult = [x * 2 kwa x katika single]
+    andika("Single element doubled:", singleResult)
+    andika("")
+    
+    // ==================== COMPARISON ====================
+    andika("⚖️  9. COMPREHENSION VS TRADITIONAL LOOP")
+    andika("─────────────────────────────────────────────────")
+    andika("List Comprehension (1 line):")
+    andika("  result = [x * 2 kwa x katika nums kama x > 2]")
+    andika("")
+    andika("Traditional Loop (5+ lines):")
+    andika("  result = []")
+    andika("  wakati i = 0, i < urefu(nums), i = i + 1 {")
+    andika("      kama nums[i] > 2 {")
+    andika("          weka_katika(result, nums[i] * 2)")
+    andika("      }")
+    andika("  }")
+    andika("")
+    
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║            Demo Completed Successfully!          ║")
+    andika("╚══════════════════════════════════════════════════╝")
+}
