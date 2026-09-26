@@ -549,8 +549,6 @@ The interpreter follows a traditional architecture:
 - [x] Function parameters and return values ✅
 - [x] Logical operators (`na`/`au` for AND/OR) ✅
 - [x] String data type and manipulation functions ✅
-
-### 🚀 Planned Features
 - [x] Array/list data structures ✅
 - [x] File I/O operations (`soma`/`andika_faili` for read/write) ✅
 - [x] Error handling with try/catch (`jaribu`/`shika`/`hatimaye`) ✅
@@ -571,7 +569,29 @@ The interpreter follows a traditional architecture:
 - [x] Lambda functions ✅
 - [x] Built-in mathematical rounding functions (floor, ceil, round, truncate) ✅
 - [x] Built-in mathematical root functions (square root, cube root, nth root) ✅
-- [ ] List comprehensions
+- [x] List comprehensions (`[expression kwa variable katika iterable kama condition]`) ✅
+
+### 🚀 Planned Features
+- [ ] Nested list comprehensions
+- [ ] Dictionary comprehensions (`{key: value kwa item katika iterable}`)
+- [ ] Set data structures and operations
+- [ ] Tuple data structures (immutable lists)
+- [ ] Slice operations for arrays (`orodha[start:end]`)
+- [ ] String interpolation/formatting
+- [ ] Pattern matching (switch/case statements)
+- [ ] Enum types
+- [ ] Type annotations and optional type checking
+- [ ] Const/immutable variable declarations
+- [ ] Spread operator for arrays and dictionaries
+- [ ] Destructuring assignment
+- [ ] Anonymous functions/closures improvements
+- [ ] Generator functions and iterators
+- [ ] Async/await for asynchronous operations
+- [ ] Package manager for third-party modules
+- [ ] Standard library expansion (date/time, networking, JSON)
+- [ ] Regular expressions support
+- [ ] Debugger and REPL (interactive shell)
+- [ ] Performance optimizations and JIT compilation
 
 ## 🤝 Contributing
 
@@ -596,6 +616,8 @@ This project is open source. Feel free to use, modify, and distribute.
 - **[OOP.md](OOP.md)**: Complete guide to object-oriented programming patterns
 - **[DICTIONARY_SUMMARY.md](DICTIONARY_SUMMARY.md)**: Dictionary/map implementation details
 - **[OOP_SUMMARY.md](OOP_SUMMARY.md)**: OOP implementation summary and examples
+- **[LIST_COMPREHENSIONS.md](markdown/LIST_COMPREHENSIONS.md)**: Complete guide to list comprehensions
+- **[LIST_COMPREHENSIONS_SUMMARY.md](markdown/LIST_COMPREHENSIONS_SUMMARY.md)**: List comprehensions implementation summary
 
 ## 🎓 Educational Use
 
