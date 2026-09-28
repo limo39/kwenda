@@ -1,0 +1,15 @@
+// Test basic nested list comprehension
+
+kazi kuu() {
+    andika("Test 1: Simple nested comprehension")
+    
+    // Create array
+    orodha namba nums = [1, 2, 3]
+    
+    // For each x, create array of x+y for each y
+    orodha namba nested = [[x + y kwa y katika nums] kwa x katika nums]
+    
+    andika("nums:", nums)
+    andika("nested [[x+y kwa y katika nums] kwa x katika nums]:")
+    andika(nested)
+}

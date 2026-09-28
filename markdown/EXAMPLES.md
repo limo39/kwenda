@@ -269,6 +269,44 @@ Empty result: []
 
 **See also:** [LIST_COMPREHENSIONS.md](LIST_COMPREHENSIONS.md) for detailed documentation.
 
+### Example 9c: Nested List Comprehensions
+```swahili
+kazi kuu() {
+    # Create a multiplication table using nested comprehensions
+    orodha namba range = [1, 2, 3, 4, 5]
+    orodha namba multTable = [[x * y kwa y katika range] kwa x katika range]
+    
+    andika("5x5 Multiplication Table:")
+    andika(multTable)
+    
+    # Create coordinate pairs (encoded as x*10 + y)
+    orodha namba coords = [0, 1, 2]
+    orodha namba grid = [[x * 10 + y kwa y katika coords] kwa x katika coords]
+    
+    andika("Coordinate Grid:")
+    andika(grid)
+    
+    # Nested with filters - only include where both x > 1 and y > 1
+    orodha namba nums = [1, 2, 3, 4]
+    orodha namba filtered = [[x + y kwa y katika nums kama y > 1] kwa x katika nums kama x > 1]
+    
+    andika("Filtered (x > 1 AND y > 1):")
+    andika(filtered)
+}
+```
+
+**Output:**
+```
+5x5 Multiplication Table:
+[[1, 2, 3, 4, 5], [2, 4, 6, 8, 10], [3, 6, 9, 12, 15], [4, 8, 12, 16, 20], [5, 10, 15, 20, 25]]
+Coordinate Grid:
+[[0, 1, 2], [10, 11, 12], [20, 21, 22]]
+Filtered (x > 1 AND y > 1):
+[[4, 5, 6], [5, 6, 7], [6, 7, 8]]
+```
+
+**See also:** [LIST_COMPREHENSIONS.md](LIST_COMPREHENSIONS.md) for nested comprehensions guide.
+
 ## Strings
 
 ### Example 10: String Manipulation

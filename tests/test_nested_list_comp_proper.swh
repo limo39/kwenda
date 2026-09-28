@@ -1,0 +1,37 @@
+// Test proper nested list comprehension
+// Syntax: [[inner_expr kwa inner_var katika inner_iter] kwa outer_var katika outer_iter]
+
+kazi kuu() {
+    andika("Testing proper nested list comprehension")
+    
+    // Create a simple array
+    orodha namba nums = [1, 2, 3]
+    
+    andika("Original array:", nums)
+    
+    // Create pairs: [[1,1], [1,2], [1,3], [2,1], [2,2], ...]
+    // For each x in nums, create an array of [x, y] for each y in nums
+    orodha namba pairs = [[x * 10 + y kwa y katika nums] kwa x katika nums]
+    
+    andika("Pairs (x*10+y):")
+    andika(pairs)
+    
+    andika("")
+    andika("Test 2: Flatten a matrix")
+    
+    // Create a 2D matrix
+    orodha namba row1 = [1, 2, 3]
+    orodha namba row2 = [4, 5, 6]
+    orodha namba row3 = [7, 8, 9]
+    
+    // Create matrix manually (since we can't nest arrays in declaration easily)
+    orodha namba matrix = []
+    weka_katika(matrix, row1)
+    weka_katika(matrix, row2)
+    weka_katika(matrix, row3)
+    
+    andika("Matrix:", matrix)
+    
+    // This won't work yet - need multiple kwa support
+    // orodha namba flat = [item kwa row katika matrix kwa item katika row]
+}

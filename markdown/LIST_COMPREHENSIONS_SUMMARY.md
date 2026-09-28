@@ -169,11 +169,132 @@ All tests pass successfully:
 
 ## Future Enhancements
 Potential future features:
-1. Nested list comprehensions
+1. ~~Nested list comprehensions~~ ✅ **COMPLETED**
 2. Multiple iterables (zip-like behavior)
 3. Dictionary comprehensions
 4. Set comprehensions (when sets are added)
 5. Generator expressions (lazy evaluation)
+
+## Nested List Comprehensions
+
+### Implementation
+Nested list comprehensions were successfully implemented with minimal changes. The key was fixing the `ParseArrayLiteral` function to properly handle nested brackets.
+
+**Changes Made:**
+1. **parser/parser.go - ParseArrayLiteral**: 
+   - Modified bracket matching to account for nesting (track bracket depth)
+   - Only detect `kwa` at the top level (ignore `kwa` inside nested brackets)
+   - This allows inner comprehensions to be parsed as complete expressions
+
+**Code Change:**
+```go
+// Find matching closing bracket (accounting for nested brackets)
+closingBracket := -1
+bracketDepth := 0
+for i := 0; i < len(tokens); i++ {
+    if tokens[i].Value == "[" {
+        bracketDepth++
+    } else if tokens[i].Value == "]" {
+        bracketDepth--
+        if bracketDepth == 0 {
+            closingBracket = i
+            break
+        }
+    }
+}
+
+// Check for "kwa" only at top level (nestedDepth == 0)
+kwaIndex := -1
+nestedDepth := 0
+for i, token := range innerTokens {
+    if token.Value == "[" {
+        nestedDepth++
+    } else if token.Value == "]" {
+        nestedDepth--
+    } else if token.Value == "kwa" && nestedDepth == 0 {
+        kwaIndex = i
+        break
+    }
+}
+```
+
+### Syntax
+```
+[[inner_expression kwa inner_var katika inner_iterable] kwa outer_var katika outer_iterable]
+```
+
+### How It Works
+1. Parser recognizes the nested structure by tracking bracket depth
+2. Inner comprehension `[inner_expr kwa inner_var katika inner_iter]` is parsed as a complete expression
+3. This inner comprehension becomes the expression for the outer comprehension
+4. Interpreter evaluates outer comprehension, which for each iteration evaluates the inner comprehension
+
+### Examples That Work
+
+**Basic Multiplication Table:**
+```kwenda
+orodha namba range = [1, 2, 3, 4, 5]
+orodha namba table = [[x * y kwa y katika range] kwa x katika range]
+// Result: [[1,2,3,4,5], [2,4,6,8,10], [3,6,9,12,15], [4,8,12,16,20], [5,10,15,20,25]]
+```
+
+**With Inner Filter:**
+```kwenda
+orodha namba nums = [1, 2, 3, 4]
+orodha namba filtered = [[x + y kwa y katika nums kama y > 2] kwa x katika nums]
+// Result: [[4,5], [5,6], [6,7], [7,8]] - only columns where y > 2
+```
+
+**With Outer Filter:**
+```kwenda
+orodha namba nums = [1, 2, 3, 4]
+orodha namba filtered = [[x + y kwa y katika nums] kwa x katika nums kama x > 2]
+// Result: [[4,5,6,7], [5,6,7,8]] - only rows where x > 2
+```
+
+**With Both Filters:**
+```kwenda
+orodha namba nums = [1, 2, 3, 4]
+orodha namba both = [[x + y kwa y katika nums kama y > 1] kwa x katika nums kama x > 2]
+// Result: [[5,6,7], [6,7,8]] - rows where x > 2 AND columns where y > 1
+```
+
+### Test Results
+All comprehensive tests pass successfully:
+- Basic nesting (addition, multiplication tables)
+- Coordinate grids
+- Filters on inner comprehension
+- Filters on outer comprehension
+- Filters on both
+- Asymmetric dimensions (different row/col sizes)
+- Complex mathematical expressions
+- Pattern generation
+- Conditional computation
+
+### Benefits Over Manual Nesting
+**Manual nested loops (9+ lines):**
+```kwenda
+orodha namba result = []
+wakati i = 0, i < 3, i = i + 1 {
+    orodha namba row = []
+    wakati j = 0, j < 3, j = j + 1 {
+        ongeza(row, i * j)
+    }
+    ongeza(result, row)
+}
+```
+
+**Nested list comprehension (1 line):**
+```kwenda
+orodha namba result = [[i * j kwa j katika nums] kwa i katika nums]
+```
+
+Advantages:
+- 90% less code
+- Clearer intent
+- No manual array management
+- Inline filters possible
+- Less error-prone (no index bugs)
 
 ## Comparison with Traditional Loops
 

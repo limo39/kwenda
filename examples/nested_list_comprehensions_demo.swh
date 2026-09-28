@@ -1,0 +1,160 @@
+// Nested List Comprehensions Demo
+// Demonstrates nested list comprehensions for multi-dimensional data
+
+kazi kuu() {
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║  Nested List Comprehensions Demo - Kwenda       ║")
+    andika("╚══════════════════════════════════════════════════╝")
+    andika("")
+    
+    // ==================== INTRODUCTION ====================
+    andika("📖 WHAT ARE NESTED LIST COMPREHENSIONS?")
+    andika("─────────────────────────────────────────────────")
+    andika("Nested list comprehensions allow you to create")
+    andika("multi-dimensional arrays (2D, 3D, etc.) in a")
+    andika("concise and readable way.")
+    andika("")
+    andika("Syntax: [[inner_expr kwa inner_var katika inner_iter]")
+    andika("         kwa outer_var katika outer_iter]")
+    andika("")
+    
+    // ==================== EXAMPLE 1: BASIC ====================
+    andika("📚 1. BASIC EXAMPLE: Addition Table")
+    andika("─────────────────────────────────────────────────")
+    orodha namba nums = [1, 2, 3]
+    orodha namba additionTable = [[x + y kwa y katika nums] kwa x katika nums]
+    
+    andika("nums:", nums)
+    andika("Addition table [[x + y kwa y katika nums] kwa x katika nums]:")
+    andika(additionTable)
+    andika("")
+    
+    // ==================== EXAMPLE 2: MULTIPLICATION ====================
+    andika("🔢 2. MULTIPLICATION TABLE")
+    andika("─────────────────────────────────────────────────")
+    orodha namba range = [1, 2, 3, 4, 5]
+    orodha namba timesTable = [[x * y kwa y katika range] kwa x katika range]
+    
+    andika("5x5 multiplication table:")
+    andika(timesTable)
+    andika("")
+    
+    // ==================== EXAMPLE 3: COORDINATES ====================
+    andika("📍 3. COORDINATE PAIRS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba coords = [0, 1, 2]
+    // Encode (x,y) as x*10 + y
+    orodha namba coordPairs = [[x * 10 + y kwa y katika coords] kwa x katika coords]
+    
+    andika("Coordinate grid (encoded as x*10 + y):")
+    andika(coordPairs)
+    andika("Decoding: 00=(0,0), 01=(0,1), 10=(1,0), 11=(1,1), etc.")
+    andika("")
+    
+    // ==================== EXAMPLE 4: FILTERING ====================
+    andika("🔍 4. WITH FILTERS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba data = [1, 2, 3, 4, 5]
+    
+    // Only pairs where both are > 2
+    orodha namba filtered = [[x + y kwa y katika data kama y > 2] kwa x katika data kama x > 2]
+    
+    andika("Pairs where x > 2 AND y > 2:")
+    andika(filtered)
+    andika("(Only rows for x=3,4,5 and columns for y=3,4,5)")
+    andika("")
+    
+    // ==================== EXAMPLE 5: DIFFERENT RANGES ====================
+    andika("📊 5. ASYMMETRIC DIMENSIONS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba rows = [1, 2, 3]
+    orodha namba cols = [10, 20, 30, 40]
+    orodha namba matrix = [[r + c kwa c katika cols] kwa r katika rows]
+    
+    andika("3 rows x 4 columns matrix:")
+    andika(matrix)
+    andika("")
+    
+    // ==================== EXAMPLE 6: PRACTICAL USE CASES ====================
+    andika("💼 6. PRACTICAL: DISTANCE MATRIX")
+    andika("─────────────────────────────────────────────────")
+    orodha namba points = [0, 1, 2, 3]
+    // Calculate absolute distance between all point pairs
+    orodha namba distances = [[x - y kwa y katika points] kwa x katika points]
+    
+    andika("Distance matrix (x - y for all pairs):")
+    andika(distances)
+    andika("")
+    
+    // ==================== EXAMPLE 7: COMPLEX EXPRESSIONS ====================
+    andika("🧮 7. COMPLEX MATHEMATICAL OPERATIONS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba base = [2, 3, 4]
+    // For each x, compute x^2 * y for all y
+    orodha namba squares = [[x * x * y kwa y katika base] kwa x katika base]
+    
+    andika("Matrix of x² * y:")
+    andika(squares)
+    andika("")
+    
+    // ==================== EXAMPLE 8: PATTERN GENERATION ====================
+    andika("🎨 8. PATTERN GENERATION")
+    andika("─────────────────────────────────────────────────")
+    orodha namba small = [1, 2, 3]
+    // Create a pattern where each cell is the sum of indices
+    orodha namba pattern = [[i + j kwa j katika small] kwa i katika small]
+    
+    andika("Diagonal-sum pattern:")
+    andika(pattern)
+    andika("Notice the diagonal lines of equal sums!")
+    andika("")
+    
+    // ==================== EXAMPLE 9: SELECTIVE COMPUTATION ====================
+    andika("⚡ 9. CONDITIONAL COMPUTATION")
+    andika("─────────────────────────────────────────────────")
+    orodha namba values = [1, 2, 3, 4, 5]
+    // Only compute for even rows and odd columns
+    orodha namba selective = [[x * y kwa y katika values kama y != 2] kwa x katika values kama x != 1]
+    
+    andika("Skip x=1 and y=2:")
+    andika(selective)
+    andika("")
+    
+    // ==================== EXAMPLE 10: LARGER MATRIX ====================
+    andika("📈 10. LARGER DIMENSIONS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba big = [1, 2, 3, 4, 5, 6, 7, 8]
+    // Create subset: first 3 x first 3
+    orodha namba subset = [[x * y kwa y katika big kama y <= 3] kwa x katika big kama x <= 3]
+    
+    andika("3x3 subset multiplication table:")
+    andika(subset)
+    andika("")
+    
+    // ==================== COMPARISON ====================
+    andika("⚖️  11. WHY USE NESTED COMPREHENSIONS?")
+    andika("─────────────────────────────────────────────────")
+    andika("Traditional nested loops:")
+    andika("  orodha namba result = []")
+    andika("  wakati i < 3, i = i + 1 {")
+    andika("      orodha namba row = []")
+    andika("      wakati j < 3, j = j + 1 {")
+    andika("          ongeza(row, i * j)")
+    andika("      }")
+    andika("      ongeza(result, row)")
+    andika("  }")
+    andika("")
+    andika("Nested list comprehension (1 line!):")
+    andika("  result = [[i * j kwa j katika range] kwa i katika range]")
+    andika("")
+    andika("Benefits:")
+    andika("  ✓ More concise and readable")
+    andika("  ✓ Less prone to indexing errors")
+    andika("  ✓ Expresses intent clearly")
+    andika("  ✓ Can include filters inline")
+    andika("")
+    
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║      Nested List Comprehensions Mastered!        ║")
+    andika("╚══════════════════════════════════════════════════╝")
+}

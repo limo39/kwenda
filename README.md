@@ -570,9 +570,9 @@ The interpreter follows a traditional architecture:
 - [x] Built-in mathematical rounding functions (floor, ceil, round, truncate) ✅
 - [x] Built-in mathematical root functions (square root, cube root, nth root) ✅
 - [x] List comprehensions (`[expression kwa variable katika iterable kama condition]`) ✅
+- [x] Nested list comprehensions (`[[inner_expr kwa inner_var katika inner_iter] kwa outer_var katika outer_iter]`) ✅
 
 ### 🚀 Planned Features
-- [ ] Nested list comprehensions
 - [ ] Dictionary comprehensions (`{key: value kwa item katika iterable}`)
 - [ ] Set data structures and operations
 - [ ] Tuple data structures (immutable lists)

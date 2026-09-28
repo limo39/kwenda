@@ -1,0 +1,21 @@
+// Test simple nested list comprehension
+
+kazi kuu() {
+    andika("Testing nested list comprehension")
+    
+    // Create a 2D array (matrix)
+    orodha namba matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    
+    andika("Original matrix:")
+    andika(matrix)
+    
+    // Flatten the matrix using nested comprehension
+    orodha namba flat = [item kwa row katika matrix kwa item katika row]
+    
+    andika("Flattened:")
+    andika(flat)
+}

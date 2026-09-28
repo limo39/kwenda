@@ -1,0 +1,35 @@
+// Verify nested list comprehension filters work correctly
+
+kazi kuu() {
+    andika("Verifying nested filters")
+    andika("")
+    
+    orodha namba nums = [1, 2, 3, 4]
+    
+    // Test inner filter: only y > 2
+    andika("Test 1: Inner filter only (y > 2)")
+    orodha namba innerOnly = [[x + y kwa y katika nums kama y > 2] kwa x katika nums]
+    andika("Result:", innerOnly)
+    andika("Expected: For each x, only add y where y > 2 (so y=3,4)")
+    andika("")
+    
+    // Test outer filter: only x > 2
+    andika("Test 2: Outer filter only (x > 2)")
+    orodha namba outerOnly = [[x + y kwa y katika nums] kwa x katika nums kama x > 2]
+    andika("Result:", outerOnly)
+    andika("Expected: Only rows where x > 2 (so x=3,4)")
+    andika("")
+    
+    // Test both filters
+    andika("Test 3: Both filters (x > 2 and y > 1)")
+    orodha namba both = [[x + y kwa y katika nums kama y > 1] kwa x katika nums kama x > 2]
+    andika("Result:", both)
+    andika("Expected: Rows for x=3,4, columns for y=2,3,4")
+    andika("")
+    
+    // Simple test without nesting first
+    andika("Test 4: Single level filter (sanity check)")
+    orodha namba single = [x kwa x katika nums kama x > 2]
+    andika("Result:", single)
+    andika("Expected: [3, 4]")
+}

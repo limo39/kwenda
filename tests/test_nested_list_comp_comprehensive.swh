@@ -1,0 +1,108 @@
+// Comprehensive test for nested list comprehensions
+
+kazi kuu() {
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║   Nested List Comprehensions - Comprehensive    ║")
+    andika("╚══════════════════════════════════════════════════╝")
+    andika("")
+    
+    // ==================== TEST 1: BASIC NESTING ====================
+    andika("📚 1. BASIC NESTING")
+    andika("─────────────────────────────────────────────────")
+    orodha namba nums = [1, 2, 3]
+    
+    // Create 2D array: each element contains sums
+    orodha namba sums = [[x + y kwa y katika nums] kwa x katika nums]
+    andika("[[x + y kwa y katika nums] kwa x katika nums]:")
+    andika(sums)
+    andika("")
+    
+    // ==================== TEST 2: MULTIPLICATION TABLE ====================
+    andika("🔢 2. MULTIPLICATION TABLE")
+    andika("─────────────────────────────────────────────────")
+    orodha namba range = [1, 2, 3, 4, 5]
+    orodha namba multTable = [[x * y kwa y katika range] kwa x katika range]
+    andika("5x5 multiplication table [[x * y kwa y katika range] kwa x katika range]:")
+    andika(multTable)
+    andika("")
+    
+    // ==================== TEST 3: COORDINATE GRID ====================
+    andika("📍 3. COORDINATE GRID")
+    andika("─────────────────────────────────────────────────")
+    orodha namba coords = [0, 1, 2]
+    // Generate x*10 + y to represent coordinates
+    orodha namba grid = [[x * 10 + y kwa y katika coords] kwa x katika coords]
+    andika("Grid coordinates (x*10 + y):")
+    andika(grid)
+    andika("")
+    
+    // ==================== TEST 4: FILTERED NESTED ====================
+    andika("🔍 4. NESTED WITH FILTER")
+    andika("─────────────────────────────────────────────────")
+    orodha namba nums2 = [1, 2, 3, 4]
+    
+    // Only include pairs where sum > 4
+    orodha namba filtered = [[x + y kwa y katika nums2 kama x + y > 4] kwa x katika nums2]
+    andika("[[x + y kwa y katika nums2 kama x+y > 4] kwa x katika nums2]:")
+    andika(filtered)
+    andika("")
+    
+    // ==================== TEST 5: OUTER FILTER ====================
+    andika("🎯 5. OUTER FILTER")
+    andika("─────────────────────────────────────────────────")
+    // Only include rows where x > 1
+    orodha namba outerFiltered = [[x * y kwa y katika nums] kwa x katika nums kama x > 1]
+    andika("[[x * y kwa y katika nums] kwa x katika nums kama x > 1]:")
+    andika(outerFiltered)
+    andika("")
+    
+    // ==================== TEST 6: BOTH FILTERS ====================
+    andika("⚡ 6. BOTH INNER AND OUTER FILTERS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba bothFiltered = [[x + y kwa y katika nums kama y > 1] kwa x katika nums kama x > 1]
+    andika("[[x + y kwa y katika nums kama y > 1] kwa x katika nums kama x > 1]:")
+    andika(bothFiltered)
+    andika("")
+    
+    // ==================== TEST 7: SQUARES AND CUBES ====================
+    andika("🧮 7. MATHEMATICAL OPERATIONS")
+    andika("─────────────────────────────────────────────────")
+    orodha namba base = [2, 3, 4]
+    orodha namba powers = [[x * x * y kwa y katika base] kwa x katika base]
+    andika("[[x² * y kwa y katika base] kwa x katika base]:")
+    andika(powers)
+    andika("")
+    
+    // ==================== TEST 8: ASYMMETRIC RANGES ====================
+    andika("📊 8. DIFFERENT RANGES")
+    andika("─────────────────────────────────────────────────")
+    orodha namba range1 = [1, 2]
+    orodha namba range2 = [10, 20, 30]
+    orodha namba asymmetric = [[x + y kwa y katika range2] kwa x katika range1]
+    andika("[[x + y kwa y katika [10,20,30]] kwa x katika [1,2]]:")
+    andika(asymmetric)
+    andika("")
+    
+    // ==================== TEST 9: LARGER NESTING ====================
+    andika("📈 9. LARGER NESTED STRUCTURE")
+    andika("─────────────────────────────────────────────────")
+    orodha namba big = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    orodha namba bigNested = [[x + y kwa y katika big kama y <= 3] kwa x katika big kama x <= 3]
+    andika("Limited to x<=3, y<=3:")
+    andika(bigNested)
+    andika("")
+    
+    // ==================== TEST 10: PRACTICAL - MATRIX OPERATIONS ====================
+    andika("💼 10. PRACTICAL: TRANSPOSE-LIKE OPERATION")
+    andika("─────────────────────────────────────────────────")
+    orodha namba small = [1, 2]
+    // Create pairs (i,j) represented as i*10+j
+    orodha namba pairs = [[i * 10 + j kwa j katika small] kwa i katika small]
+    andika("Pairs (i,j) as i*10+j:")
+    andika(pairs)
+    andika("")
+    
+    andika("╔══════════════════════════════════════════════════╗")
+    andika("║         All Nested Tests Completed!              ║")
+    andika("╚══════════════════════════════════════════════════╝")
+}

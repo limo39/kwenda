@@ -1056,11 +1056,18 @@ func ParseArrayLiteral(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Find matching closing bracket (accounting for nested brackets)
 	closingBracket := -1
-	for i := 1; i < len(tokens); i++ {
-		if tokens[i].Value == "]" {
-			closingBracket = i
-			break
+	bracketDepth := 0
+	for i := 0; i < len(tokens); i++ {
+		if tokens[i].Value == "[" {
+			bracketDepth++
+		} else if tokens[i].Value == "]" {
+			bracketDepth--
+			if bracketDepth == 0 {
+				closingBracket = i
+				break
+			}
 		}
 	}
 
@@ -1069,16 +1076,22 @@ func ParseArrayLiteral(tokens []lexer.Token) ast.ASTNode {
 	}
 
 	// Check if this is a list comprehension by looking for "kwa" keyword
+	// But ignore "kwa" inside nested brackets
 	innerTokens := tokens[1:closingBracket]
 	kwaIndex := -1
+	nestedDepth := 0
 	for i, token := range innerTokens {
-		if token.Value == "kwa" {
+		if token.Value == "[" {
+			nestedDepth++
+		} else if token.Value == "]" {
+			nestedDepth--
+		} else if token.Value == "kwa" && nestedDepth == 0 {
 			kwaIndex = i
 			break
 		}
 	}
 
-	// If we found "kwa", this is a list comprehension
+	// If we found "kwa" at the top level, this is a list comprehension
 	if kwaIndex != -1 {
 		return ParseListComprehension(innerTokens, kwaIndex)
 	}
