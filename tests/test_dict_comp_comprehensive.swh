@@ -1,0 +1,45 @@
+# Comprehensive Dictionary Comprehension Tests
+
+andika("=== Test 1: Basic dictionary comprehension ===")
+nums = [1, 2, 3, 4, 5]
+doubled = {x: x * 2 kwa x katika nums}
+andika("Result: ", doubled)
+
+andika("\n=== Test 2: With condition (filter) ===")
+large = {x: x ** 2 kwa x katika nums kama x > 2}
+andika("Squares where x > 2: ", large)
+
+andika("\n=== Test 3: String keys and values ===")
+words = ["apple", "banana", "cherry"]
+lengths = {w: w.urefu() kwa w katika words}
+andika("Word lengths: ", lengths)
+
+andika("\n=== Test 4: Complex key expression ===")
+squared_keys = {x * x: x kwa x katika [2, 3, 4]}
+andika("Squared keys: ", squared_keys)
+
+andika("\n=== Test 5: Complex value expression ===")
+formula = {x: (x * 3) + (x ** 2) kwa x katika [1, 2, 3]}
+andika("Formula result: ", formula)
+
+andika("\n=== Test 6: Even numbers only ===")
+evens = {x: x kwa x katika [1, 2, 3, 4, 5, 6, 7, 8] kama x % 2 == 0}
+andika("Even numbers: ", evens)
+
+andika("\n=== Test 7: Odd numbers only ===")
+odds = {x: x * 10 kwa x katika [1, 2, 3, 4, 5, 6] kama x % 2 != 0}
+andika("Odd numbers * 10: ", odds)
+
+andika("\n=== Test 8: Empty result (no matching condition) ===")
+empty = {x: x kwa x katika nums kama x > 100}
+andika("Empty dict: ", empty)
+
+andika("\n=== Test 9: Single element ===")
+single = {x: x + 100 kwa x katika [42]}
+andika("Single element: ", single)
+
+andika("\n=== Test 10: Negative numbers ===")
+negs = {x: x * (-1) kwa x katika [-5, -3, -1, 1, 3, 5]}
+andika("Negated: ", negs)
+
+andika("\n=== All comprehensive tests completed! ===")

@@ -217,6 +217,48 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// If iterable is not an array, return empty array
 		return []interface{}{}
 
+	case ast.DictionaryComprehensionNode:
+		// Handle dictionary comprehensions (e.g., {x: x * 2 kwa x katika namba kama x > 5})
+		// Evaluate the iterable
+		iterableValue := Interpret(n.Iterable, env)
+		
+		// Create result dictionary
+		result := make(map[string]interface{})
+		
+		// Check if iterable is an array
+		if arr, ok := iterableValue.([]interface{}); ok {
+			// Create a new environment for the comprehension scope
+			compEnv := NewChildEnvironment(env)
+			
+			// Iterate over the array
+			for _, item := range arr {
+				// Set the loop variable
+				compEnv.Set(n.Variable, item)
+				
+				// Check the condition if present
+				if n.Condition != nil {
+					conditionValue := Interpret(n.Condition, compEnv)
+					// Skip if condition is false
+					if !toBool(conditionValue) {
+						continue
+					}
+				}
+				
+				// Evaluate the key and value expressions for this item
+				keyValue := Interpret(n.KeyExpr, compEnv)
+				valueValue := Interpret(n.ValueExpr, compEnv)
+				
+				// Convert key to string
+				keyStr := fmt.Sprintf("%v", keyValue)
+				result[keyStr] = valueValue
+			}
+			
+			return result
+		}
+		
+		// If iterable is not an array, return empty dictionary
+		return make(map[string]interface{})
+
 	case ast.ArrayDeclarationNode:
 		// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
 		// Special case: if the first element is a ListComprehensionNode, evaluate it directly

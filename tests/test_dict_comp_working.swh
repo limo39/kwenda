@@ -1,0 +1,36 @@
+# Dictionary Comprehension Tests (working version)
+
+# Test 1: Basic comprehension
+nums = [1, 2, 3, 4, 5]
+doubled = {x: x * 2 kwa x katika nums}
+andika("Test 1 - Doubled: ", doubled)
+
+# Test 2: With condition
+large = {x: x ** 2 kwa x katika nums kama x > 2}
+andika("Test 2 - Squares > 2: ", large)
+
+# Test 3: Complex value
+formula = {x: (x * 3) + (x ** 2) kwa x katika [1, 2, 3]}
+andika("Test 3 - Formula: ", formula)
+
+# Test 4: Even numbers
+evens = {x: x kwa x katika [1, 2, 3, 4, 5, 6, 7, 8] kama x % 2 == 0}
+andika("Test 4 - Evens: ", evens)
+
+# Test 5: Odd numbers
+odds = {x: x * 10 kwa x katika [1, 2, 3, 4, 5, 6] kama x % 2 != 0}
+andika("Test 5 - Odds * 10: ", odds)
+
+# Test 6: Empty result
+empty = {x: x kwa x katika nums kama x > 100}
+andika("Test 6 - Empty: ", empty)
+
+# Test 7: Single element
+single = {x: x + 100 kwa x katika [42]}
+andika("Test 7 - Single: ", single)
+
+# Test 8: Complex keys
+squared_keys = {x * x: x kwa x katika [2, 3, 4]}
+andika("Test 8 - Squared keys: ", squared_keys)
+
+andika("All tests completed!")

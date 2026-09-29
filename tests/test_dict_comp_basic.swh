@@ -1,0 +1,35 @@
+# Basic Dictionary Comprehension Tests
+
+andika("=== Test 1: Basic Dictionary Comprehension ===")
+nums = [1, 2, 3, 4, 5]
+dict1 = {x: x * 2 kwa x katika nums}
+andika("Numbers: ", nums)
+andika("Dict {x: x*2}: ", dict1)
+
+andika("\n=== Test 2: Dictionary Comprehension with Condition ===")
+dict2 = {x: x * 2 kwa x katika nums kama x > 2}
+andika("Dict {x: x*2} where x > 2: ", dict2)
+
+andika("\n=== Test 3: String Keys ===")
+names = ["alice", "bob", "charlie"]
+lengths = {name: name.urefu() kwa name katika names}
+andika("Names: ", names)
+andika("Dict {name: len(name)}: ", lengths)
+
+andika("\n=== Test 4: Complex Value Expression ===")
+dict3 = {x: (x * 2) + 10 kwa x katika nums}
+andika("Dict {x: (x*2)+10}: ", dict3)
+
+andika("\n=== Test 5: Filter Even Numbers ===")
+evens = {x: x ** 2 kwa x katika nums kama x % 2 == 0}
+andika("Dict {x: x**2} where x is even: ", evens)
+
+andika("\n=== Test 6: Empty Result ===")
+empty = {x: x kwa x katika nums kama x > 10}
+andika("Dict where x > 10 (should be empty): ", empty)
+
+andika("\n=== Test 7: Single Item ===")
+single = {x: x kwa x katika [42]}
+andika("Dict from single item: ", single)
+
+andika("\n=== All basic dictionary comprehension tests completed! ===")

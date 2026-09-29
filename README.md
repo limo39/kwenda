@@ -609,13 +609,13 @@ This project is open source. Feel free to use, modify, and distribute.
 
 ## 📚 Additional Documentation
 
-- **[FUNCTIONS.md](FUNCTIONS.md)**: Comprehensive guide to function parameters and return values
-- **[LOOPS.md](LOOPS.md)**: Detailed documentation on loop constructs and control flow
-- **[BOOLEANS.md](BOOLEANS.md)**: Complete guide to boolean data types and logical operations
-- **[STRINGS.md](STRINGS.md)**: Complete guide to string manipulation and functions
-- **[OOP.md](OOP.md)**: Complete guide to object-oriented programming patterns
-- **[DICTIONARY_SUMMARY.md](DICTIONARY_SUMMARY.md)**: Dictionary/map implementation details
-- **[OOP_SUMMARY.md](OOP_SUMMARY.md)**: OOP implementation summary and examples
+- **[FUNCTIONS.md](markdown/FUNCTIONS.md)**: Comprehensive guide to function parameters and return values
+- **[LOOPS.md](markdown/LOOPS.md)**: Detailed documentation on loop constructs and control flow
+- **[BOOLEANS.md](markdown/BOOLEANS.md)**: Complete guide to boolean data types and logical operations
+- **[STRINGS.md](markdown/STRINGS.md)**: Complete guide to string manipulation and functions
+- **[OOP.md](markdown/OOP.md)**: Complete guide to object-oriented programming patterns
+- **[DICTIONARY_SUMMARY.md](markdown/DICTIONARY_SUMMARY.md)**: Dictionary/map implementation details
+- **[OOP_SUMMARY.md](markdown/OOP_SUMMARY.md)**: OOP implementation summary and examples
 - **[LIST_COMPREHENSIONS.md](markdown/LIST_COMPREHENSIONS.md)**: Complete guide to list comprehensions
 - **[LIST_COMPREHENSIONS_SUMMARY.md](markdown/LIST_COMPREHENSIONS_SUMMARY.md)**: List comprehensions implementation summary
 
@@ -655,7 +655,7 @@ Kwenda believes that programming should be accessible in one's native language. 
 
 ## 📐 Mathematical & Advanced Operations
 
-For comprehensive documentation of all mathematical and advanced operations, please see **[MATH.md](MATH.md)**.
+For comprehensive documentation of all mathematical and advanced operations, please see **[MATH.md](markdown/MATH.md)**.
 
 This includes:
 - **Rounding Operations**: floor, ceiling, round, truncate

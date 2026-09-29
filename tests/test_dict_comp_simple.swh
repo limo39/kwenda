@@ -1,0 +1,5 @@
+# Very simple dictionary comprehension test
+
+andika("Test 1: Dict comprehension from array literal")
+result = {x: x * 2 kwa x katika [1, 2, 3]}
+andika("Result: ", result)

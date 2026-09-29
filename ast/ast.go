@@ -268,3 +268,13 @@ type ListComprehensionNode struct {
 	Iterable   ASTNode // The collection to iterate over
 	Condition  ASTNode // Optional filter condition (can be nil)
 }
+// DictionaryComprehensionNode represents a dictionary comprehension
+// Syntax: {key_expr: value_expr kwa variable katika iterable kama condition}
+// Example: {x: x * 2 kwa x katika namba kama x > 5}
+type DictionaryComprehensionNode struct {
+	KeyExpr    ASTNode // The expression to evaluate for the key
+	ValueExpr  ASTNode // The expression to evaluate for the value
+	Variable   string  // The loop variable name
+	Iterable   ASTNode // The collection to iterate over
+	Condition  ASTNode // Optional filter condition (can be nil)
+}

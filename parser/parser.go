@@ -34,11 +34,51 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 		}
 
 		// Handle top-level variable declarations
-		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			end := i + 3
-			for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" {
+			braceCount := 0
+			bracketCount := 0
+			parenCount := 0
+			
+			// Track brackets to find the actual end of the value expression
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+				} else if tokens[end].Value == "{" {
+					braceCount++
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && bracketCount == 0 && parenCount == 0 {
+						end++
+						break
+					}
+				} else if tokens[end].Value == "[" {
+					bracketCount++
+				} else if tokens[end].Value == "]" {
+					bracketCount--
+					if braceCount == 0 && bracketCount == 0 && parenCount == 0 {
+						end++
+						break
+					}
+				}
+				
+				// If all brackets are closed and we hit a keyword, stop
+				if braceCount == 0 && bracketCount == 0 && parenCount == 0 {
+					if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
+					   tokens[end].Value == "kamusi" || tokens[end].Value == "boolean" || 
+					   tokens[end].Value == "orodha" || tokens[end].Value == "kazi" || 
+					   tokens[end].Value == "darasa" || tokens[end].Value == "andika" || 
+					   tokens[end].Value == "wakati" || tokens[end].Value == "kama" || 
+					   tokens[end].Value == "kwa" {
+						break
+					}
+				}
+				
 				end++
 			}
+			
 			stmt := Parse(tokens[i:end])
 			if stmt != nil {
 				functions = append(functions, stmt)
@@ -108,6 +148,8 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			// Handle plain statements at the top level (function calls, assignments, etc.)
 			end := i + 1
 			parenCount := 0
+			braceCount := 0
+			bracketCount := 0
 			
 			// If starting with identifier followed by paren, parse function call
 			if tokens[i].Type == lexer.TokenIdentifier && end < len(tokens) && tokens[end].Value == "(" {
@@ -121,6 +163,50 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 					} else if tokens[end].Value == ")" {
 						parenCount--
 					}
+					end++
+				}
+			} else if tokens[i].Type == lexer.TokenIdentifier && end < len(tokens) && tokens[end].Value == "=" {
+				// Assignment statement - track all bracket types to find the end
+				end++ // Move past =
+				
+				// Find the end of the assignment value
+				for end < len(tokens) {
+					if tokens[end].Value == "(" {
+						parenCount++
+					} else if tokens[end].Value == ")" {
+						parenCount--
+					} else if tokens[end].Value == "{" {
+						braceCount++
+					} else if tokens[end].Value == "}" {
+						braceCount--
+						if braceCount == 0 && parenCount == 0 && bracketCount == 0 {
+							// End of dictionary/block
+							end++
+							break
+						}
+					} else if tokens[end].Value == "[" {
+						bracketCount++
+					} else if tokens[end].Value == "]" {
+						bracketCount--
+						if braceCount == 0 && parenCount == 0 && bracketCount == 0 {
+							// End of array
+							end++
+							break
+						}
+					}
+					
+					// If all brackets closed and we hit a keyword, stop
+					if braceCount == 0 && parenCount == 0 && bracketCount == 0 {
+						if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
+						   tokens[end].Value == "kazi" || tokens[end].Value == "darasa" || 
+						   tokens[end].Value == "andika" || tokens[end].Value == "wakati" || 
+						   tokens[end].Value == "kama" || tokens[end].Value == "kwa" || 
+						   tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || 
+						   tokens[end].Value == "orodha" {
+							break
+						}
+					}
+					
 					end++
 				}
 			} else {
@@ -795,6 +881,11 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		return ParseArrayLiteral(tokens)
 	}
 
+	// Handle dictionary literals and comprehensions
+	if len(tokens) >= 2 && tokens[0].Value == "{" {
+		return ParseDictionaryLiteral(tokens)
+	}
+
 	// Handle function calls like ingiza("prompt")
 	if len(tokens) >= 3 && tokens[1].Value == "(" {
 		if tokens[0].Value == "ingiza" {
@@ -1167,6 +1258,98 @@ func ParseListComprehension(tokens []lexer.Token, kwaIndex int) ast.ASTNode {
 		Variable:   variable,
 		Iterable:   iterable,
 		Condition:  condition,
+	}
+}
+
+// ParseDictionaryComprehension parses dictionary comprehension syntax
+// Syntax: {key_expr: value_expr kwa variable katika iterable kama condition}
+func ParseDictionaryComprehension(tokens []lexer.Token, kwaIndex int) ast.ASTNode {
+	if kwaIndex < 1 {
+		return nil // Need key:value expression before "kwa"
+	}
+
+	// Parse the key:value expression before "kwa"
+	// Find the colon separator in the key:value part
+	colonIndex := -1
+	nestedDepth := 0
+	for i := 0; i < kwaIndex; i++ {
+		if tokens[i].Value == "{" || tokens[i].Value == "[" {
+			nestedDepth++
+		} else if tokens[i].Value == "}" || tokens[i].Value == "]" {
+			nestedDepth--
+		} else if tokens[i].Value == ":" && nestedDepth == 0 {
+			colonIndex = i
+			break // Take the first colon at top level
+		}
+	}
+
+	if colonIndex == -1 || colonIndex == 0 || colonIndex >= kwaIndex-1 {
+		return nil // Need key:value before "kwa"
+	}
+
+	// Parse key and value expressions
+	keyExpr := ParseExpression(tokens[0:colonIndex])
+	valueExpr := ParseExpression(tokens[colonIndex+1 : kwaIndex])
+
+	if keyExpr == nil || valueExpr == nil {
+		return nil
+	}
+
+	// Find "katika" keyword after "kwa"
+	katikaIndex := -1
+	for i := kwaIndex + 1; i < len(tokens); i++ {
+		if tokens[i].Value == "katika" {
+			katikaIndex = i
+			break
+		}
+	}
+
+	if katikaIndex == -1 || katikaIndex != kwaIndex+2 {
+		return nil // Expected: kwa variable katika
+	}
+
+	// Get the variable name (between "kwa" and "katika")
+	if kwaIndex+1 >= len(tokens) || tokens[kwaIndex+1].Type != lexer.TokenIdentifier {
+		return nil
+	}
+	variable := tokens[kwaIndex+1].Value
+
+	// Find if there's a "kama" (condition) keyword
+	kamaIndex := -1
+	nestedDepth = 0
+	for i := katikaIndex + 1; i < len(tokens); i++ {
+		if tokens[i].Value == "{" || tokens[i].Value == "[" {
+			nestedDepth++
+		} else if tokens[i].Value == "}" || tokens[i].Value == "]" {
+			nestedDepth--
+		} else if tokens[i].Value == "kama" && nestedDepth == 0 {
+			kamaIndex = i
+			break
+		}
+	}
+
+	var iterable, condition ast.ASTNode
+
+	if kamaIndex == -1 {
+		// No condition: {key: value kwa variable katika iterable}
+		iterable = ParseExpression(tokens[katikaIndex+1:])
+		condition = nil
+	} else {
+		// With condition: {key: value kwa variable katika iterable kama condition}
+		iterable = ParseExpression(tokens[katikaIndex+1 : kamaIndex])
+		condition = ParseExpression(tokens[kamaIndex+1:])
+	}
+
+	if iterable == nil {
+		return nil
+	}
+
+	return ast.DictionaryComprehensionNode{
+		KeyExpr:   keyExpr,
+		ValueExpr: valueExpr,
+		Variable:  variable,
+		Iterable:  iterable,
+		Condition: condition,
 	}
 }
 
@@ -1568,9 +1751,10 @@ func ParseDictionaryLiteral(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Find matching closing brace (accounting for nested braces)
 	closingBrace := -1
-	braceCount := 1
-	for i := 1; i < len(tokens); i++ {
+	braceCount := 0
+	for i := 0; i < len(tokens); i++ {
 		if tokens[i].Value == "{" {
 			braceCount++
 		} else if tokens[i].Value == "}" {
@@ -1586,6 +1770,28 @@ func ParseDictionaryLiteral(tokens []lexer.Token) ast.ASTNode {
 		return nil
 	}
 
+	// Check if this is a dictionary comprehension by looking for "kwa" keyword
+	// But ignore "kwa" inside nested braces or brackets
+	innerTokens := tokens[1:closingBrace]
+	kwaIndex := -1
+	nestedDepth := 0
+	for i, token := range innerTokens {
+		if token.Value == "{" || token.Value == "[" {
+			nestedDepth++
+		} else if token.Value == "}" || token.Value == "]" {
+			nestedDepth--
+		} else if token.Value == "kwa" && nestedDepth == 0 {
+			kwaIndex = i
+			break
+		}
+	}
+
+	// If we found "kwa" at the top level, this is a dictionary comprehension
+	if kwaIndex != -1 {
+		return ParseDictionaryComprehension(innerTokens, kwaIndex)
+	}
+
+	// Otherwise, parse as regular dictionary literal
 	var pairs []ast.DictionaryPair
 	if closingBrace > 1 {
 		pairs = ParseDictionaryPairs(tokens[1:closingBrace])

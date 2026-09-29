@@ -1,0 +1,41 @@
+# Dictionary Comprehensions in Kwenda
+# Syntax: {key_expr: value_expr kwa variable katika iterable kama condition}
+
+# Example 1: Basic dictionary comprehension
+numbers = [1, 2, 3, 4, 5]
+doubled = {x: x * 2 kwa x katika numbers}
+andika("Example 1 - Doubled values: ", doubled)
+
+# Example 2: With filter condition
+squares_large = {n: n ** 2 kwa n katika numbers kama n > 2}
+andika("Example 2 - Squares where n > 2: ", squares_large)
+
+# Example 3: Complex expressions
+combined = {x: (x * 3) + (x ** 2) kwa x katika [1, 2, 3, 4]}
+andika("Example 3 - Complex formula: ", combined)
+
+# Example 4: Complex key expressions
+squared_keys = {n * n: n kwa n katika [2, 3, 4, 5]}
+andika("Example 4 - Squared keys: ", squared_keys)
+
+# Example 5: Filter even numbers
+evens_dict = {x: x * 100 kwa x katika [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] kama x % 2 == 0}
+andika("Example 5 - Even numbers * 100: ", evens_dict)
+
+# Example 6: Filter odd numbers
+odds_dict = {x: x + 1000 kwa x katika [1, 2, 3, 4, 5, 6] kama x % 2 != 0}
+andika("Example 6 - Odd numbers + 1000: ", odds_dict)
+
+# Example 7: Empty result (no matches)
+empty_dict = {x: x kwa x katika numbers kama x > 100}
+andika("Example 7 - Empty dict (no matches): ", empty_dict)
+
+# Example 8: Single element
+single_dict = {x: x + 42 kwa x katika [7]}
+andika("Example 8 - Single element: ", single_dict)
+
+# Example 9: Range of values
+range_dict = {i: i * i * i kwa i katika [1, 2, 3, 4, 5]}
+andika("Example 9 - Cubes: ", range_dict)
+
+andika("\nDictionary comprehensions complete!")

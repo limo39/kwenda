@@ -39,3 +39,5 @@ Thumbs.db
 *.exe
 .*.broken
 *.broken
+
+build_errors.txt

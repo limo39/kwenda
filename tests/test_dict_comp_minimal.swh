@@ -1,0 +1,2 @@
+result = {x: x * 2 kwa x katika [1, 2, 3]}
+andika("Result: ", result)
