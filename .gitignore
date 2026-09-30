@@ -41,3 +41,4 @@ Thumbs.db
 *.broken
 
 build_errors.txt
+build_enum_errors.txt
