@@ -1,0 +1,61 @@
+# Enum Types in Kwenda
+# Syntax: aina EnumName { VALUE1, VALUE2, VALUE3 }
+
+# Example 1: Status enum
+aina Status {
+    PENDING,
+    ACTIVE,
+    COMPLETED,
+    CANCELLED
+}
+
+current_status = Status.ACTIVE
+andika("Current status: ", current_status)
+
+# Example 2: Using enums in conditionals
+kama current_status == Status.ACTIVE {
+    andika("The status is ACTIVE")
+}
+
+# Example 3: Color enum
+aina Color {
+    RED,
+    GREEN,
+    BLUE,
+    YELLOW
+}
+
+favorite_color = Color.BLUE
+andika("Favorite color: ", favorite_color)
+
+# Example 4: Comparison
+kama favorite_color == Color.BLUE {
+    andika("You like blue!")
+}
+
+# Example 5: Priority levels
+aina Priority {
+    LOW,
+    MEDIUM,
+    HIGH,
+    URGENT
+}
+
+task_priority = Priority.HIGH
+andika("Task priority: ", task_priority)
+
+# Example 6: Day of week
+aina Day {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+}
+
+today = Day.WEDNESDAY
+andika("Today is: ", today)
+
+andika("\nEnum examples complete!")

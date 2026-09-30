@@ -117,6 +117,36 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			continue
 		}
 
+		// Handle enum definitions
+		if tokens[i].Value == "aina" {
+			// Find the end of this enum
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						end++
+						break
+					}
+				}
+				end++
+			}
+
+			// Parse this enum
+			enum := Parse(tokens[i:end])
+			if enum != nil {
+				functions = append(functions, enum)
+			}
+			i = end
+			continue
+		}
+
 		// Find the end of the current function
 		if tokens[i].Value == "kazi" {
 			// Find the end of this function
@@ -288,6 +318,11 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle class definitions
 	if tokens[0].Value == "darasa" {
 		return ParseClassDefinition(tokens)
+	}
+
+	// Handle enum definitions
+	if tokens[0].Value == "aina" {
+		return ParseEnumDefinition(tokens)
 	}
 
 	// Handle class instantiation (unda ClassName(args))
@@ -949,12 +984,15 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle member access with dot notation (e.g., hii.jina) - MUST come before 'hii' keyword check!
+	// Handle member access with dot notation (e.g., hii.jina, Status.ACTIVE)
+	// MUST come before 'hii' keyword check!
 	if len(tokens) >= 3 && tokens[1].Value == "." {
 		var object ast.ASTNode
 		if tokens[0].Value == "hii" {
 			object = ast.ThisNode{}
 		} else {
+			// Check if this might be enum access (will be resolved at runtime)
+			// For now, treat as member access - interpreter will handle enum vs object
 			object = ast.IdentifierNode{Value: tokens[0].Value}
 		}
 		return ast.MemberAccessNode{
@@ -1000,12 +1038,33 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle identifiers
+	// Handle identifiers (including those with dots like Status.ACTIVE from lexer)
 	if tokens[0].Type == lexer.TokenIdentifier {
+		// Check if identifier contains a dot (enum access or method call from lexer)
+		value := tokens[0].Value
+		if dotIndex := indexOf(value, '.'); dotIndex != -1 {
+			// Split into object and member
+			object := value[:dotIndex]
+			member := value[dotIndex+1:]
+			return ast.MemberAccessNode{
+				Object: ast.IdentifierNode{Value: object},
+				Member: member,
+			}
+		}
 		return ast.IdentifierNode{Value: tokens[0].Value}
 	}
 
 	return nil
+}
+
+// Helper function to find index of character in string
+func indexOf(s string, ch byte) int {
+	for i := 0; i < len(s); i++ {
+		if s[i] == ch {
+			return i
+		}
+	}
+	return -1
 }
 
 // ParseArguments parses function arguments
@@ -1868,6 +1927,62 @@ func ParseDictionaryPair(tokens []lexer.Token) *ast.DictionaryPair {
 
 
 // ParseClassDefinition parses class definitions (darasa ClassName { ... } or darasa Child : Parent { ... })
+// ParseEnumDefinition parses enum type definitions
+// Syntax: aina EnumName { VALUE1, VALUE2, VALUE3 }
+// Example: aina Status { PENDING, ACTIVE, COMPLETED }
+func ParseEnumDefinition(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "aina" {
+		return nil
+	}
+
+	enumName := tokens[1].Value
+
+	// Find the opening and closing braces
+	braceStart := -1
+	braceEnd := -1
+	braceCount := 0
+
+	for i := 2; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			if braceCount == 0 {
+				braceStart = i + 1
+			}
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				braceEnd = i
+				break
+			}
+		}
+	}
+
+	if braceStart == -1 || braceEnd == -1 {
+		return nil
+	}
+
+	// Parse the enum values (comma-separated identifiers)
+	var values []string
+	bodyTokens := tokens[braceStart:braceEnd]
+
+	for i := 0; i < len(bodyTokens); i++ {
+		token := bodyTokens[i]
+		// Skip commas and whitespace
+		if token.Value == "," || token.Value == "" {
+			continue
+		}
+		// Collect identifier tokens as enum values
+		if token.Type == lexer.TokenIdentifier {
+			values = append(values, token.Value)
+		}
+	}
+
+	return ast.EnumNode{
+		Name:   enumName,
+		Values: values,
+	}
+}
+
 func ParseClassDefinition(tokens []lexer.Token) ast.ASTNode {
 	if len(tokens) < 3 || tokens[0].Value != "darasa" {
 		return nil

@@ -43,6 +43,8 @@ func isSwahiliKeyword(word string) bool {
 		"darasa", "unda", "hii",
 		// Dictionary/Map keywords
 		"kamusi",
+		// Enum keyword
+		"aina",
 		// Lambda/Anonymous function keyword
 		"lambda",
 	}

@@ -1,0 +1,33 @@
+# Basic enum test
+
+aina Status {
+    PENDING,
+    ACTIVE,
+    COMPLETED
+}
+
+current = Status.ACTIVE
+andika("Current status: ", current)
+
+# Test comparison
+kama current == Status.ACTIVE {
+    andika("Status is ACTIVE!")
+}
+
+kama current != Status.PENDING {
+    andika("Status is not PENDING")
+}
+
+# Another enum
+aina Color {
+    RED,
+    GREEN,
+    BLUE
+}
+
+my_color = Color.BLUE
+andika("Color: ", my_color)
+
+kama my_color == Color.BLUE {
+    andika("Color is BLUE!")
+}

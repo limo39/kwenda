@@ -1,0 +1,35 @@
+# Simple enum test
+
+aina Status {
+    PENDING,
+    ACTIVE,
+    COMPLETED
+}
+
+status1 = Status.PENDING
+status2 = Status.ACTIVE
+status3 = Status.COMPLETED
+
+andika("Status 1: ", status1)
+andika("Status 2: ", status2)
+andika("Status 3: ", status3)
+
+# Test equality
+kama status1 == Status.PENDING {
+    andika("Test 1 passed!")
+}
+
+kama status2 == Status.ACTIVE {
+    andika("Test 2 passed!")
+}
+
+kama status3 == Status.COMPLETED {
+    andika("Test 3 passed!")
+}
+
+# Test inequality
+kama status1 != Status.ACTIVE {
+    andika("Test 4 passed!")
+}
+
+andika("All enum tests completed!")

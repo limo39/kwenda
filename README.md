@@ -15,6 +15,7 @@
 - **Booleans**: True/false values with `kweli`/`uwongo`
 - **Arrays**: Dynamic lists with `orodha` keyword
 - **Dictionaries**: Key-value maps with `kamusi` keyword
+- **Enums**: Enumeration types with `aina` keyword (e.g., `aina Status { PENDING, ACTIVE }`)
 - **Type-safe Declarations**: Explicit type declarations for variables
 
 ### Operators & Expressions
@@ -571,15 +572,15 @@ The interpreter follows a traditional architecture:
 - [x] Built-in mathematical root functions (square root, cube root, nth root) ✅
 - [x] List comprehensions (`[expression kwa variable katika iterable kama condition]`) ✅
 - [x] Nested list comprehensions (`[[inner_expr kwa inner_var katika inner_iter] kwa outer_var katika outer_iter]`) ✅
+- [x] Dictionary comprehensions (`{key: value kwa item katika iterable}`) ✅
+- [x] Enum types (`aina Status { PENDING, ACTIVE, COMPLETED }`) ✅
 
 ### 🚀 Planned Features
-- [ ] Dictionary comprehensions (`{key: value kwa item katika iterable}`)
 - [ ] Set data structures and operations
 - [ ] Tuple data structures (immutable lists)
 - [ ] Slice operations for arrays (`orodha[start:end]`)
 - [ ] String interpolation/formatting
 - [ ] Pattern matching (switch/case statements)
-- [ ] Enum types
 - [ ] Type annotations and optional type checking
 - [ ] Const/immutable variable declarations
 - [ ] Spread operator for arrays and dictionaries
@@ -618,6 +619,7 @@ This project is open source. Feel free to use, modify, and distribute.
 - **[OOP_SUMMARY.md](markdown/OOP_SUMMARY.md)**: OOP implementation summary and examples
 - **[LIST_COMPREHENSIONS.md](markdown/LIST_COMPREHENSIONS.md)**: Complete guide to list comprehensions
 - **[LIST_COMPREHENSIONS_SUMMARY.md](markdown/LIST_COMPREHENSIONS_SUMMARY.md)**: List comprehensions implementation summary
+- **[ENUMS.md](markdown/ENUMS.md)**: Complete guide to enum types and usage
 
 ## 🎓 Educational Use
 

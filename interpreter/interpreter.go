@@ -37,6 +37,7 @@ type Environment struct {
 	Variables map[string]interface{}
 	Functions map[string]ast.FunctionNode
 	Classes   map[string]ast.ClassNode // Class definitions
+	Enums     map[string]ast.EnumNode  // Enum definitions
 	Modules   map[string]*Environment  // Module namespaces
 	Parent    *Environment             // For function scope
 }
@@ -46,6 +47,7 @@ func NewEnvironment() *Environment {
 		Variables: make(map[string]interface{}),
 		Functions: make(map[string]ast.FunctionNode),
 		Classes:   make(map[string]ast.ClassNode),
+		Enums:     make(map[string]ast.EnumNode),
 		Modules:   make(map[string]*Environment),
 		Parent:    nil,
 	}
@@ -92,6 +94,23 @@ func (env *Environment) SetClass(name string, class ast.ClassNode) {
 func (env *Environment) GetClass(name string) (ast.ClassNode, bool) {
 	class, exists := env.Classes[name]
 	return class, exists
+}
+
+func (env *Environment) SetEnum(name string, enum ast.EnumNode) {
+	env.Enums[name] = enum
+}
+
+func (env *Environment) GetEnum(name string) (ast.EnumNode, bool) {
+	// Check current environment
+	enum, exists := env.Enums[name]
+	if exists {
+		return enum, true
+	}
+	// Check parent environment
+	if env.Parent != nil {
+		return env.Parent.GetEnum(name)
+	}
+	return ast.EnumNode{}, false
 }
 
 // toBool converts a value to boolean following Kwenda's rules
@@ -345,7 +364,31 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return value
 
 	case ast.MemberAccessNode:
-		// Handle member access (e.g., hii.jina or object.property)
+		// Handle member access (e.g., hii.jina, object.property, or Status.ACTIVE)
+		
+		// First, check if it's an enum access
+		if idNode, ok := n.Object.(ast.IdentifierNode); ok {
+			// Check if the object is an enum type
+			if enumDef, exists := env.GetEnum(idNode.Value); exists {
+				// Check if the member is a valid enum value
+				for _, value := range enumDef.Values {
+					if value == n.Member {
+						// Return enum value as a special struct
+						return ast.EnumValueNode{
+							EnumName: enumDef.Name,
+							Value:    n.Member,
+						}
+					}
+				}
+				// Invalid enum value
+				return ControlFlowResult{
+					Type:  ControlThrow,
+					Value: ErrorValue{Message: fmt.Sprintf("Thamani ya aina '%s' haipo katika aina '%s'", n.Member, idNode.Value)},
+				}
+			}
+		}
+		
+		// Otherwise, treat as object property access
 		objectValue := Interpret(n.Object, env)
 		if dict, ok := objectValue.(map[string]interface{}); ok {
 			if value, exists := dict[n.Member]; exists {
@@ -372,11 +415,32 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		}
 
 		// Check if it's a module access (e.g., math.PI or math.ongeza_kubwa)
+		// or enum access (e.g., Status.ACTIVE)
 		if strings.Contains(n.Value, ".") {
 			parts := strings.SplitN(n.Value, ".", 2)
 			moduleName := parts[0]
 			memberName := parts[1]
 
+			// First check if it's an enum access
+			if enumDef, exists := env.GetEnum(moduleName); exists {
+				// Check if the member is a valid enum value
+				for _, value := range enumDef.Values {
+					if value == memberName {
+						// Return enum value as a special struct
+						return ast.EnumValueNode{
+							EnumName: enumDef.Name,
+							Value:    memberName,
+						}
+					}
+				}
+				// Invalid enum value
+				return ControlFlowResult{
+					Type:  ControlThrow,
+					Value: ErrorValue{Message: fmt.Sprintf("Thamani ya aina '%s' haipo katika aina '%s'", memberName, moduleName)},
+				}
+			}
+
+			// Otherwise, try module access
 			if moduleEnv, exists := env.Modules[moduleName]; exists {
 				// Try to get variable first
 				if value := moduleEnv.Get(memberName); value != nil {
@@ -418,8 +482,21 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 
-		// Handle comparison operators that can work with booleans
+		// Handle comparison operators that can work with booleans and enums
 		if n.Op == "==" || n.Op == "!=" {
+			// Handle enum value comparison
+			if leftEnum, leftIsEnum := left.(ast.EnumValueNode); leftIsEnum {
+				if rightEnum, rightIsEnum := right.(ast.EnumValueNode); rightIsEnum {
+					// Compare enum values
+					isEqual := leftEnum.EnumName == rightEnum.EnumName && leftEnum.Value == rightEnum.Value
+					if n.Op == "==" {
+						return isEqual
+					} else {
+						return !isEqual
+					}
+				}
+			}
+			
 			// If both are booleans, compare as booleans
 			if leftBool, leftIsBool := left.(bool); leftIsBool {
 				if rightBool, rightIsBool := right.(bool); rightIsBool {
@@ -612,8 +689,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				if i > 0 {
 					fmt.Print(" ")
 				}
-				// Special formatting for dictionaries
-				if dict, ok := result.(map[string]interface{}); ok {
+				// Special formatting for enum values
+				if enumVal, ok := result.(ast.EnumValueNode); ok {
+					fmt.Printf("%s.%s", enumVal.EnumName, enumVal.Value)
+				} else if dict, ok := result.(map[string]interface{}); ok {
+					// Special formatting for dictionaries
 					fmt.Print("{")
 					first := true
 					for key, value := range dict {
@@ -3771,6 +3851,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle class definitions
 		// Store class definition in environment
 		env.SetClass(n.Name, n)
+		return nil
+
+	case ast.EnumNode:
+		// Handle enum definitions
+		// Store enum definition in environment
+		env.SetEnum(n.Name, n)
 		return nil
 
 	case ast.NewInstanceNode:

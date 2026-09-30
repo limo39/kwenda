@@ -278,3 +278,24 @@ type DictionaryComprehensionNode struct {
 	Iterable   ASTNode // The collection to iterate over
 	Condition  ASTNode // Optional filter condition (can be nil)
 }
+// EnumNode represents an enum type definition
+// Syntax: aina EnumName { VALUE1, VALUE2, VALUE3 }
+// Example: aina Status { PENDING, ACTIVE, COMPLETED }
+type EnumNode struct {
+	Name   string   // Enum type name (e.g., "Status")
+	Values []string // List of enum values (e.g., ["PENDING", "ACTIVE", "COMPLETED"])
+}
+
+// EnumAccessNode represents accessing an enum value
+// Syntax: EnumName.VALUE
+// Example: Status.ACTIVE
+type EnumAccessNode struct {
+	EnumName string // The enum type name (e.g., "Status")
+	Value    string // The specific enum value (e.g., "ACTIVE")
+}
+
+// EnumValueNode represents an enum value at runtime
+type EnumValueNode struct {
+	EnumName string // The enum type name
+	Value    string // The specific enum value
+}
