@@ -574,6 +574,8 @@ The interpreter follows a traditional architecture:
 - [x] Nested list comprehensions (`[[inner_expr kwa inner_var katika inner_iter] kwa outer_var katika outer_iter]`) ✅
 - [x] Dictionary comprehensions (`{key: value kwa item katika iterable}`) ✅
 - [x] Enum types (`aina Status { PENDING, ACTIVE, COMPLETED }`) ✅
+- [x] Interactive REPL (Read-Eval-Print Loop) ✅
+- [x] Debugger with breakpoints and variable inspection ✅
 
 ### 🚀 Planned Features
 - [ ] Set data structures and operations
@@ -591,7 +593,6 @@ The interpreter follows a traditional architecture:
 - [ ] Package manager for third-party modules
 - [ ] Standard library expansion (date/time, networking, JSON)
 - [ ] Regular expressions support
-- [ ] Debugger and REPL (interactive shell)
 - [ ] Performance optimizations and JIT compilation
 
 ## 🤝 Contributing
@@ -620,6 +621,8 @@ This project is open source. Feel free to use, modify, and distribute.
 - **[LIST_COMPREHENSIONS.md](markdown/LIST_COMPREHENSIONS.md)**: Complete guide to list comprehensions
 - **[LIST_COMPREHENSIONS_SUMMARY.md](markdown/LIST_COMPREHENSIONS_SUMMARY.md)**: List comprehensions implementation summary
 - **[ENUMS.md](markdown/ENUMS.md)**: Complete guide to enum types and usage
+- **[REPL.md](markdown/REPL.md)**: Interactive shell documentation and usage guide
+- **[DEBUGGER.md](markdown/DEBUGGER.md)**: Debugger commands and debugging workflow
 
 ## 🎓 Educational Use
 

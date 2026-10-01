@@ -6,6 +6,8 @@ import (
     "kwenda/lexer"
     "kwenda/parser"
     "kwenda/interpreter"
+    "kwenda/repl"
+    "kwenda/debugger"
     "os"
     "strings"
 )
@@ -81,8 +83,15 @@ func printHelp() {
 
 USAGE:
     kwenda <filename.swh>              Run a Kwenda program
+    kwenda repl                        Start interactive REPL
+    kwenda debug <filename.swh>        Debug a program
     kwenda --help                      Show this help message
     kwenda --version                   Show version information
+
+MODES:
+    Normal Mode:    Execute a Kwenda program file
+    REPL Mode:      Interactive shell for testing code
+    Debug Mode:     Step through code with breakpoints
 
 DESCRIPTION:
     Kwenda is a fully-featured programming language with native Swahili syntax.
@@ -91,6 +100,8 @@ DESCRIPTION:
 
 EXAMPLES:
     kwenda hello.swh                   Run hello.swh program
+    kwenda repl                        Start interactive shell
+    kwenda debug examples/demo.swh     Debug demo program
     kwenda examples/demo.swh           Run demo from examples folder
 
 BASIC SYNTAX:
@@ -129,6 +140,8 @@ FEATURES:
     ✓ Module system
     ✓ Error handling (try/catch)
     ✓ Standard library functions
+    ✓ Interactive REPL
+    ✓ Debugger with breakpoints
 
 DOCUMENTATION:
     README.md                          Full documentation
@@ -161,24 +174,64 @@ A bridge to technology for everyone.
 func main() {
     // Check for command line arguments
     if len(os.Args) < 2 {
-        fmt.Println("Usage: kwenda <filename.swh>")
+        fmt.Println("Usage: kwenda <filename.swh> | repl | debug <filename.swh>")
         fmt.Println("Try 'kwenda --help' for more information.")
         return
     }
     
-    filename := os.Args[1]
+    command := os.Args[1]
     
     // Handle help flag
-    if filename == "--help" || filename == "-h" {
+    if command == "--help" || command == "-h" {
         printHelp()
         return
     }
     
     // Handle version flag
-    if filename == "--version" || filename == "-v" {
+    if command == "--version" || command == "-v" {
         printVersion()
         return
     }
+    
+    // Handle REPL mode
+    if command == "repl" || command == "interactive" || command == "shell" {
+        r := repl.NewREPL()
+        r.Start()
+        return
+    }
+    
+    // Handle debug mode
+    if command == "debug" || command == "dbg" {
+        if len(os.Args) < 3 {
+            fmt.Println("Usage: kwenda debug <filename.swh>")
+            return
+        }
+        
+        filename := os.Args[2]
+        input, err := os.ReadFile(filename)
+        if err != nil {
+            fmt.Println("Error reading file:", err)
+            return
+        }
+        
+        // Create environment for debugger
+        env := interpreter.NewEnvironment()
+        
+        // Process imports
+        processedSource, err := ProcessImports(string(input))
+        if err != nil {
+            fmt.Println("Error processing imports:", err)
+            return
+        }
+        
+        // Start debugger
+        dbg := debugger.NewDebugger(processedSource, env)
+        dbg.Start()
+        return
+    }
+    
+    // Normal execution mode
+    filename := command
     
     // Read the source code from a file
     input, err := os.ReadFile(filename)
