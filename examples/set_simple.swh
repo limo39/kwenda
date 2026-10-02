@@ -1,0 +1,4 @@
+// Simple set test
+seti namba s = {1, 2, 3}
+andika("Set:", s)
+andika("Size:", ukubwa_seti(s))

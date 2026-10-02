@@ -301,6 +301,30 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		env.Set(n.Name, elements)
 		return elements
 
+	case ast.SetNode:
+		// Handle set literals (e.g., {1, 2, 3})
+		// Sets are represented as maps with keys as elements and values as true
+		set := make(map[interface{}]bool)
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			// Convert value to a comparable key
+			key := fmt.Sprintf("%v", value)
+			set[key] = true
+		}
+		return set
+
+	case ast.SetDeclarationNode:
+		// Handle set declarations (e.g., seti namba x = {1, 2, 3})
+		set := make(map[interface{}]bool)
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			// Convert value to a comparable key
+			key := fmt.Sprintf("%v", value)
+			set[key] = true
+		}
+		env.Set(n.Name, set)
+		return set
+
 	case ast.ArrayAccessNode:
 		// Handle array access (e.g., arr[0]) or dictionary access (e.g., dict["key"])
 		arrayValue := Interpret(n.Array, env)
@@ -704,6 +728,18 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						first = false
 					}
 					fmt.Print("}")
+				} else if set, ok := result.(map[interface{}]bool); ok {
+					// Special formatting for sets
+					fmt.Print("{")
+					first := true
+					for key := range set {
+						if !first {
+							fmt.Print(", ")
+						}
+						fmt.Print(key)
+						first = false
+					}
+					fmt.Print("}")
 				} else if arr, ok := result.([]interface{}); ok {
 					// Special formatting for arrays
 					fmt.Print("[")
@@ -789,6 +825,251 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				}
 			}
 			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Hii si orodha", Context: "Katika kazi 'pata': Argument ya kwanza lazima iwe orodha"}}
+		}
+
+		// Set manipulation functions
+		if n.Name == "ongeza_seti" && len(n.Args) == 2 {
+			// Add element to set: ongeza_seti(set, element)
+			element := Interpret(n.Args[1], env)
+
+			// Update the original set variable if it's an identifier
+			if setNode, ok := n.Args[0].(ast.IdentifierNode); ok {
+				setArg := env.Get(setNode.Value)
+				if set, ok := setArg.(map[interface{}]bool); ok {
+					key := fmt.Sprintf("%v", element)
+					set[key] = true
+					return len(set) // Return new size
+				}
+			}
+			return 0
+		}
+
+		if n.Name == "ondoa_seti" && len(n.Args) == 2 {
+			// Remove element from set: ondoa_seti(set, element)
+			element := Interpret(n.Args[1], env)
+
+			// Update the original set variable if it's an identifier
+			if setNode, ok := n.Args[0].(ast.IdentifierNode); ok {
+				setArg := env.Get(setNode.Value)
+				if set, ok := setArg.(map[interface{}]bool); ok {
+					key := fmt.Sprintf("%v", element)
+					delete(set, key)
+					return len(set) // Return new size
+				}
+			}
+			return 0
+		}
+
+		if n.Name == "imo_seti" && len(n.Args) == 2 {
+			// Check if element is in set: imo_seti(set, element)
+			setArg := Interpret(n.Args[0], env)
+			element := Interpret(n.Args[1], env)
+
+			if set, ok := setArg.(map[interface{}]bool); ok {
+				key := fmt.Sprintf("%v", element)
+				return set[key]
+			}
+			return false
+		}
+
+		if n.Name == "ukubwa_seti" && len(n.Args) == 1 {
+			// Get set size: ukubwa_seti(set)
+			setArg := Interpret(n.Args[0], env)
+			if set, ok := setArg.(map[interface{}]bool); ok {
+				return len(set)
+			}
+			return 0
+		}
+
+		if n.Name == "muungano" && len(n.Args) == 2 {
+			// Union of two sets: muungano(set1, set2)
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					result := make(map[interface{}]bool)
+					// Add all elements from set1
+					for k := range set1 {
+						result[k] = true
+					}
+					// Add all elements from set2
+					for k := range set2 {
+						result[k] = true
+					}
+					return result
+				}
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "makutano" && len(n.Args) == 2 {
+			// Intersection of two sets: makutano(set1, set2)
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					result := make(map[interface{}]bool)
+					// Add elements that are in both sets
+					for k := range set1 {
+						if set2[k] {
+							result[k] = true
+						}
+					}
+					return result
+				}
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "tofauti" && len(n.Args) == 2 {
+			// Difference of two sets: tofauti(set1, set2) - elements in set1 but not in set2
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					result := make(map[interface{}]bool)
+					// Add elements that are in set1 but not in set2
+					for k := range set1 {
+						if !set2[k] {
+							result[k] = true
+						}
+					}
+					return result
+				}
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "tofauti_simetrik" && len(n.Args) == 2 {
+			// Symmetric difference: tofauti_simetrik(set1, set2) - elements in either set but not in both
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					result := make(map[interface{}]bool)
+					// Add elements from set1 that are not in set2
+					for k := range set1 {
+						if !set2[k] {
+							result[k] = true
+						}
+					}
+					// Add elements from set2 that are not in set1
+					for k := range set2 {
+						if !set1[k] {
+							result[k] = true
+						}
+					}
+					return result
+				}
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "ni_subeti" && len(n.Args) == 2 {
+			// Check if set1 is subset of set2: ni_subeti(set1, set2)
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					// Check if all elements of set1 are in set2
+					for k := range set1 {
+						if !set2[k] {
+							return false
+						}
+					}
+					return true
+				}
+			}
+			return false
+		}
+
+		if n.Name == "ni_supereti" && len(n.Args) == 2 {
+			// Check if set1 is superset of set2: ni_supereti(set1, set2)
+			set1Arg := Interpret(n.Args[0], env)
+			set2Arg := Interpret(n.Args[1], env)
+
+			if set1, ok1 := set1Arg.(map[interface{}]bool); ok1 {
+				if set2, ok2 := set2Arg.(map[interface{}]bool); ok2 {
+					// Check if all elements of set2 are in set1
+					for k := range set2 {
+						if !set1[k] {
+							return false
+						}
+					}
+					return true
+				}
+			}
+			return false
+		}
+
+		if n.Name == "tupu_seti" && len(n.Args) == 1 {
+			// Clear all elements from set: tupu_seti(set)
+			if setNode, ok := n.Args[0].(ast.IdentifierNode); ok {
+				setArg := env.Get(setNode.Value)
+				if _, ok := setArg.(map[interface{}]bool); ok {
+					newSet := make(map[interface{}]bool)
+					env.Set(setNode.Value, newSet)
+					return 0
+				}
+			}
+			return 0
+		}
+
+		if n.Name == "nakili_seti" && len(n.Args) == 1 {
+			// Copy a set: nakili_seti(set)
+			setArg := Interpret(n.Args[0], env)
+			if set, ok := setArg.(map[interface{}]bool); ok {
+				result := make(map[interface{}]bool)
+				for k, v := range set {
+					result[k] = v
+				}
+				return result
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "seti_kwa_orodha" && len(n.Args) == 1 {
+			// Convert array to set: seti_kwa_orodha(array)
+			arrayArg := Interpret(n.Args[0], env)
+			if arr, ok := arrayArg.([]interface{}); ok {
+				set := make(map[interface{}]bool)
+				for _, elem := range arr {
+					key := fmt.Sprintf("%v", elem)
+					set[key] = true
+				}
+				return set
+			}
+			return make(map[interface{}]bool)
+		}
+
+		if n.Name == "orodha_kwa_seti" && len(n.Args) == 1 {
+			// Convert set to array: orodha_kwa_seti(set)
+			setArg := Interpret(n.Args[0], env)
+			if set, ok := setArg.(map[interface{}]bool); ok {
+				var result []interface{}
+				for k := range set {
+					// Try to convert string key back to original type
+					if str, ok := k.(string); ok {
+						// Try to parse as int
+						if num, err := strconv.Atoi(str); err == nil {
+							result = append(result, num)
+						} else if num, err := strconv.ParseFloat(str, 64); err == nil {
+							result = append(result, num)
+						} else {
+							result = append(result, str)
+						}
+					} else {
+						result = append(result, k)
+					}
+				}
+				return result
+			}
+			return []interface{}{}
 		}
 
 		// File I/O operations

@@ -34,7 +34,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 		}
 
 		// Handle top-level variable declarations
-		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha" || tokens[i].Value == "seti") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			end := i + 3
 			braceCount := 0
 			bracketCount := 0
@@ -68,7 +68,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				if braceCount == 0 && bracketCount == 0 && parenCount == 0 {
 					if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
 					   tokens[end].Value == "kamusi" || tokens[end].Value == "boolean" || 
-					   tokens[end].Value == "orodha" || tokens[end].Value == "kazi" || 
+					   tokens[end].Value == "orodha" || tokens[end].Value == "seti" || tokens[end].Value == "kazi" || 
 					   tokens[end].Value == "darasa" || tokens[end].Value == "andika" || 
 					   tokens[end].Value == "wakati" || tokens[end].Value == "kama" || 
 					   tokens[end].Value == "kwa" {
@@ -422,6 +422,21 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle set declarations (e.g., seti namba x = {1, 2, 3})
+	if tokens[0].Value == "seti" && len(tokens) >= 5 && tokens[3].Value == "=" {
+		setLiteral := ParseSetLiteral(tokens[4:])
+		
+		var elements []ast.ASTNode
+		if setNode, ok := setLiteral.(ast.SetNode); ok {
+			elements = setNode.Elements
+		}
+		return ast.SetDeclarationNode{
+			Name:     tokens[2].Value,
+			Type:     tokens[1].Value,
+			Elements: elements,
+		}
+	}
+
 	// Handle member assignment (e.g., hii.jina = "Amina")
 	if len(tokens) >= 5 && tokens[1].Value == "." && tokens[3].Value == "=" {
 		var object ast.ASTNode
@@ -740,6 +755,30 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 				} else if tokens[end].Value == "]" {
 					bracketCount--
 					if bracketCount == 0 {
+						end++
+						break
+					}
+				}
+				end++
+			}
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse set declarations
+		if tokens[i].Value == "seti" && i+4 < len(tokens) && tokens[i+3].Value == "=" {
+			end := i + 4
+			braceCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 {
 						end++
 						break
 					}
@@ -1410,6 +1449,69 @@ func ParseDictionaryComprehension(tokens []lexer.Token, kwaIndex int) ast.ASTNod
 		Iterable:  iterable,
 		Condition: condition,
 	}
+}
+
+// ParseSetLiteral parses set literals (e.g., {1, 2, 3})
+func ParseSetLiteral(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 2 || tokens[0].Value != "{" {
+		return nil
+	}
+
+	// Find matching closing brace (accounting for nested braces)
+	closingBrace := -1
+	braceDepth := 0
+	for i := 0; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceDepth++
+		} else if tokens[i].Value == "}" {
+			braceDepth--
+			if braceDepth == 0 {
+				closingBrace = i
+				break
+			}
+		}
+	}
+
+	if closingBrace == -1 {
+		return nil
+	}
+
+	// Parse set elements (between braces)
+	var elements []ast.ASTNode
+	if closingBrace > 1 {
+		elements = ParseSetElements(tokens[1:closingBrace])
+	}
+
+	return ast.SetNode{Elements: elements}
+}
+
+// ParseSetElements parses comma-separated set elements
+func ParseSetElements(tokens []lexer.Token) []ast.ASTNode {
+	var elements []ast.ASTNode
+	var currentElement []lexer.Token
+
+	for _, token := range tokens {
+		if token.Value == "," {
+			if len(currentElement) > 0 {
+				element := ParseExpression(currentElement)
+				if element != nil {
+					elements = append(elements, element)
+				}
+				currentElement = nil
+			}
+		} else {
+			currentElement = append(currentElement, token)
+		}
+	}
+
+	if len(currentElement) > 0 {
+		element := ParseExpression(currentElement)
+		if element != nil {
+			elements = append(elements, element)
+		}
+	}
+
+	return elements
 }
 
 // ParseArrayElements parses comma-separated array elements

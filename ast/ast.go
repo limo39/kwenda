@@ -299,3 +299,15 @@ type EnumValueNode struct {
 	EnumName string // The enum type name
 	Value    string // The specific enum value
 }
+
+// SetNode represents a set literal (e.g., {1, 2, 3})
+type SetNode struct {
+	Elements []ASTNode // Set elements (must be unique)
+}
+
+// SetDeclarationNode represents a set variable declaration (e.g., seti namba = {1, 2, 3})
+type SetDeclarationNode struct {
+	Name     string    // Variable name
+	Type     string    // Element type (namba, maneno, etc.)
+	Elements []ASTNode // Initial elements
+}

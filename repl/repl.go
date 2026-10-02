@@ -172,7 +172,7 @@ func (r *REPL) isExpression(tokens []lexer.Token) bool {
 	
 	firstToken := tokens[0]
 	keywords := []string{"kazi", "kama", "wakati", "kwa", "darasa", "rudisha", 
-	                     "namba", "maneno", "boolean", "kamusi", "orodha", "aina"}
+	                     "namba", "maneno", "boolean", "kamusi", "orodha", "seti", "aina"}
 	
 	for _, keyword := range keywords {
 		if firstToken.Value == keyword {

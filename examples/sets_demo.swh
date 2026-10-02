@@ -1,0 +1,135 @@
+// Set Data Structure Demo in Kwenda
+// Sets are unordered collections of unique elements
+
+andika("=== BASIC SET OPERATIONS ===")
+
+// Create sets
+seti namba s1 = {1, 2, 3, 4, 5}
+seti namba s2 = {4, 5, 6, 7, 8}
+seti maneno s3 = {"apple", "banana", "cherry"}
+
+andika("Set 1:", s1)
+andika("Set 2:", s2)
+andika("Set 3 (strings):", s3)
+
+// Get set size
+andika("Ukubwa wa Set 1:", ukubwa_seti(s1))
+andika("Ukubwa wa Set 2:", ukubwa_seti(s2))
+
+andika("")
+andika("=== ADDING AND REMOVING ELEMENTS ===")
+
+// Add elements
+ongeza_seti(s1, 10)
+andika("Baada ya kuongeza 10:", s1)
+
+// Try adding duplicate (should not change size)
+namba ukubwa_awali = ukubwa_seti(s1)
+ongeza_seti(s1, 3)
+namba ukubwa_baada = ukubwa_seti(s1)
+andika("Ukubwa kabla:", ukubwa_awali)
+andika("Ukubwa baada ya kuongeza 3 tena:", ukubwa_baada)
+
+// Remove elements
+ondoa_seti(s1, 2)
+andika("Baada ya kuondoa 2:", s1)
+
+andika("")
+andika("=== MEMBERSHIP TESTING ===")
+
+// Check if element is in set
+boolean ipo = imo_seti(s1, 5)
+andika("Je, 5 imo katika Set 1?", ipo)
+
+boolean haipo = imo_seti(s1, 100)
+andika("Je, 100 imo katika Set 1?", haipo)
+
+andika("")
+andika("=== SET OPERATIONS ===")
+
+// Union (muungano) - all elements from both sets
+seti namba muungano_result = muungano(s1, s2)
+andika("Muungano wa Set 1 na Set 2:", muungano_result)
+
+// Intersection (makutano) - only elements in both sets
+seti namba makutano_result = makutano(s1, s2)
+andika("Makutano ya Set 1 na Set 2:", makutano_result)
+
+// Difference (tofauti) - elements in first set but not in second
+seti namba tofauti_result = tofauti(s1, s2)
+andika("Tofauti (Set 1 - Set 2):", tofauti_result)
+
+seti namba tofauti_result2 = tofauti(s2, s1)
+andika("Tofauti (Set 2 - Set 1):", tofauti_result2)
+
+// Symmetric difference - elements in either set but not in both
+seti namba tofauti_sim = tofauti_simetrik(s1, s2)
+andika("Tofauti Simetrik:", tofauti_sim)
+
+andika("")
+andika("=== SUBSET AND SUPERSET ===")
+
+seti namba s4 = {1, 3}
+seti namba s5 = {1, 2, 3, 4, 5, 10}
+
+boolean ni_sub = ni_subeti(s4, s1)
+andika("Je, {1, 3} ni subeti ya Set 1?", ni_sub)
+
+boolean ni_super = ni_supereti(s5, s1)
+andika("Je, {1, 2, 3, 4, 5, 10} ni supereti ya Set 1?", ni_super)
+
+andika("")
+andika("=== COPYING AND CLEARING ===")
+
+// Copy a set
+seti namba s6 = nakili_seti(s1)
+andika("Nakili ya Set 1:", s6)
+
+// Modify the copy
+ongeza_seti(s6, 99)
+andika("Baada ya kuongeza 99 kwa nakili:", s6)
+andika("Set 1 ya asili:", s1)
+
+// Clear a set
+tupu_seti(s6)
+andika("Baada ya kufuta kila kitu:", s6)
+andika("Ukubwa:", ukubwa_seti(s6))
+
+andika("")
+andika("=== CONVERSION OPERATIONS ===")
+
+// Convert array to set (removes duplicates)
+orodha namba arr = [1, 2, 2, 3, 3, 3, 4, 5, 5]
+andika("Orodha ya asili:", arr)
+
+seti namba from_arr = seti_kwa_orodha(arr)
+andika("Baada ya kubadilisha kuwa seti:", from_arr)
+andika("Ukubwa (duplikeiti zimeondolewa):", ukubwa_seti(from_arr))
+
+// Convert set back to array
+orodha namba back_to_arr = orodha_kwa_seti(from_arr)
+andika("Kurudi kwa orodha:", back_to_arr)
+
+andika("")
+andika("=== PRACTICAL EXAMPLE: UNIQUE VISITORS ===")
+
+// Track unique visitors to a website
+seti maneno wageni = {"Ali", "Fatuma", "Hassan"}
+andika("Wageni wa awali:", wageni)
+
+// New visitors
+ongeza_seti(wageni, "Amina")
+ongeza_seti(wageni, "Juma")
+andika("Baada ya wageni wapya:", wageni)
+
+// Someone tries to visit again (won't be counted twice)
+namba idadi_kabla = ukubwa_seti(wageni)
+ongeza_seti(wageni, "Ali")
+namba idadi_baada = ukubwa_seti(wageni)
+
+andika("Idadi ya wageni kabla:", idadi_kabla)
+andika("Idadi ya wageni baada (Ali alijaribu kurudi):", idadi_baada)
+andika("Wageni wa kipekee:", wageni)
+
+andika("")
+andika("Demo imekamilika!")
