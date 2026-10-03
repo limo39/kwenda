@@ -311,3 +311,15 @@ type SetDeclarationNode struct {
 	Type     string    // Element type (namba, maneno, etc.)
 	Elements []ASTNode // Initial elements
 }
+
+// TupleNode represents a tuple literal (e.g., (1, 2, 3) or ("a", "b", "c"))
+type TupleNode struct {
+	Elements []ASTNode // Tuple elements (immutable)
+}
+
+// TupleDeclarationNode represents a tuple variable declaration (e.g., tuple namba = (1, 2, 3))
+type TupleDeclarationNode struct {
+	Name     string    // Variable name
+	Type     string    // Element type (namba, maneno, etc.) - optional
+	Elements []ASTNode // Initial elements
+}

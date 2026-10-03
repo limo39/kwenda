@@ -32,6 +32,11 @@ type ErrorValue struct {
 	Context string // Additional context about where the error occurred
 }
 
+// TupleValue represents an immutable tuple at runtime
+type TupleValue struct {
+	Elements []interface{} // Tuple elements (immutable)
+}
+
 // Environment stores variables and their values
 type Environment struct {
 	Variables map[string]interface{}
@@ -152,6 +157,12 @@ func toNumber(value interface{}) (float64, bool) {
 }
 
 func Interpret(node ast.ASTNode, env *Environment) interface{} {
+	// Handle nil nodes
+	if node == nil {
+		fmt.Println("Kosa: Nodi ni nil (Node is nil)")
+		return nil
+	}
+	
 	switch n := node.(type) {
 	case ast.NumberNode:
 		// Try to parse as float first
@@ -324,6 +335,28 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		}
 		env.Set(n.Name, set)
 		return set
+
+	case ast.TupleNode:
+		// Handle tuple literals (e.g., (1, 2, 3))
+		// Tuples are represented as a special struct to distinguish from arrays
+		var elements []interface{}
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			elements = append(elements, value)
+		}
+		// Return tuple as a slice wrapped in a special marker
+		return TupleValue{Elements: elements}
+
+	case ast.TupleDeclarationNode:
+		// Handle tuple declarations (e.g., tuple namba x = (1, 2, 3))
+		var elements []interface{}
+		for _, element := range n.Elements {
+			value := Interpret(element, env)
+			elements = append(elements, value)
+		}
+		tuple := TupleValue{Elements: elements}
+		env.Set(n.Name, tuple)
+		return tuple
 
 	case ast.ArrayAccessNode:
 		// Handle array access (e.g., arr[0]) or dictionary access (e.g., dict["key"])
@@ -740,6 +773,16 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 						first = false
 					}
 					fmt.Print("}")
+				} else if tuple, ok := result.(TupleValue); ok {
+					// Special formatting for tuples
+					fmt.Print("(")
+					for j, elem := range tuple.Elements {
+						if j > 0 {
+							fmt.Print(", ")
+						}
+						fmt.Print(elem)
+					}
+					fmt.Print(")")
 				} else if arr, ok := result.([]interface{}); ok {
 					// Special formatting for arrays
 					fmt.Print("[")
@@ -1070,6 +1113,221 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 				return result
 			}
 			return []interface{}{}
+		}
+
+		// Tuple manipulation functions
+		if n.Name == "urefu_tuple" && len(n.Args) == 1 {
+			// Get tuple length: urefu_tuple(tuple)
+			tupleArg := Interpret(n.Args[0], env)
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				return len(tuple.Elements)
+			}
+			return 0
+		}
+
+		if n.Name == "pata_tuple" && len(n.Args) == 2 {
+			// Get element at index: pata_tuple(tuple, index)
+			tupleArg := Interpret(n.Args[0], env)
+			indexArg := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				if idx, ok := indexArg.(int); ok {
+					if idx >= 0 && idx < len(tuple.Elements) {
+						return tuple.Elements[idx]
+					} else {
+						// Throw error for invalid index
+						errorMsg := fmt.Sprintf("Index %d ni nje ya mipaka ya tuple (urefu: %d)", idx, len(tuple.Elements))
+						context := fmt.Sprintf("Katika kazi 'pata_tuple': Jaribu kutumia index kati ya 0 na %d", len(tuple.Elements)-1)
+						return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: errorMsg, Context: context}}
+					}
+				} else {
+					return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Index lazima iwe namba", Context: "Katika kazi 'pata_tuple'"}}
+				}
+			}
+			return ControlFlowResult{Type: ControlThrow, Value: ErrorValue{Message: "Hii si tuple", Context: "Katika kazi 'pata_tuple': Argument ya kwanza lazima iwe tuple"}}
+		}
+
+		if n.Name == "imo_tuple" && len(n.Args) == 2 {
+			// Check if element is in tuple: imo_tuple(tuple, element)
+			tupleArg := Interpret(n.Args[0], env)
+			element := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				for _, elem := range tuple.Elements {
+					if fmt.Sprintf("%v", elem) == fmt.Sprintf("%v", element) {
+						return true
+					}
+				}
+				return false
+			}
+			return false
+		}
+
+		if n.Name == "unganisha_tuple" && len(n.Args) == 2 {
+			// Concatenate two tuples: unganisha_tuple(tuple1, tuple2)
+			tuple1Arg := Interpret(n.Args[0], env)
+			tuple2Arg := Interpret(n.Args[1], env)
+
+			if tuple1, ok1 := tuple1Arg.(TupleValue); ok1 {
+				if tuple2, ok2 := tuple2Arg.(TupleValue); ok2 {
+					newElements := make([]interface{}, len(tuple1.Elements)+len(tuple2.Elements))
+					copy(newElements, tuple1.Elements)
+					copy(newElements[len(tuple1.Elements):], tuple2.Elements)
+					return TupleValue{Elements: newElements}
+				}
+			}
+			return TupleValue{Elements: []interface{}{}}
+		}
+
+		if n.Name == "rudia_tuple" && len(n.Args) == 2 {
+			// Repeat tuple n times: rudia_tuple(tuple, n)
+			tupleArg := Interpret(n.Args[0], env)
+			countArg := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				if count, ok := countArg.(int); ok && count > 0 {
+					newElements := make([]interface{}, len(tuple.Elements)*count)
+					for i := 0; i < count; i++ {
+						copy(newElements[i*len(tuple.Elements):], tuple.Elements)
+					}
+					return TupleValue{Elements: newElements}
+				}
+			}
+			return TupleValue{Elements: []interface{}{}}
+		}
+
+		if n.Name == "kata_tuple" && len(n.Args) >= 2 {
+			// Slice tuple: kata_tuple(tuple, start) or kata_tuple(tuple, start, end)
+			tupleArg := Interpret(n.Args[0], env)
+			startArg := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				if start, ok := startArg.(int); ok {
+					if start < 0 {
+						start = 0
+					}
+					if start >= len(tuple.Elements) {
+						return TupleValue{Elements: []interface{}{}}
+					}
+
+					if len(n.Args) == 3 {
+						// kata_tuple(tuple, start, end)
+						endArg := Interpret(n.Args[2], env)
+						if end, ok := endArg.(int); ok {
+							if end > len(tuple.Elements) {
+								end = len(tuple.Elements)
+							}
+							if end <= start {
+								return TupleValue{Elements: []interface{}{}}
+							}
+							newElements := make([]interface{}, end-start)
+							copy(newElements, tuple.Elements[start:end])
+							return TupleValue{Elements: newElements}
+						}
+					} else {
+						// kata_tuple(tuple, start) - from start to end
+						newElements := make([]interface{}, len(tuple.Elements)-start)
+						copy(newElements, tuple.Elements[start:])
+						return TupleValue{Elements: newElements}
+					}
+				}
+			}
+			return TupleValue{Elements: []interface{}{}}
+		}
+
+		if n.Name == "index_tuple" && len(n.Args) == 2 {
+			// Find first index of element: index_tuple(tuple, element)
+			tupleArg := Interpret(n.Args[0], env)
+			element := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				elementStr := fmt.Sprintf("%v", element)
+				for i, elem := range tuple.Elements {
+					if fmt.Sprintf("%v", elem) == elementStr {
+						return i
+					}
+				}
+			}
+			return -1
+		}
+
+		if n.Name == "hesabu_tuple" && len(n.Args) == 2 {
+			// Count occurrences of element: hesabu_tuple(tuple, element)
+			tupleArg := Interpret(n.Args[0], env)
+			element := Interpret(n.Args[1], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				elementStr := fmt.Sprintf("%v", element)
+				count := 0
+				for _, elem := range tuple.Elements {
+					if fmt.Sprintf("%v", elem) == elementStr {
+						count++
+					}
+				}
+				return count
+			}
+			return 0
+		}
+
+		if n.Name == "tuple_kwa_orodha" && len(n.Args) == 1 {
+			// Convert array to tuple: tuple_kwa_orodha(array)
+			arrayArg := Interpret(n.Args[0], env)
+			if arr, ok := arrayArg.([]interface{}); ok {
+				elements := make([]interface{}, len(arr))
+				copy(elements, arr)
+				return TupleValue{Elements: elements}
+			}
+			return TupleValue{Elements: []interface{}{}}
+		}
+
+		if n.Name == "orodha_kwa_tuple" && len(n.Args) == 1 {
+			// Convert tuple to array: orodha_kwa_tuple(tuple)
+			tupleArg := Interpret(n.Args[0], env)
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				result := make([]interface{}, len(tuple.Elements))
+				copy(result, tuple.Elements)
+				return result
+			}
+			return []interface{}{}
+		}
+
+		if n.Name == "kiungo_tuple" && len(n.Args) >= 1 {
+			// Join tuple elements into string: kiungo_tuple(tuple) or kiungo_tuple(tuple, separator)
+			tupleArg := Interpret(n.Args[0], env)
+			separator := ""
+			if len(n.Args) == 2 {
+				if sep, ok := Interpret(n.Args[1], env).(string); ok {
+					separator = sep
+				}
+			}
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				var parts []string
+				for _, elem := range tuple.Elements {
+					parts = append(parts, fmt.Sprintf("%v", elem))
+				}
+				return strings.Join(parts, separator)
+			}
+			return ""
+		}
+
+		if n.Name == "badilisha_tuple" && len(n.Args) == 3 {
+			// Create new tuple with element replaced: badilisha_tuple(tuple, index, new_value)
+			tupleArg := Interpret(n.Args[0], env)
+			indexArg := Interpret(n.Args[1], env)
+			newValue := Interpret(n.Args[2], env)
+
+			if tuple, ok := tupleArg.(TupleValue); ok {
+				if idx, ok := indexArg.(int); ok {
+					if idx >= 0 && idx < len(tuple.Elements) {
+						newElements := make([]interface{}, len(tuple.Elements))
+						copy(newElements, tuple.Elements)
+						newElements[idx] = newValue
+						return TupleValue{Elements: newElements}
+					}
+				}
+			}
+			return TupleValue{Elements: []interface{}{}}
 		}
 
 		// File I/O operations

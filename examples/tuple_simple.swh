@@ -1,0 +1,12 @@
+// Simple tuple test
+tuple namba t = (1, 2, 3)
+andika("Tuple:", t)
+andika("Urefu:", urefu_tuple(t))
+andika("Element 0:", pata_tuple(t, 0))
+andika("Element 1:", pata_tuple(t, 1))
+andika("Element 2:", pata_tuple(t, 2))
+
+// Tuple concatenation
+tuple namba t2 = (4, 5)
+tuple namba combined = unganisha_tuple(t, t2)
+andika("Combined:", combined)

@@ -1,0 +1,190 @@
+// Tuple Data Structure Demo in Kwenda
+// Tuples are ordered, immutable collections
+
+andika("=== BASIC TUPLE OPERATIONS ===")
+
+// Create tuples
+tuple namba t1 = (1, 2, 3, 4, 5)
+tuple maneno t2 = ("Ali", "Fatuma", "Hassan")
+tuple namba t3 = (10, 20, 30)
+
+andika("Tuple 1:", t1)
+andika("Tuple 2:", t2)
+andika("Tuple 3:", t3)
+
+// Get tuple length
+andika("Urefu wa Tuple 1:", urefu_tuple(t1))
+andika("Urefu wa Tuple 2:", urefu_tuple(t2))
+
+andika("")
+andika("=== ACCESSING ELEMENTS ===")
+
+// Access elements by index
+namba elem0 = pata_tuple(t1, 0)
+namba elem2 = pata_tuple(t1, 2)
+namba elem4 = pata_tuple(t1, 4)
+
+andika("Element katika index 0:", elem0)
+andika("Element katika index 2:", elem2)
+andika("Element katika index 4:", elem4)
+
+// Access string tuple
+maneno jina1 = pata_tuple(t2, 0)
+maneno jina2 = pata_tuple(t2, 1)
+
+andika("Jina 1:", jina1)
+andika("Jina 2:", jina2)
+
+andika("")
+andika("=== MEMBERSHIP TESTING ===")
+
+// Check if element exists
+boolean imo = imo_tuple(t1, 3)
+andika("Je, 3 imo katika Tuple 1?", imo)
+
+boolean haimo = imo_tuple(t1, 100)
+andika("Je, 100 imo katika Tuple 1?", haimo)
+
+boolean imo_jina = imo_tuple(t2, "Hassan")
+andika("Je, Hassan imo katika Tuple 2?", imo_jina)
+
+andika("")
+andika("=== TUPLE CONCATENATION ===")
+
+// Concatenate tuples (creates new tuple)
+tuple namba t_combined = unganisha_tuple(t1, t3)
+andika("Tuple 1 + Tuple 3:", t_combined)
+andika("Urefu:", urefu_tuple(t_combined))
+
+// Original tuples remain unchanged (immutable)
+andika("Tuple 1 bado:", t1)
+andika("Tuple 3 bado:", t3)
+
+andika("")
+andika("=== TUPLE REPETITION ===")
+
+// Repeat tuple
+tuple namba t_repeated = rudia_tuple((1, 2), 3)
+andika("(1, 2) × 3:", t_repeated)
+
+tuple maneno t_repeat_str = rudia_tuple(("Ha", ), 4)
+andika("(Ha) × 4:", t_repeat_str)
+
+andika("")
+andika("=== TUPLE SLICING ===")
+
+tuple namba big_tuple = (10, 20, 30, 40, 50, 60, 70, 80)
+andika("Tuple kubwa:", big_tuple)
+
+// Slice from index to end
+tuple namba slice1 = kata_tuple(big_tuple, 3)
+andika("Kutoka index 3:", slice1)
+
+// Slice from start to end
+tuple namba slice2 = kata_tuple(big_tuple, 2, 6)
+andika("Kutoka index 2 hadi 6:", slice2)
+
+// Slice from beginning
+tuple namba slice3 = kata_tuple(big_tuple, 0, 4)
+andika("Vipande vya kwanza 4:", slice3)
+
+andika("")
+andika("=== FINDING ELEMENTS ===")
+
+tuple namba search_tuple = (5, 10, 15, 20, 15, 25)
+andika("Tuple ya utaftaji:", search_tuple)
+
+// Find first index of element
+namba idx1 = index_tuple(search_tuple, 15)
+andika("Index ya kwanza ya 15:", idx1)
+
+namba idx2 = index_tuple(search_tuple, 100)
+andika("Index ya 100 (haipo):", idx2)
+
+// Count occurrences
+namba count1 = hesabu_tuple(search_tuple, 15)
+andika("Idadi ya 15:", count1)
+
+namba count2 = hesabu_tuple(search_tuple, 5)
+andika("Idadi ya 5:", count2)
+
+andika("")
+andika("=== CONVERSION OPERATIONS ===")
+
+// Convert array to tuple
+orodha namba arr = [7, 8, 9]
+andika("Orodha:", arr)
+
+tuple namba from_arr = tuple_kwa_orodha(arr)
+andika("Tuple kutoka orodha:", from_arr)
+
+// Convert tuple to array
+orodha namba back_to_arr = orodha_kwa_tuple(t1)
+andika("Kurudi kwa orodha:", back_to_arr)
+
+andika("")
+andika("=== STRING OPERATIONS ===")
+
+// Join tuple elements into string
+maneno joined1 = kiungo_tuple(t2)
+andika("Unganisha bila separator:", joined1)
+
+maneno joined2 = kiungo_tuple(t2, ", ")
+andika("Unganisha na separator:", joined2)
+
+tuple namba num_tuple = (1, 2, 3, 4, 5)
+maneno num_str = kiungo_tuple(num_tuple, "-")
+andika("Namba zimeunganishwa:", num_str)
+
+andika("")
+andika("=== CREATING NEW TUPLES ===")
+
+// Since tuples are immutable, we create new ones with changes
+tuple namba original = (100, 200, 300)
+andika("Tuple ya asili:", original)
+
+// Replace element (creates new tuple)
+tuple namba modified = badilisha_tuple(original, 1, 999)
+andika("Tuple iliyobadilishwa (index 1 = 999):", modified)
+
+// Original remains unchanged
+andika("Tuple ya asili bado:", original)
+
+andika("")
+andika("=== PRACTICAL EXAMPLE: COORDINATES ===")
+
+// Tuples are perfect for representing fixed coordinates
+tuple namba point_a = (10, 20)
+tuple namba point_b = (30, 40)
+
+andika("Point A:", point_a)
+andika("Point B:", point_b)
+
+namba ax = pata_tuple(point_a, 0)
+namba ay = pata_tuple(point_a, 1)
+namba bx = pata_tuple(point_b, 0)
+namba by = pata_tuple(point_b, 1)
+
+andika("A(x, y):", ax, ay)
+andika("B(x, y):", bx, by)
+
+// Calculate distance components (without modifying original tuples)
+namba dx = bx - ax
+namba dy = by - ay
+
+andika("Tofauti: dx =", dx, ", dy =", dy)
+
+andika("")
+andika("=== PRACTICAL EXAMPLE: RGB COLORS ===")
+
+// Tuples for color values
+tuple namba red = (255, 0, 0)
+tuple namba green = (0, 255, 0)
+tuple namba blue = (0, 0, 255)
+
+andika("Rangi nyekundu:", red)
+andika("Rangi ya kijani:", green)
+andika("Rangi ya buluu:", blue)
+
+andika("")
+andika("Demo imekamilika!")

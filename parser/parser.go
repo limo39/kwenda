@@ -34,7 +34,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 		}
 
 		// Handle top-level variable declarations
-		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha" || tokens[i].Value == "seti") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
+		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha" || tokens[i].Value == "seti" || tokens[i].Value == "tuple") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			end := i + 3
 			braceCount := 0
 			bracketCount := 0
@@ -68,7 +68,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				if braceCount == 0 && bracketCount == 0 && parenCount == 0 {
 					if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
 					   tokens[end].Value == "kamusi" || tokens[end].Value == "boolean" || 
-					   tokens[end].Value == "orodha" || tokens[end].Value == "seti" || tokens[end].Value == "kazi" || 
+					   tokens[end].Value == "orodha" || tokens[end].Value == "seti" || tokens[end].Value == "tuple" || tokens[end].Value == "kazi" || 
 					   tokens[end].Value == "darasa" || tokens[end].Value == "andika" || 
 					   tokens[end].Value == "wakati" || tokens[end].Value == "kama" || 
 					   tokens[end].Value == "kwa" {
@@ -437,6 +437,21 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
+	// Handle tuple declarations (e.g., tuple namba x = (1, 2, 3))
+	if tokens[0].Value == "tuple" && len(tokens) >= 5 && tokens[3].Value == "=" {
+		tupleLiteral := ParseTupleLiteral(tokens[4:])
+		
+		var elements []ast.ASTNode
+		if tupleNode, ok := tupleLiteral.(ast.TupleNode); ok {
+			elements = tupleNode.Elements
+		}
+		return ast.TupleDeclarationNode{
+			Name:     tokens[2].Value,
+			Type:     tokens[1].Value,
+			Elements: elements,
+		}
+	}
+
 	// Handle member assignment (e.g., hii.jina = "Amina")
 	if len(tokens) >= 5 && tokens[1].Value == "." && tokens[3].Value == "=" {
 		var object ast.ASTNode
@@ -779,6 +794,30 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 				} else if tokens[end].Value == "}" {
 					braceCount--
 					if braceCount == 0 {
+						end++
+						break
+					}
+				}
+				end++
+			}
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				statements = append(statements, stmt)
+			}
+			i = end
+			continue
+		}
+
+		// Parse tuple declarations
+		if tokens[i].Value == "tuple" && i+4 < len(tokens) && tokens[i+3].Value == "=" {
+			end := i + 4
+			parenCount := 0
+			for end < len(tokens) {
+				if tokens[end].Value == "(" {
+					parenCount++
+				} else if tokens[end].Value == ")" {
+					parenCount--
+					if parenCount == 0 {
 						end++
 						break
 					}
@@ -1492,6 +1531,76 @@ func ParseSetElements(tokens []lexer.Token) []ast.ASTNode {
 
 	for _, token := range tokens {
 		if token.Value == "," {
+			if len(currentElement) > 0 {
+				element := ParseExpression(currentElement)
+				if element != nil {
+					elements = append(elements, element)
+				}
+				currentElement = nil
+			}
+		} else {
+			currentElement = append(currentElement, token)
+		}
+	}
+
+	if len(currentElement) > 0 {
+		element := ParseExpression(currentElement)
+		if element != nil {
+			elements = append(elements, element)
+		}
+	}
+
+	return elements
+}
+
+// ParseTupleLiteral parses tuple literals (e.g., (1, 2, 3))
+func ParseTupleLiteral(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 2 || tokens[0].Value != "(" {
+		return nil
+	}
+
+	// Find matching closing paren (accounting for nested parens)
+	closingParen := -1
+	parenDepth := 0
+	for i := 0; i < len(tokens); i++ {
+		if tokens[i].Value == "(" {
+			parenDepth++
+		} else if tokens[i].Value == ")" {
+			parenDepth--
+			if parenDepth == 0 {
+				closingParen = i
+				break
+			}
+		}
+	}
+
+	if closingParen == -1 {
+		return nil
+	}
+
+	// Parse tuple elements (between parens)
+	var elements []ast.ASTNode
+	if closingParen > 1 {
+		elements = ParseTupleElements(tokens[1:closingParen])
+	}
+
+	return ast.TupleNode{Elements: elements}
+}
+
+// ParseTupleElements parses comma-separated tuple elements
+func ParseTupleElements(tokens []lexer.Token) []ast.ASTNode {
+	var elements []ast.ASTNode
+	var currentElement []lexer.Token
+	parenDepth := 0
+
+	for _, token := range tokens {
+		if token.Value == "(" {
+			parenDepth++
+			currentElement = append(currentElement, token)
+		} else if token.Value == ")" {
+			parenDepth--
+			currentElement = append(currentElement, token)
+		} else if token.Value == "," && parenDepth == 0 {
 			if len(currentElement) > 0 {
 				element := ParseExpression(currentElement)
 				if element != nil {

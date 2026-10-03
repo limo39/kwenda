@@ -35,6 +35,10 @@ func isSwahiliKeyword(word string) bool {
 		"muungano", "makutano", "tofauti", "tofauti_simetrik",
 		"ni_subeti", "ni_supereti", "tupu_seti", "nakili_seti",
 		"seti_kwa_orodha", "orodha_kwa_seti",
+		// Tuple keywords
+		"tuple", "urefu_tuple", "pata_tuple", "imo_tuple", "unganisha_tuple",
+		"rudia_tuple", "kata_tuple", "index_tuple", "hesabu_tuple",
+		"tuple_kwa_orodha", "orodha_kwa_tuple", "kiungo_tuple", "badilisha_tuple",
 		// File I/O keywords
 		"soma", "andika_faili", "unda_faili", "faili_ipo", "ondoa_faili",
 		// Import/Module keywords
