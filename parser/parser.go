@@ -485,13 +485,35 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 		}
 	}
 
-	// Handle array/dictionary access
+	// Handle array/dictionary access or slice
 	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		// Find the closing bracket
+		bracketEnd := -1
 		for i := 2; i < len(tokens); i++ {
 			if tokens[i].Value == "]" {
+				bracketEnd = i
+				break
+			}
+		}
+		
+		if bracketEnd != -1 {
+			// Check if this is a slice operation (contains colon)
+			hasColon := false
+			for i := 2; i < bracketEnd; i++ {
+				if tokens[i].Value == ":" {
+					hasColon = true
+					break
+				}
+			}
+			
+			if hasColon {
+				// Parse slice syntax: arr[start:end] or arr[start:end:step]
+				return ParseArraySlice(tokens[0].Value, tokens[2:bracketEnd])
+			} else {
+				// Regular array access
 				return ast.ArrayAccessNode{
 					Array: ast.IdentifierNode{Value: tokens[0].Value},
-					Index: ParseExpression(tokens[2:i]),
+					Index: ParseExpression(tokens[2:bracketEnd]),
 				}
 			}
 		}
@@ -1104,13 +1126,35 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 
 
 
-	// Handle array/dictionary access (e.g., arr[0] or dict["key"])
+	// Handle array/dictionary access or slice (e.g., arr[0], dict["key"], or arr[1:3])
 	if len(tokens) >= 4 && tokens[0].Type == lexer.TokenIdentifier && tokens[1].Value == "[" {
+		// Find the closing bracket
+		bracketEnd := -1
 		for i := 2; i < len(tokens); i++ {
 			if tokens[i].Value == "]" {
+				bracketEnd = i
+				break
+			}
+		}
+		
+		if bracketEnd != -1 {
+			// Check if this is a slice operation (contains colon)
+			hasColon := false
+			for i := 2; i < bracketEnd; i++ {
+				if tokens[i].Value == ":" {
+					hasColon = true
+					break
+				}
+			}
+			
+			if hasColon {
+				// Parse slice syntax
+				return ParseArraySlice(tokens[0].Value, tokens[2:bracketEnd])
+			} else {
+				// Regular array access
 				return ast.ArrayAccessNode{
 					Array: ast.IdentifierNode{Value: tokens[0].Value},
-					Index: ParseExpression(tokens[2:i]),
+					Index: ParseExpression(tokens[2:bracketEnd]),
 				}
 			}
 		}
@@ -1621,6 +1665,66 @@ func ParseTupleElements(tokens []lexer.Token) []ast.ASTNode {
 	}
 
 	return elements
+}
+
+// ParseArraySlice parses array slice syntax: arr[start:end] or arr[start:end:step]
+func ParseArraySlice(arrayName string, sliceTokens []lexer.Token) ast.ASTNode {
+	// Find colon positions
+	var colonPositions []int
+	for i, token := range sliceTokens {
+		if token.Value == ":" {
+			colonPositions = append(colonPositions, i)
+		}
+	}
+	
+	if len(colonPositions) == 0 {
+		// No colons, shouldn't happen as this is checked before calling
+		return nil
+	}
+	
+	var start, end, step ast.ASTNode
+	
+	if len(colonPositions) == 1 {
+		// Format: [start:end]
+		colon := colonPositions[0]
+		
+		// Parse start (everything before colon)
+		if colon > 0 {
+			start = ParseExpression(sliceTokens[0:colon])
+		}
+		
+		// Parse end (everything after colon)
+		if colon+1 < len(sliceTokens) {
+			end = ParseExpression(sliceTokens[colon+1:])
+		}
+		
+	} else if len(colonPositions) == 2 {
+		// Format: [start:end:step]
+		colon1 := colonPositions[0]
+		colon2 := colonPositions[1]
+		
+		// Parse start
+		if colon1 > 0 {
+			start = ParseExpression(sliceTokens[0:colon1])
+		}
+		
+		// Parse end
+		if colon2 > colon1+1 {
+			end = ParseExpression(sliceTokens[colon1+1 : colon2])
+		}
+		
+		// Parse step
+		if colon2+1 < len(sliceTokens) {
+			step = ParseExpression(sliceTokens[colon2+1:])
+		}
+	}
+	
+	return ast.ArraySliceNode{
+		Array: ast.IdentifierNode{Value: arrayName},
+		Start: start,
+		End:   end,
+		Step:  step,
+	}
 }
 
 // ParseArrayElements parses comma-separated array elements

@@ -121,6 +121,14 @@ type ArrayAccessNode struct {
     Index ASTNode // The index expression
 }
 
+// ArraySliceNode represents array slice access (e.g., arr[start:end] or arr[start:end:step])
+type ArraySliceNode struct {
+    Array ASTNode // The array being sliced
+    Start ASTNode // Start index (can be nil for arr[:end])
+    End   ASTNode // End index (can be nil for arr[start:])
+    Step  ASTNode // Step value (can be nil for default step of 1)
+}
+
 // ArrayAssignmentNode represents array element assignment (e.g., arr[0] = 5)
 type ArrayAssignmentNode struct {
     Array ASTNode // The array being modified

@@ -375,12 +375,108 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Otherwise treat as array
 		if arr, ok := arrayValue.([]interface{}); ok {
 			if idx, ok := indexValue.(int); ok {
+				// Handle negative indices
+				if idx < 0 {
+					idx = len(arr) + idx
+				}
 				if idx >= 0 && idx < len(arr) {
 					return arr[idx]
 				}
 			}
 		}
 		return nil
+
+	case ast.ArraySliceNode:
+		// Handle array slicing (e.g., arr[start:end] or arr[start:end:step])
+		arrayValue := Interpret(n.Array, env)
+		
+		if arr, ok := arrayValue.([]interface{}); ok {
+			length := len(arr)
+			
+			// Determine start index
+			start := 0
+			if n.Start != nil {
+				if startVal := Interpret(n.Start, env); startVal != nil {
+					if s, ok := startVal.(int); ok {
+						start = s
+						// Handle negative start
+						if start < 0 {
+							start = length + start
+						}
+						if start < 0 {
+							start = 0
+						}
+						if start > length {
+							start = length
+						}
+					}
+				}
+			}
+			
+			// Determine end index
+			end := length
+			if n.End != nil {
+				if endVal := Interpret(n.End, env); endVal != nil {
+					if e, ok := endVal.(int); ok {
+						end = e
+						// Handle negative end
+						if end < 0 {
+							end = length + end
+						}
+						if end < 0 {
+							end = 0
+						}
+						if end > length {
+							end = length
+						}
+					}
+				}
+			}
+			
+			// Determine step
+			step := 1
+			if n.Step != nil {
+				if stepVal := Interpret(n.Step, env); stepVal != nil {
+					if st, ok := stepVal.(int); ok {
+						step = st
+						if step == 0 {
+							return ControlFlowResult{
+								Type: ControlThrow,
+								Value: ErrorValue{
+									Message: "Hatua haiwezi kuwa sifuri (Step cannot be zero)",
+									Context: "Katika slice operation",
+								},
+							}
+						}
+					}
+				}
+			}
+			
+			// Perform slicing
+			var result []interface{}
+			
+			if step > 0 {
+				// Forward slicing
+				if start >= end {
+					return []interface{}{} // Empty slice
+				}
+				for i := start; i < end; i += step {
+					result = append(result, arr[i])
+				}
+			} else {
+				// Reverse slicing
+				if start <= end {
+					return []interface{}{} // Empty slice
+				}
+				for i := start; i > end; i += step {
+					result = append(result, arr[i])
+				}
+			}
+			
+			return result
+		}
+		
+		return []interface{}{}
 
 	case ast.ArrayAssignmentNode:
 		// Handle array assignment (e.g., arr[0] = 5) or dictionary assignment (e.g., dict["key"] = value)

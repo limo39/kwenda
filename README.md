@@ -49,7 +49,10 @@
 
 ### Data Structures
 - **Array Operations**: Add, remove, access, and get length
+- **Array Slicing**: Python-style slicing with `orodha[start:end:step]` syntax
 - **List Comprehensions**: Create arrays with concise syntax `[expression kwa variable katika iterable kama condition]`
+- **Sets**: Unordered collections of unique elements with `seti` keyword
+- **Tuples**: Immutable ordered collections with `tuple` keyword
 - **Dictionary Operations**: Create, access, modify key-value pairs
 - **String Functions**: Length, substring, replace, find, case conversion, trim, split
 

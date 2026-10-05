@@ -1,0 +1,172 @@
+// Array Slice Operations Demo in Kwenda
+// Python-style slicing with syntax: orodha[start:end:step]
+
+andika("=== BASIC SLICING ===")
+
+orodha namba numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+andika("Original array:", numbers)
+
+// Basic slice [start:end]
+orodha namba slice1 = numbers[2:5]
+andika("numbers[2:5]:", slice1)
+
+orodha namba slice2 = numbers[0:3]
+andika("numbers[0:3]:", slice2)
+
+orodha namba slice3 = numbers[5:9]
+andika("numbers[5:9]:", slice3)
+
+andika("")
+andika("=== OMITTING START OR END ===")
+
+// Slice from beginning [:end]
+orodha namba slice_start = numbers[:5]
+andika("numbers[:5] (kutoka mwanzo):", slice_start)
+
+// Slice to end [start:]
+orodha namba slice_end = numbers[5:]
+andika("numbers[5:] (hadi mwisho):", slice_end)
+
+// Full copy [:]
+orodha namba slice_full = numbers[:]
+andika("numbers[:] (nakala kamili):", slice_full)
+
+andika("")
+andika("=== NEGATIVE INDICES ===")
+
+// Negative indices count from the end
+orodha namba last_three = numbers[-3:]
+andika("numbers[-3:] (tatu za mwisho):", last_three)
+
+orodha namba up_to_last_two = numbers[:-2]
+andika("numbers[:-2] (mpaka wa mwisho 2):", up_to_last_two)
+
+orodha namba middle_neg = numbers[-7:-3]
+andika("numbers[-7:-3]:", middle_neg)
+
+andika("")
+andika("=== STEP VALUES ===")
+
+// Every second element [start:end:step]
+orodha namba every_second = numbers[0:10:2]
+andika("numbers[0:10:2] (kila ya pili):", every_second)
+
+orodha namba every_third = numbers[0:10:3]
+andika("numbers[0:10:3] (kila ya tatu):", every_third)
+
+// Step with omitted start/end
+orodha namba step_from_start = numbers[::2]
+andika("numbers[::2] (kila ya pili, yote):", step_from_start)
+
+orodha namba step_in_range = numbers[1:8:2]
+andika("numbers[1:8:2]:", step_in_range)
+
+andika("")
+andika("=== REVERSE SLICING ===")
+
+// Negative step reverses the array
+orodha namba reversed = numbers[::-1]
+andika("numbers[::-1] (kinyume):", reversed)
+
+orodha namba reverse_part = numbers[7:2:-1]
+andika("numbers[7:2:-1]:", reverse_part)
+
+orodha namba reverse_every_two = numbers[::-2]
+andika("numbers[::-2] (kinyume, kila ya pili):", reverse_every_two)
+
+andika("")
+andika("=== STRING SLICING ===")
+
+orodha maneno words = ["Habari", "yako", "leo", "vipi", "mambo"]
+andika("Original:", words)
+
+orodha maneno first_two = words[:2]
+andika("words[:2]:", first_two)
+
+orodha maneno last_two = words[-2:]
+andika("words[-2:]:", last_two)
+
+orodha maneno every_other = words[::2]
+andika("words[::2]:", every_other)
+
+andika("")
+andika("=== PRACTICAL EXAMPLES ===")
+
+// Example 1: Get first half of array
+orodha namba data = [10, 20, 30, 40, 50, 60, 70, 80]
+namba urefu = urefu_orodha(data)
+namba nusu = urefu / 2
+
+andika("Data:", data)
+orodha namba first_half = data[:nusu]
+andika("Nusu ya kwanza:", first_half)
+
+orodha namba second_half = data[nusu:]
+andika("Nusu ya pili:", second_half)
+
+// Example 2: Remove first and last elements
+orodha namba trimmed = data[1:-1]
+andika("Bila ya kwanza na mwisho:", trimmed)
+
+// Example 3: Get even-indexed elements
+orodha namba even_indices = data[::2]
+andika("Indices sawa:", even_indices)
+
+// Example 4: Get odd-indexed elements
+orodha namba odd_indices = data[1::2]
+andika("Indices witiri:", odd_indices)
+
+andika("")
+andika("=== SLICING WITH VARIABLES ===")
+
+orodha namba arr = [100, 200, 300, 400, 500, 600]
+andika("Array:", arr)
+
+namba start_idx = 1
+namba end_idx = 4
+namba step_val = 1
+
+orodha namba var_slice = arr[start_idx:end_idx:step_val]
+andika("arr[1:4:1]:", var_slice)
+
+// Dynamic slicing
+namba kutoka = 2
+namba mpaka = 5
+orodha namba dynamic = arr[kutoka:mpaka]
+andika("arr[2:5]:", dynamic)
+
+andika("")
+andika("=== EDGE CASES ===")
+
+orodha namba small = [1, 2, 3]
+andika("Small array:", small)
+
+// Out of bounds - safely handled
+orodha namba beyond = small[1:10]
+andika("small[1:10] (beyond bounds):", beyond)
+
+// Start > end with positive step = empty
+orodha namba empty1 = small[2:1]
+andika("small[2:1] (mwanzo > mwisho):", empty1)
+
+// Negative indices beyond bounds
+orodha namba neg_beyond = small[-10:]
+andika("small[-10:]:", neg_beyond)
+
+andika("")
+andika("=== COPYING VS REFERENCE ===")
+
+orodha namba original = [1, 2, 3, 4, 5]
+andika("Original:", original)
+
+// Slice creates a new array
+orodha namba copy = original[:]
+andika("Copy (nakili):", copy)
+
+// Modify copy doesn't affect original
+copy[0] = 999
+andika("Baada ya kubadilisha nakili:", copy)
+andika("Original bado:", original)
+
+andika("")
+andika("Demo imekamilika!")

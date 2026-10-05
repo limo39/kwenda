@@ -1,0 +1,29 @@
+// Simple slice test
+orodha namba arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+andika("Original:", arr)
+andika("")
+
+// Basic slicing
+andika("arr[2:5]:", arr[2:5])
+andika("arr[:5]:", arr[:5])
+andika("arr[5:]:", arr[5:])
+andika("arr[:]:", arr[:])
+andika("")
+
+// Negative indices
+andika("arr[-3:]:", arr[-3:])
+andika("arr[:-2]:", arr[:-2])
+andika("")
+
+// Step values
+andika("arr[::2]:", arr[::2])
+andika("arr[1::2]:", arr[1::2])
+andika("arr[::-1]:", arr[::-1])
+andika("")
+
+// Practical
+orodha maneno words = ["Habari", "yako", "leo", "vipi"]
+andika("Words:", words)
+andika("words[:2]:", words[:2])
+andika("words[-2:]:", words[-2:])
