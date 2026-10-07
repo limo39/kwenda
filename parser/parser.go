@@ -1116,7 +1116,12 @@ func ParseExpression(tokens []lexer.Token) ast.ASTNode {
 
 	// Handle string literals
 	if tokens[0].Type == lexer.TokenString {
-		return ast.StringNode{Value: tokens[0].Value}
+		strValue := tokens[0].Value
+		// Check if this is a formatted string (starts with f")
+		if strings.HasPrefix(strValue, "f\"") {
+			return ParseFormattedString(strValue + "\"")
+		}
+		return ast.StringNode{Value: strValue}
 	}
 
 	// Handle numbers
@@ -1724,6 +1729,93 @@ func ParseArraySlice(arrayName string, sliceTokens []lexer.Token) ast.ASTNode {
 		Start: start,
 		End:   end,
 		Step:  step,
+	}
+}
+
+// ParseFormattedString parses formatted string with interpolation (e.g., f"Hello {name}")
+func ParseFormattedString(fstring string) ast.ASTNode {
+	// Remove f" prefix and " suffix
+	if !strings.HasPrefix(fstring, "f\"") || !strings.HasSuffix(fstring, "\"") {
+		// Not a formatted string, treat as regular
+		content := strings.TrimPrefix(fstring, "f\"")
+		content = strings.TrimSuffix(content, "\"")
+		return ast.StringNode{Value: content}
+	}
+	
+	content := fstring[2 : len(fstring)-1] // Remove f" and "
+	
+	var parts []ast.ASTNode
+	var currentLiteral strings.Builder
+	inExpression := false
+	braceDepth := 0
+	var exprTokens []rune
+	
+	runes := []rune(content)
+	for i := 0; i < len(runes); i++ {
+		char := runes[i]
+		
+		if char == '{' && !inExpression {
+			// Start of interpolation
+			if i+1 < len(runes) && runes[i+1] == '{' {
+				// Escaped brace {{
+				currentLiteral.WriteRune('{')
+				i++ // Skip next brace
+			} else {
+				// Save current literal if any
+				if currentLiteral.Len() > 0 {
+					parts = append(parts, ast.StringNode{Value: currentLiteral.String()})
+					currentLiteral.Reset()
+				}
+				inExpression = true
+				braceDepth = 1
+			}
+		} else if char == '}' && inExpression {
+			braceDepth--
+			if braceDepth == 0 {
+				// End of interpolation
+				// Parse the expression
+				if len(exprTokens) > 0 {
+					exprStr := string(exprTokens)
+					// Lex and parse the expression
+					tokens := lexer.Lex(exprStr)
+					if len(tokens) > 0 {
+						expr := ParseExpression(tokens)
+						if expr != nil {
+							parts = append(parts, expr)
+						}
+					}
+					exprTokens = nil
+				}
+				inExpression = false
+			} else {
+				exprTokens = append(exprTokens, char)
+			}
+		} else if char == '}' && !inExpression {
+			// Escaped brace }}
+			if i+1 < len(runes) && runes[i+1] == '}' {
+				currentLiteral.WriteRune('}')
+				i++ // Skip next brace
+			} else {
+				currentLiteral.WriteRune(char)
+			}
+		} else if inExpression {
+			if char == '{' {
+				braceDepth++
+			}
+			exprTokens = append(exprTokens, char)
+		} else {
+			currentLiteral.WriteRune(char)
+		}
+	}
+	
+	// Add remaining literal if any
+	if currentLiteral.Len() > 0 {
+		parts = append(parts, ast.StringNode{Value: currentLiteral.String()})
+	}
+	
+	return ast.FormattedStringNode{
+		Parts:       parts,
+		IsFormatted: true,
 	}
 }
 

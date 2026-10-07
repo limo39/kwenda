@@ -92,6 +92,7 @@ func Lex(input string) []Token {
 	var tokens []Token
 	var currentToken strings.Builder
 	var inString bool
+	var inFString bool
 	runes := []rune(input)
 	lineNumber := 1 // Track current line number
 
@@ -106,10 +107,24 @@ func Lex(input string) []Token {
 		if char == '"' {
 			// Handle string literals
 			if inString {
-				tokens = append(tokens, makeToken(TokenString, currentToken.String(), lineNumber))
+				if inFString {
+					tokens = append(tokens, makeToken(TokenString, "f\""+currentToken.String()+"\"", lineNumber))
+					inFString = false
+				} else {
+					tokens = append(tokens, makeToken(TokenString, currentToken.String(), lineNumber))
+				}
 				currentToken.Reset()
 				inString = false
 			} else {
+				// Check if this is an f-string (f"...")
+				if i > 0 && runes[i-1] == 'f' && len(tokens) > 0 {
+					lastToken := tokens[len(tokens)-1]
+					if lastToken.Type == TokenIdentifier && lastToken.Value == "f" {
+						// Remove the 'f' token and mark as f-string
+						tokens = tokens[:len(tokens)-1]
+						inFString = true
+					}
+				}
 				inString = true
 			}
 		} else if inString {

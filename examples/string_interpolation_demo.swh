@@ -1,0 +1,167 @@
+// String Interpolation Demo in Kwenda
+// F-string style formatting with f"text {expression}"
+
+andika("=== BASIC INTERPOLATION ===")
+
+maneno jina = "Amina"
+namba umri = 25
+
+// Basic variable interpolation
+andika(f"Jina: {jina}")
+andika(f"Umri: {umri}")
+andika(f"Habari, jina langu ni {jina} na nina miaka {umri}")
+
+andika("")
+andika("=== EXPRESSIONS IN STRINGS ===")
+
+namba x = 10
+namba y = 20
+
+// Arithmetic expressions
+andika(f"x + y = {x + y}")
+andika(f"x * y = {x * y}")
+andika(f"x - y = {x - y}")
+
+// Complex expressions
+namba jumla = x + y
+andika(f"Jumla ya {x} na {y} ni {jumla}")
+andika(f"Wastani ni {(x + y) / 2}")
+
+andika("")
+andika("=== BOOLEAN VALUES ===")
+
+boolean ni_kweli = kweli
+boolean ni_uwongo = uwongo
+
+andika(f"Thamani ya kweli: {ni_kweli}")
+andika(f"Thamani ya uwongo: {ni_uwongo}")
+
+namba a = 15
+namba b = 10
+
+andika(f"Je, {a} > {b}? {a > b}")
+andika(f"Je, {a} == {b}? {a == b}")
+
+andika("")
+andika("=== STRING OPERATIONS ===")
+
+maneno kwanza = "Habari"
+maneno pili = "yako"
+
+andika(f"Unganisha: {kwanza} {pili}")
+andika(f"Urefu wa '{kwanza}': {urefu(kwanza)}")
+
+// Function calls in interpolation
+andika(f"Herufi kubwa: {herufi_kubwa(kwanza)}")
+andika(f"Herufi ndogo: {herufi_ndogo(kwanza)}")
+
+andika("")
+andika("=== ARRAYS ===")
+
+orodha namba namba_list = [1, 2, 3, 4, 5]
+andika(f"Orodha: {namba_list}")
+andika(f"Urefu: {urefu_orodha(namba_list)}")
+andika(f"Kipengele cha kwanza: {pata(namba_list, 0)}")
+andika(f"Kipengele cha mwisho: {pata(namba_list, 4)}")
+
+// Array slicing in interpolation
+andika(f"Tatu za kwanza: {namba_list[:3]}")
+andika(f"Tatu za mwisho: {namba_list[-3:]}")
+
+andika("")
+andika("=== MULTIPLE EXPRESSIONS ===")
+
+namba pato = 1000
+namba gharama = 750
+
+andika(f"Pato: {pato}, Gharama: {gharama}")
+andika(f"Faida: {pato - gharama}")
+andika(f"Asilimia ya faida: {(pato - gharama) * 100 / pato}%")
+
+andika("")
+andika("=== FORMATTING WITH CALCULATIONS ===")
+
+namba radius = 5
+andika(f"Radius: {radius}")
+andika(f"Diameter: {radius * 2}")
+andika(f"Area (pi * r^2 approx): {3.14 * radius * radius}")
+
+andika("")
+andika("=== CONDITIONAL EXPRESSIONS ===")
+
+namba alama = 85
+
+andika(f"Alama: {alama}")
+boolean amethibitisha = alama >= 50
+andika(f"Amethibitisha? {amethibitisha}")
+
+andika("")
+andika("=== NESTED INTERPOLATION ===")
+
+maneno mji = "Dar es Salaam"
+namba watu = 6000000
+
+andika(f"Mji wa {mji} una watu karibu {watu}")
+andika(f"Idadi ya watu ni zaidi ya milioni {watu / 1000000}")
+
+andika("")
+andika("=== PRACTICAL EXAMPLES ===")
+
+// Example 1: Receipt/Invoice
+maneno bidhaa = "Kitabu"
+namba bei = 15000
+namba idadi = 3
+namba jumla = bei * idadi
+
+andika(f"=== RISITI ===")
+andika(f"Bidhaa: {bidhaa}")
+andika(f"Bei kwa moja: TSh {bei}")
+andika(f"Idadi: {idadi}")
+andika(f"Jumla: TSh {jumla}")
+
+andika("")
+
+// Example 2: User Profile
+maneno mtumiaji = "Hassan"
+namba miaka = 30
+maneno mahali = "Arusha"
+
+andika(f"=== WASIFU ===")
+andika(f"Jina: {mtumiaji}")
+andika(f"Umri: {miaka} miaka")
+andika(f"Anaishi: {mahali}")
+
+andika("")
+
+// Example 3: Progress Bar
+namba imekamilika = 75
+namba jumla_kazi = 100
+
+andika(f"Maendeleo: {imekamilika}/{jumla_kazi} ({imekamilika * 100 / jumla_kazi}%)")
+
+andika("")
+
+// Example 4: Temperature Conversion
+namba celsius = 25
+namba fahrenheit = (celsius * 9 / 5) + 32
+
+andika(f"{celsius}°C = {fahrenheit}°F")
+
+andika("")
+andika("=== ESCAPING BRACES ===")
+
+// To display actual braces, use double braces {{ }}
+andika("Kutumia {{braces}} katika maneno")
+// Note: This requires implementation support for escaping
+
+andika("")
+andika("=== MULTI-LINE FORMATTED STRINGS ===")
+
+maneno nchi = "Tanzania"
+namba eneo = 947303
+
+andika(f"Nchi: {nchi}")
+andika(f"Eneo: {eneo} km²")
+
+andika("")
+andika("Demo imekamilika!")

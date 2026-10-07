@@ -182,6 +182,76 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	case ast.StringNode:
 		return n.Value
 
+	case ast.FormattedStringNode:
+		// Handle formatted strings with interpolation
+		var result strings.Builder
+		for _, part := range n.Parts {
+			switch p := part.(type) {
+			case ast.StringNode:
+				// Literal string part
+				result.WriteString(p.Value)
+			default:
+				// Expression part - evaluate and convert to string
+				value := Interpret(part, env)
+				if value != nil {
+					// Format the value based on its type
+					switch v := value.(type) {
+					case string:
+						result.WriteString(v)
+					case int:
+						result.WriteString(fmt.Sprintf("%d", v))
+					case float64:
+						// Format floats nicely - remove trailing zeros
+						str := fmt.Sprintf("%f", v)
+						str = strings.TrimRight(str, "0")
+						str = strings.TrimRight(str, ".")
+						result.WriteString(str)
+					case bool:
+						if v {
+							result.WriteString("kweli")
+						} else {
+							result.WriteString("uwongo")
+						}
+					case []interface{}:
+						// Format arrays
+						result.WriteRune('[')
+						for i, elem := range v {
+							if i > 0 {
+								result.WriteString(", ")
+							}
+							result.WriteString(fmt.Sprintf("%v", elem))
+						}
+						result.WriteRune(']')
+					case TupleValue:
+						// Format tuples
+						result.WriteRune('(')
+						for i, elem := range v.Elements {
+							if i > 0 {
+								result.WriteString(", ")
+							}
+							result.WriteString(fmt.Sprintf("%v", elem))
+						}
+						result.WriteRune(')')
+					case map[interface{}]bool:
+						// Format sets
+						result.WriteRune('{')
+						first := true
+						for key := range v {
+							if !first {
+								result.WriteString(", ")
+							}
+							result.WriteString(fmt.Sprintf("%v", key))
+							first = false
+						}
+						result.WriteRune('}')
+					default:
+						result.WriteString(fmt.Sprintf("%v", v))
+					}
+				}
+			}
+		}
+		return result.String()
+
 	case ast.DictionaryNode:
 		// Handle dictionary literals (e.g., {"key": "value", "age": 25})
 		dict := make(map[string]interface{})

@@ -97,6 +97,12 @@ type StringNode struct {
     Value string // The string value without quotes
 }
 
+// FormattedStringNode represents a formatted string with interpolation (e.g., f"Hello {name}")
+type FormattedStringNode struct {
+    Parts       []ASTNode // Mix of StringNode and expression nodes
+    IsFormatted bool      // Whether this is a formatted string
+}
+
 // StringVariableDeclarationNode represents a string variable declaration (e.g., maneno x = "habari")
 type StringVariableDeclarationNode struct {
     Name  string  // Variable name
