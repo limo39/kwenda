@@ -56,6 +56,8 @@ func isSwahiliKeyword(word string) bool {
 		"aina",
 		// Lambda/Anonymous function keyword
 		"lambda",
+		// Pattern matching keywords
+		"swichi", "ikiwa", "kawaida",
 	}
 	for _, kw := range keywords {
 		if kw == word {

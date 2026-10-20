@@ -337,3 +337,16 @@ type TupleDeclarationNode struct {
 	Type     string    // Element type (namba, maneno, etc.) - optional
 	Elements []ASTNode // Initial elements
 }
+
+// SwitchNode represents a switch statement (e.g., swichi x { ikiwa 1 { ... } ikiwa 2 { ... } kawaida { ... } })
+type SwitchNode struct {
+	Expression ASTNode     // The expression to match against
+	Cases      []CaseNode  // List of case clauses
+	Default    []ASTNode   // Default case body (optional)
+}
+
+// CaseNode represents a case clause in a switch statement
+type CaseNode struct {
+	Values []ASTNode // List of values to match (can match multiple values)
+	Body   []ASTNode // Statements to execute if matched
+}

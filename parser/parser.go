@@ -3,6 +3,7 @@ package parser
 import (
 	"kwenda/ast"
 	"kwenda/lexer"
+	"strings"
 )
 
 // ProgramNode represents the entire program
@@ -174,6 +175,37 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				functions = append(functions, function)
 			}
 			i = end
+		} else if tokens[i].Value == "kama" || tokens[i].Value == "wakati" || tokens[i].Value == "kwa" || tokens[i].Value == "swichi" {
+			// Handle control flow statements at top level
+			end := i + 1
+			braceCount := 0
+			foundFirstBrace := false
+
+			for end < len(tokens) {
+				if tokens[end].Value == "{" {
+					braceCount++
+					foundFirstBrace = true
+				} else if tokens[end].Value == "}" {
+					braceCount--
+					if braceCount == 0 && foundFirstBrace {
+						// Check for else clause for if statements
+						if tokens[i].Value == "kama" && end+1 < len(tokens) && tokens[end+1].Value == "sivyo" {
+							end++
+							continue
+						}
+						end++
+						break
+					}
+				}
+				end++
+			}
+
+			// Parse this control flow statement
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				functions = append(functions, stmt)
+			}
+			i = end
 		} else {
 			// Handle plain statements at the top level (function calls, assignments, etc.)
 			end := i + 1
@@ -232,7 +264,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 						   tokens[end].Value == "andika" || tokens[end].Value == "wakati" || 
 						   tokens[end].Value == "kama" || tokens[end].Value == "kwa" || 
 						   tokens[end].Value == "boolean" || tokens[end].Value == "kamusi" || 
-						   tokens[end].Value == "orodha" {
+						   tokens[end].Value == "orodha" || tokens[end].Value == "swichi" {
 							break
 						}
 					}
@@ -241,7 +273,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				}
 			} else {
 				// For other statements, find next keyword
-				for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" && tokens[end].Value != "darasa" && tokens[end].Value != "andika" && tokens[end].Value != "wakati" && tokens[end].Value != "kama" && tokens[end].Value != "kwa" {
+				for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" && tokens[end].Value != "darasa" && tokens[end].Value != "andika" && tokens[end].Value != "wakati" && tokens[end].Value != "kama" && tokens[end].Value != "kwa" && tokens[end].Value != "swichi" {
 					end++
 				}
 			}
@@ -266,6 +298,11 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle conditional statements
 	if tokens[0].Value == "kama" {
 		return ParseIfStatement(tokens)
+	}
+
+	// Handle switch statements
+	if tokens[0].Value == "swichi" {
+		return ParseSwitchStatement(tokens)
 	}
 
 	// Handle while loops
@@ -608,8 +645,8 @@ func ParseBlock(tokens []lexer.Token) []ast.ASTNode {
 			continue
 		}
 
-		// Parse control flow statements (if, while, for, try)
-		if tokens[i].Value == "kama" || tokens[i].Value == "wakati" || tokens[i].Value == "kwa" || tokens[i].Value == "jaribu" {
+		// Parse control flow statements (if, while, for, try, switch)
+		if tokens[i].Value == "kama" || tokens[i].Value == "wakati" || tokens[i].Value == "kwa" || tokens[i].Value == "jaribu" || tokens[i].Value == "swichi" {
 			end := i + 1
 			braceCount := 0
 			foundFirstBrace := false
@@ -1935,6 +1972,179 @@ func ParseIfStatement(tokens []lexer.Token) ast.ASTNode {
 		ThenBody:  thenBody,
 		ElseBody:  elseBody,
 	}
+}
+
+// ParseSwitchStatement parses switch statements (swichi expr { ikiwa val1, val2 { ... } kawaida { ... } })
+func ParseSwitchStatement(tokens []lexer.Token) ast.ASTNode {
+	if len(tokens) < 4 || tokens[0].Value != "swichi" {
+		return nil
+	}
+
+	// Find the expression (between "swichi" and "{")
+	exprStart := 1
+	exprEnd := -1
+	for i := exprStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			exprEnd = i
+			break
+		}
+	}
+
+	if exprEnd == -1 {
+		return nil
+	}
+
+	// Parse the switch expression
+	expression := ParseExpression(tokens[exprStart:exprEnd])
+
+	// Find the switch body (between "{" and "}")
+	bodyStart := exprEnd + 1
+	bodyEnd := -1
+	braceCount := 1
+	for i := bodyStart; i < len(tokens); i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				bodyEnd = i
+				break
+			}
+		}
+	}
+
+	if bodyEnd == -1 {
+		return nil
+	}
+
+	// Parse cases and default
+	var cases []ast.CaseNode
+	var defaultBody []ast.ASTNode
+
+	i := bodyStart
+	for i < bodyEnd {
+		if tokens[i].Value == "ikiwa" {
+			// Parse case clause
+			caseNode, nextIndex := ParseCaseClause(tokens, i, bodyEnd)
+			if caseNode != nil {
+				cases = append(cases, *caseNode)
+			}
+			i = nextIndex
+		} else if tokens[i].Value == "kawaida" {
+			// Parse default clause
+			defaultStart := -1
+			defaultEnd := -1
+
+			// Find opening brace after "kawaida"
+			for j := i + 1; j < bodyEnd; j++ {
+				if tokens[j].Value == "{" {
+					defaultStart = j + 1
+					break
+				}
+			}
+
+			if defaultStart != -1 {
+				// Find closing brace for default body
+				braceCount := 1
+				for j := defaultStart; j < bodyEnd; j++ {
+					if tokens[j].Value == "{" {
+						braceCount++
+					} else if tokens[j].Value == "}" {
+						braceCount--
+						if braceCount == 0 {
+							defaultEnd = j
+							break
+						}
+					}
+				}
+
+				if defaultEnd != -1 {
+					defaultBody = ParseBlock(tokens[defaultStart:defaultEnd])
+					i = defaultEnd + 1
+				} else {
+					i++
+				}
+			} else {
+				i++
+			}
+		} else {
+			i++
+		}
+	}
+
+	return ast.SwitchNode{
+		Expression: expression,
+		Cases:      cases,
+		Default:    defaultBody,
+	}
+}
+
+// ParseCaseClause parses a single case clause (ikiwa val1, val2 { ... })
+func ParseCaseClause(tokens []lexer.Token, start int, end int) (*ast.CaseNode, int) {
+	if start >= end || tokens[start].Value != "ikiwa" {
+		return nil, start + 1
+	}
+
+	// Find the values (between "ikiwa" and "{")
+	valuesStart := start + 1
+	valuesEnd := -1
+	for i := valuesStart; i < end; i++ {
+		if tokens[i].Value == "{" {
+			valuesEnd = i
+			break
+		}
+	}
+
+	if valuesEnd == -1 {
+		return nil, start + 1
+	}
+
+	// Parse the case values (comma-separated)
+	var values []ast.ASTNode
+	currentValueStart := valuesStart
+	for i := valuesStart; i < valuesEnd; i++ {
+		if tokens[i].Value == "," {
+			// Parse the value before the comma
+			if i > currentValueStart {
+				value := ParseExpression(tokens[currentValueStart:i])
+				values = append(values, value)
+			}
+			currentValueStart = i + 1
+		}
+	}
+	// Parse the last value
+	if valuesEnd > currentValueStart {
+		value := ParseExpression(tokens[currentValueStart:valuesEnd])
+		values = append(values, value)
+	}
+
+	// Find the case body (between "{" and "}")
+	bodyStart := valuesEnd + 1
+	bodyEnd := -1
+	braceCount := 1
+	for i := bodyStart; i < end; i++ {
+		if tokens[i].Value == "{" {
+			braceCount++
+		} else if tokens[i].Value == "}" {
+			braceCount--
+			if braceCount == 0 {
+				bodyEnd = i
+				break
+			}
+		}
+	}
+
+	if bodyEnd == -1 {
+		return nil, start + 1
+	}
+
+	// Parse the case body
+	body := ParseBlock(tokens[bodyStart:bodyEnd])
+
+	return &ast.CaseNode{
+		Values: values,
+		Body:   body,
+	}, bodyEnd + 1
 }
 
 // ParseWhileStatement parses while loops (wakati condition { ... })

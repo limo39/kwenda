@@ -156,6 +156,49 @@ func toNumber(value interface{}) (float64, bool) {
 	}
 }
 
+// compareValues compares two values for equality in switch statements
+func compareValues(a, b interface{}) bool {
+	// Handle nil cases
+	if a == nil && b == nil {
+		return true
+	}
+	if a == nil || b == nil {
+		return false
+	}
+
+	// Direct equality for same types
+	switch aVal := a.(type) {
+	case int:
+		if bVal, ok := b.(int); ok {
+			return aVal == bVal
+		}
+		if bVal, ok := b.(float64); ok {
+			return float64(aVal) == bVal
+		}
+	case float64:
+		if bVal, ok := b.(float64); ok {
+			return aVal == bVal
+		}
+		if bVal, ok := b.(int); ok {
+			return aVal == float64(bVal)
+		}
+	case string:
+		if bVal, ok := b.(string); ok {
+			return aVal == bVal
+		}
+	case bool:
+		if bVal, ok := b.(bool); ok {
+			return aVal == bVal
+		}
+	case ast.EnumValueNode:
+		if bVal, ok := b.(ast.EnumValueNode); ok {
+			return aVal.EnumName == bVal.EnumName && aVal.Value == bVal.Value
+		}
+	}
+
+	return false
+}
+
 func Interpret(node ast.ASTNode, env *Environment) interface{} {
 	// Handle nil nodes
 	if node == nil {
@@ -4358,6 +4401,62 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 			return result
 		}
+		return nil
+
+	case ast.SwitchNode:
+		// Handle switch statements (swichi expr { ikiwa val1, val2 { ... } kawaida { ... } })
+		switchExpr := Interpret(n.Expression, env)
+
+		// Try to match against each case
+		for _, caseClause := range n.Cases {
+			matched := false
+			for _, caseValue := range caseClause.Values {
+				caseVal := Interpret(caseValue, env)
+				
+				// Compare switch expression with case value
+				if compareValues(switchExpr, caseVal) {
+					matched = true
+					break
+				}
+			}
+
+			if matched {
+				// Execute the case body
+				var result interface{}
+				for _, statement := range caseClause.Body {
+					result = Interpret(statement, env)
+					// Propagate control flow
+					if cf, ok := result.(ControlFlowResult); ok {
+						if cf.Type == ControlReturn {
+							return result
+						} else if cf.Type == ControlBreak {
+							// Break out of switch
+							return cf.Value
+						}
+					}
+				}
+				// After executing a matching case, exit the switch (no fallthrough)
+				return result
+			}
+		}
+
+		// If no case matched, execute default body
+		if len(n.Default) > 0 {
+			var result interface{}
+			for _, statement := range n.Default {
+				result = Interpret(statement, env)
+				// Propagate control flow
+				if cf, ok := result.(ControlFlowResult); ok {
+					if cf.Type == ControlReturn {
+						return result
+					} else if cf.Type == ControlBreak {
+						return cf.Value
+					}
+				}
+			}
+			return result
+		}
+
 		return nil
 
 	case ast.WhileNode:

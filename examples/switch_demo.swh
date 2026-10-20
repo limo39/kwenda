@@ -1,0 +1,397 @@
+// ============================================================
+// SWITCH STATEMENT DEMONSTRATION - Pattern Matching in Kwenda
+// ============================================================
+// This file demonstrates switch/case statements (swichi/ikiwa)
+// for pattern matching and decision making
+
+andika("=== KWENDA SWITCH STATEMENT EXAMPLES ===")
+andika("")
+
+// ============================================================
+// 1. BASIC SWITCH WITH NUMBERS
+// ============================================================
+andika("1. Basic Switch with Numbers:")
+andika("----------------------------")
+
+namba day = 3
+swichi day {
+    ikiwa 1 {
+        andika("Jumatatu (Monday)")
+    }
+    ikiwa 2 {
+        andika("Jumanne (Tuesday)")
+    }
+    ikiwa 3 {
+        andika("Jumatano (Wednesday)")
+    }
+    ikiwa 4 {
+        andika("Alhamisi (Thursday)")
+    }
+    ikiwa 5 {
+        andika("Ijumaa (Friday)")
+    }
+    kawaida {
+        andika("Wikendi (Weekend)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 2. MULTIPLE VALUES IN SINGLE CASE
+// ============================================================
+andika("2. Multiple Values in Single Case:")
+andika("-----------------------------------")
+
+namba month = 7
+swichi month {
+    ikiwa 12, 1, 2 {
+        andika("Kipindi cha baridi (Winter season)")
+    }
+    ikiwa 3, 4, 5 {
+        andika("Kipindi cha masika (Spring season)")
+    }
+    ikiwa 6, 7, 8 {
+        andika("Kipindi cha joto (Summer season)")
+    }
+    ikiwa 9, 10, 11 {
+        andika("Kipindi cha vuli (Autumn season)")
+    }
+    kawaida {
+        andika("Mwezi si sahihi (Invalid month)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 3. SWITCH WITH STRINGS
+// ============================================================
+andika("3. Switch with Strings:")
+andika("------------------------")
+
+maneno color = "bluu"
+swichi color {
+    ikiwa "nyekundu" {
+        andika("Rangi ya damu (Color of blood)")
+    }
+    ikiwa "bluu" {
+        andika("Rangi ya anga (Color of sky)")
+    }
+    ikiwa "kijani" {
+        andika("Rangi ya majani (Color of leaves)")
+    }
+    ikiwa "manjano" {
+        andika("Rangi ya jua (Color of sun)")
+    }
+    kawaida {
+        andika("Rangi isiyojulikana (Unknown color)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 4. SWITCH WITH BOOLEAN VALUES
+// ============================================================
+andika("4. Switch with Boolean Values:")
+andika("-------------------------------")
+
+boolean isStudent = kweli
+swichi isStudent {
+    ikiwa kweli {
+        andika("Wewe ni mwanafunzi (You are a student)")
+        andika("Unapata punguzo (You get a discount)")
+    }
+    ikiwa uwongo {
+        andika("Wewe si mwanafunzi (You are not a student)")
+        andika("Bei ya kawaida (Regular price)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 5. SWITCH WITH EXPRESSIONS
+// ============================================================
+andika("5. Switch with Expressions:")
+andika("----------------------------")
+
+namba score = 85
+namba grade = 0
+
+kama score >= 90 {
+    grade = 5
+} sivyo kama score >= 80 {
+    grade = 4
+} sivyo kama score >= 70 {
+    grade = 3
+} sivyo kama score >= 60 {
+    grade = 2
+} sivyo {
+    grade = 1
+}
+
+swichi grade {
+    ikiwa 5 {
+        andika("Daraja A - Bora sana! (Grade A - Excellent!)")
+    }
+    ikiwa 4 {
+        andika("Daraja B - Vizuri sana! (Grade B - Very good!)")
+    }
+    ikiwa 3 {
+        andika("Daraja C - Vizuri (Grade C - Good)")
+    }
+    ikiwa 2 {
+        andika("Daraja D - Wastani (Grade D - Average)")
+    }
+    kawaida {
+        andika("Daraja F - Jaribu tena (Grade F - Try again)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 6. SWITCH IN FUNCTION
+// ============================================================
+andika("6. Switch in Function:")
+andika("-----------------------")
+
+kazi getGreeting(namba hour) {
+    swichi hour {
+        ikiwa 0, 1, 2, 3, 4, 5 {
+            rudisha "Usiku mwema (Good night)"
+        }
+        ikiwa 6, 7, 8, 9, 10, 11 {
+            rudisha "Habari za asubuhi (Good morning)"
+        }
+        ikiwa 12, 13, 14, 15, 16 {
+            rudisha "Habari za mchana (Good afternoon)"
+        }
+        ikiwa 17, 18, 19, 20 {
+            rudisha "Habari za jioni (Good evening)"
+        }
+        kawaida {
+            rudisha "Habari za usiku (Good night)"
+        }
+    }
+}
+
+andika(getGreeting(9))   // Morning
+andika(getGreeting(14))  // Afternoon
+andika(getGreeting(18))  // Evening
+
+andika("")
+
+// ============================================================
+// 7. SWITCH WITH MENU SYSTEM
+// ============================================================
+andika("7. Switch with Menu System:")
+andika("----------------------------")
+
+kazi processMenuChoice(namba choice) {
+    swichi choice {
+        ikiwa 1 {
+            andika("Umechagua: Tengeneza faili mpya (Create new file)")
+        }
+        ikiwa 2 {
+            andika("Umechagua: Fungua faili (Open file)")
+        }
+        ikiwa 3 {
+            andika("Umechagua: Hifadhi faili (Save file)")
+        }
+        ikiwa 4 {
+            andika("Umechagua: Chapisha (Print)")
+        }
+        ikiwa 5 {
+            andika("Umechagua: Toka (Exit)")
+        }
+        kawaida {
+            andika("Chaguo si sahihi! Tafadhali chagua 1-5")
+            andika("(Invalid choice! Please select 1-5)")
+        }
+    }
+}
+
+andika("Menyu:")
+andika("1. Tengeneza mpya")
+andika("2. Fungua")
+andika("3. Hifadhi")
+andika("4. Chapisha")
+andika("5. Toka")
+andika("")
+processMenuChoice(3)
+
+andika("")
+
+// ============================================================
+// 8. SWITCH WITH HTTP STATUS CODES
+// ============================================================
+andika("8. Switch with HTTP Status Codes:")
+andika("-----------------------------------")
+
+kazi getStatusMessage(namba statusCode) {
+    swichi statusCode {
+        ikiwa 200 {
+            rudisha "OK - Mafanikio (Success)"
+        }
+        ikiwa 201 {
+            rudisha "Created - Imeundwa (Created)"
+        }
+        ikiwa 400 {
+            rudisha "Bad Request - Ombi si sahihi (Bad request)"
+        }
+        ikiwa 401 {
+            rudisha "Unauthorized - Hauruhusiwi (Unauthorized)"
+        }
+        ikiwa 403 {
+            rudisha "Forbidden - Imezuiwa (Forbidden)"
+        }
+        ikiwa 404 {
+            rudisha "Not Found - Haipatikani (Not found)"
+        }
+        ikiwa 500 {
+            rudisha "Internal Server Error - Hitilafu ya seva (Server error)"
+        }
+        kawaida {
+            rudisha "Unknown Status - Hali isiyojulikana (Unknown status)"
+        }
+    }
+}
+
+andika("Status 200:", getStatusMessage(200))
+andika("Status 404:", getStatusMessage(404))
+andika("Status 500:", getStatusMessage(500))
+
+andika("")
+
+// ============================================================
+// 9. SWITCH WITH CALCULATOR OPERATIONS
+// ============================================================
+andika("9. Switch with Calculator Operations:")
+andika("--------------------------------------")
+
+kazi calculate(namba a, maneno operator, namba b) {
+    swichi operator {
+        ikiwa "+" {
+            rudisha a + b
+        }
+        ikiwa "-" {
+            rudisha a - b
+        }
+        ikiwa "*" {
+            rudisha a * b
+        }
+        ikiwa "/" {
+            kama b == 0 {
+                rudisha "Hitilafu: Huwezi gawanya na sifuri (Cannot divide by zero)"
+            }
+            rudisha a / b
+        }
+        ikiwa "%" {
+            rudisha a % b
+        }
+        kawaida {
+            rudisha "Opereta isiyojulikana (Unknown operator)"
+        }
+    }
+}
+
+andika("10 + 5 =", calculate(10, "+", 5))
+andika("10 - 5 =", calculate(10, "-", 5))
+andika("10 * 5 =", calculate(10, "*", 5))
+andika("10 / 5 =", calculate(10, "/", 5))
+
+andika("")
+
+// ============================================================
+// 10. SWITCH WITH TYPE CHECKING
+// ============================================================
+andika("10. Switch with Data Type Checking:")
+andika("------------------------------------")
+
+kazi processData(namba typeCode) {
+    swichi typeCode {
+        ikiwa 1 {
+            andika("Kuchakata data ya namba (Processing number data)")
+        }
+        ikiwa 2 {
+            andika("Kuchakata data ya maneno (Processing string data)")
+        }
+        ikiwa 3 {
+            andika("Kuchakata data ya boolean (Processing boolean data)")
+        }
+        ikiwa 4 {
+            andika("Kuchakata orodha (Processing array)")
+        }
+        ikiwa 5 {
+            andika("Kuchakata kamusi (Processing dictionary)")
+        }
+        kawaida {
+            andika("Aina ya data isiyojulikana (Unknown data type)")
+        }
+    }
+}
+
+processData(1)
+processData(4)
+processData(2)
+
+andika("")
+
+// ============================================================
+// 11. NESTED SWITCH STATEMENTS
+// ============================================================
+andika("11. Nested Switch Statements:")
+andika("------------------------------")
+
+namba category = 1
+namba subcategory = 2
+
+swichi category {
+    ikiwa 1 {
+        andika("Kategoria: Programu (Category: Software)")
+        swichi subcategory {
+            ikiwa 1 {
+                andika("  - Programu ya kuandika (Text editor)")
+            }
+            ikiwa 2 {
+                andika("  - Kivinjari (Browser)")
+            }
+            kawaida {
+                andika("  - Programu nyingine (Other software)")
+            }
+        }
+    }
+    ikiwa 2 {
+        andika("Kategoria: Vifaa (Category: Hardware)")
+    }
+    kawaida {
+        andika("Kategoria isiyojulikana (Unknown category)")
+    }
+}
+
+andika("")
+
+// ============================================================
+// 12. SWITCH WITH NO DEFAULT
+// ============================================================
+andika("12. Switch with No Default Case:")
+andika("---------------------------------")
+
+namba value = 10
+swichi value {
+    ikiwa 5 {
+        andika("Thamani ni 5 (Value is 5)")
+    }
+    ikiwa 10 {
+        andika("Thamani ni 10 (Value is 10)")
+    }
+    ikiwa 15 {
+        andika("Thamani ni 15 (Value is 15)")
+    }
+}
+
+andika("")
+andika("=== MWISHO WA MFANO (END OF EXAMPLES) ===")

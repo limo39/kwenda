@@ -1,0 +1,83 @@
+// Simple Switch Statement Example
+
+andika("=== SWITCH SIMPLE TEST ===")
+andika("")
+
+// Test 1: Basic number matching
+namba x = 2
+andika("Test 1: x =", x)
+swichi x {
+    ikiwa 1 {
+        andika("One")
+    }
+    ikiwa 2 {
+        andika("Two")
+    }
+    ikiwa 3 {
+        andika("Three")
+    }
+    kawaida {
+        andika("Other number")
+    }
+}
+
+andika("")
+
+// Test 2: Multiple values
+namba day = 6
+andika("Test 2: day =", day)
+swichi day {
+    ikiwa 1, 2, 3, 4, 5 {
+        andika("Weekday")
+    }
+    ikiwa 6, 7 {
+        andika("Weekend")
+    }
+}
+
+andika("")
+
+// Test 3: String matching
+maneno color = "red"
+andika("Test 3: color =", color)
+swichi color {
+    ikiwa "red" {
+        andika("Stop")
+    }
+    ikiwa "yellow" {
+        andika("Slow down")
+    }
+    ikiwa "green" {
+        andika("Go")
+    }
+    kawaida {
+        andika("Unknown color")
+    }
+}
+
+andika("")
+
+// Test 4: In a function
+kazi getGrade(namba score) {
+    swichi score {
+        ikiwa 10, 9 {
+            rudisha "A"
+        }
+        ikiwa 8, 7 {
+            rudisha "B"
+        }
+        ikiwa 6, 5 {
+            rudisha "C"
+        }
+        kawaida {
+            rudisha "F"
+        }
+    }
+}
+
+andika("Test 4: Grade for 9 =", getGrade(9))
+andika("Test 4: Grade for 6 =", getGrade(6))
+andika("Test 4: Grade for 3 =", getGrade(3))
+
+andika("")
+andika("=== TEST COMPLETE ===")

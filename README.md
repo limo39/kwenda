@@ -26,6 +26,7 @@
 
 ### Control Flow
 - **Conditionals**: If/else statements with `kama`/`sivyo`
+- **Pattern Matching**: Switch/case statements with `swichi`/`ikiwa`/`kawaida`
 - **While Loops**: Iteration with `wakati`
 - **For Loops**: Flexible looping with `kwa`
 - **Loop Control**: Break (`vunja`) and continue (`endelea`)
@@ -136,6 +137,9 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `kwa` | for | For loop |
 | `vunja` | break | Break out of loop |
 | `endelea` | continue | Continue to next iteration |
+| `swichi` | switch | Switch statement (pattern matching) |
+| `ikiwa` | case | Case clause in switch statement |
+| `kawaida` | default | Default case in switch statement |
 | `boolean` | boolean | Declare a boolean variable |
 | `kweli` | true | Boolean true value |
 | `uwongo` | false | Boolean false value |
