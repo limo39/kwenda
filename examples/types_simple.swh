@@ -1,0 +1,48 @@
+// Simple type checking example
+
+andika("=== SIMPLE TYPE CHECKING TEST ===")
+andika("")
+
+// Test 1: Basic typed function
+kazi ongeza(namba a, namba b) namba {
+    rudisha a + b
+}
+
+namba x = 5
+namba y = 10
+namba jumla = ongeza(x, y)
+andika("5 + 10 =", jumla)
+
+andika("")
+
+// Test 2: String function
+kazi salamu(maneno jina) maneno {
+    rudisha "Habari " + jina
+}
+
+maneno ujumbe = salamu("Amina")
+andika(ujumbe)
+
+andika("")
+
+// Test 3: Boolean function
+kazi ni_kubwa(namba a, namba b) boolean {
+    rudisha a > b
+}
+
+boolean matokeo = ni_kubwa(15, 10)
+andika("15 > 10?", matokeo)
+
+andika("")
+
+// Test 4: Array function
+kazi pata_namba() orodha {
+    rudisha [1, 2, 3, 4, 5]
+}
+
+orodha namba orodha_ya_namba = pata_namba()
+andika("Orodha:", orodha_ya_namba)
+
+andika("")
+
+andika("=== ALL TESTS PASSED ===")

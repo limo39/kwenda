@@ -8,6 +8,8 @@
 - **Native Swahili Syntax**: All keywords and concepts in Swahili
 - **Interactive I/O**: Built-in support for user input and output with `ingiza` and `andika`
 - **Comments**: Single-line comments using `#`
+- **Type Annotations**: Optional type annotations for variables and functions
+- **Type Checking**: Static type checking with `--check` and `--strict` modes
 
 ### Data Types & Variables
 - **Numbers**: Integer and floating-point support with `namba`
@@ -91,6 +93,12 @@ go build
 ```bash
 # Run a Kwenda program
 ./kwenda program.swh
+
+# Type check before running (non-strict)
+./kwenda --check program.swh
+
+# Type check with strict mode
+./kwenda --strict program.swh
 
 # Or using go run
 go run main.go program.swh

@@ -8,6 +8,7 @@ import (
     "kwenda/interpreter"
     "kwenda/repl"
     "kwenda/debugger"
+    "kwenda/typechecker"
     "os"
     "strings"
 )
@@ -85,6 +86,8 @@ USAGE:
     kwenda <filename.swh>              Run a Kwenda program
     kwenda repl                        Start interactive REPL
     kwenda debug <filename.swh>        Debug a program
+    kwenda --check <filename.swh>      Type check a program (non-strict)
+    kwenda --strict <filename.swh>     Type check with strict mode
     kwenda --help                      Show this help message
     kwenda --version                   Show version information
 
@@ -92,6 +95,7 @@ MODES:
     Normal Mode:    Execute a Kwenda program file
     REPL Mode:      Interactive shell for testing code
     Debug Mode:     Step through code with breakpoints
+    Type Check:     Verify types without execution (--check or --strict)
 
 DESCRIPTION:
     Kwenda is a fully-featured programming language with native Swahili syntax.
@@ -190,6 +194,51 @@ func main() {
     // Handle version flag
     if command == "--version" || command == "-v" {
         printVersion()
+        return
+    }
+    
+    // Handle type checking mode
+    if command == "--check" || command == "--strict" {
+        if len(os.Args) < 3 {
+            fmt.Println("Usage: kwenda", command, "<filename.swh>")
+            return
+        }
+        
+        filename := os.Args[2]
+        input, err := os.ReadFile(filename)
+        if err != nil {
+            fmt.Println("Error reading file:", err)
+            return
+        }
+        
+        // Process imports
+        processedSource, err := ProcessImports(string(input))
+        if err != nil {
+            fmt.Println("Error processing imports:", err)
+            return
+        }
+        
+        // Lexical analysis
+        tokens := lexer.Lex(processedSource)
+        
+        // Parsing
+        program := parser.ParseProgram(tokens)
+        
+        // Type checking
+        strict := command == "--strict"
+        errors := typechecker.CheckProgram(program.Functions, strict)
+        
+        if len(errors) == 0 {
+            fmt.Println("✓ Ukaguzi wa aina umefanikisha! (Type checking passed!)")
+            fmt.Println("✓ Hakuna hitilafu za aina zilizopatikana. (No type errors found.)")
+        } else {
+            fmt.Printf("✗ Hitilafu %d za aina zimepatikana: (Found %d type errors:)\n", len(errors), len(errors))
+            fmt.Println()
+            for i, err := range errors {
+                fmt.Printf("%d. %v\n", i+1, err)
+            }
+            os.Exit(1)
+        }
         return
     }
     

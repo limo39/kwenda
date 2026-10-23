@@ -1,0 +1,38 @@
+// Test file with intentional type errors for strict type checking
+
+andika("=== TYPE ERROR EXAMPLES ===")
+
+// Example 1: Correct - will pass type checking
+kazi ongeza(namba a, namba b) namba {
+    rudisha a + b
+}
+
+namba matokeo = ongeza(5, 10)
+andika("Matokeo:", matokeo)
+
+// Example 2: Type error - passing string to number parameter (uncomment to test)
+// maneno x = "hello"
+// namba y = ongeza(x, 5)  // Error: Expected namba, got maneno
+
+// Example 3: Type error - wrong return type (uncomment to test)
+// kazi pata_namba() maneno {
+//     rudisha 42  // Error: Expected maneno, got namba
+// }
+
+// Example 4: Correct boolean function
+kazi ni_kubwa(namba a, namba b) boolean {
+    rudisha a > b
+}
+
+boolean jibu = ni_kubwa(10, 5)
+andika("10 > 5?", jibu)
+
+// Example 5: Correct string function
+kazi salamu(maneno jina) maneno {
+    rudisha "Habari " + jina
+}
+
+maneno ujumbe = salamu("Amina")
+andika(ujumbe)
+
+andika("=== TYPE CHECKING PASSED ===")

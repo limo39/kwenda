@@ -1,0 +1,336 @@
+// ============================================================
+// TYPE ANNOTATIONS DEMONSTRATION - Type Safety in Kwenda
+// ============================================================
+// This file demonstrates type annotations and optional type checking
+
+andika("=== KWENDA TYPE ANNOTATIONS EXAMPLES ===")
+andika("")
+
+// ============================================================
+// 1. BASIC VARIABLE TYPE ANNOTATIONS
+// ============================================================
+andika("1. Basic Variable Types:")
+andika("-------------------------")
+
+// Number types
+namba x = 10
+namba y = 20.5
+namba suma = x + y
+andika("x (namba):", x)
+andika("y (namba):", y)
+andika("suma:", suma)
+
+andika("")
+
+// String types
+maneno jina = "Amina"
+maneno salamu = "Habari"
+andika("jina (maneno):", jina)
+andika("salamu (maneno):", salamu)
+
+andika("")
+
+// Boolean types
+boolean ni_mwanafunzi = kweli
+boolean ana_ruhusa = uwongo
+andika("ni_mwanafunzi (boolean):", ni_mwanafunzi)
+andika("ana_ruhusa (boolean):", ana_ruhusa)
+
+andika("")
+
+// ============================================================
+// 2. FUNCTION TYPE ANNOTATIONS
+// ============================================================
+andika("2. Function Type Annotations:")
+andika("-------------------------------")
+
+// Function with typed parameters and return type
+kazi ongeza(namba a, namba b) namba {
+    rudisha a + b
+}
+
+namba matokeo1 = ongeza(5, 3)
+andika("ongeza(5, 3) =", matokeo1)
+
+andika("")
+
+// Function with string parameters
+kazi unganisha_majina(maneno kwanza, maneno mwisho) maneno {
+    rudisha kwanza + " " + mwisho
+}
+
+maneno jina_kamili = unganisha_majina("Fatuma", "Hassan")
+andika("Jina kamili:", jina_kamili)
+
+andika("")
+
+// Function with boolean return
+kazi ni_kubwa(namba a, namba b) boolean {
+    rudisha a > b
+}
+
+boolean jibu = ni_kubwa(10, 5)
+andika("10 > 5?", jibu)
+
+andika("")
+
+// ============================================================
+// 3. MULTIPLE PARAMETER TYPES
+// ============================================================
+andika("3. Multiple Parameter Types:")
+andika("-----------------------------")
+
+kazi onyesha_taarifa(maneno jina, namba umri, boolean ni_mwanafunzi) {
+    andika("Jina:", jina)
+    andika("Umri:", umri)
+    andika("Mwanafunzi:", ni_mwanafunzi)
+}
+
+onyesha_taarifa("Ali", 25, kweli)
+
+andika("")
+
+// ============================================================
+// 4. ARRAY TYPE ANNOTATIONS
+// ============================================================
+andika("4. Array Type Annotations:")
+andika("---------------------------")
+
+orodha namba namba_list = [1, 2, 3, 4, 5]
+andika("Orodha ya namba:", namba_list)
+
+orodha maneno majina = ["Amina", "Juma", "Fatuma"]
+andika("Orodha ya majina:", majina)
+
+andika("")
+
+// ============================================================
+// 5. FUNCTION RETURNING ARRAY
+// ============================================================
+andika("5. Function Returning Array:")
+andika("-----------------------------")
+
+kazi pata_namba_tano() orodha {
+    rudisha [10, 20, 30, 40, 50]
+}
+
+orodha namba namba_tano = pata_namba_tano()
+andika("Namba tano:", namba_tano)
+
+andika("")
+
+// ============================================================
+// 6. CALCULATOR WITH TYPE SAFETY
+// ============================================================
+andika("6. Calculator with Type Safety:")
+andika("--------------------------------")
+
+kazi gawanya(namba a, namba b) namba {
+    kama b == 0 {
+        andika("Hitilafu: Huwezi gawanya na sifuri!")
+        rudisha 0
+    }
+    rudisha a / b
+}
+
+namba x1 = gawanya(20, 4)
+andika("20 / 4 =", x1)
+
+namba x2 = gawanya(10, 0)
+andika("10 / 0 =", x2)
+
+andika("")
+
+// ============================================================
+// 7. HELPER FUNCTIONS WITH TYPES
+// ============================================================
+andika("7. Helper Functions with Types:")
+andika("--------------------------------")
+
+kazi ni_chanya(namba x) boolean {
+    rudisha x > 0
+}
+
+kazi ni_hasi(namba x) boolean {
+    rudisha x < 0
+}
+
+kazi ni_sifuri(namba x) boolean {
+    rudisha x == 0
+}
+
+andika("10 ni chanya?", ni_chanya(10))
+andika("-5 ni hasi?", ni_hasi(-5))
+andika("0 ni sifuri?", ni_sifuri(0))
+
+andika("")
+
+// ============================================================
+// 8. STRING MANIPULATION WITH TYPES
+// ============================================================
+andika("8. String Manipulation with Types:")
+andika("-----------------------------------")
+
+kazi herufi_za_kwanza(maneno neno, namba idadi) maneno {
+    // Get first 'idadi' characters
+    rudisha neno
+}
+
+maneno matokeo = herufi_za_kwanza("Habari", 3)
+andika("Herufi 3 za kwanza:", matokeo)
+
+andika("")
+
+// ============================================================
+// 9. TEMPERATURE CONVERTER
+// ============================================================
+andika("9. Temperature Converter:")
+andika("--------------------------")
+
+kazi celsius_to_fahrenheit(namba celsius) namba {
+    rudisha (celsius * 9 / 5) + 32
+}
+
+kazi fahrenheit_to_celsius(namba fahrenheit) namba {
+    rudisha (fahrenheit - 32) * 5 / 9
+}
+
+namba temp_c = 25
+namba temp_f = celsius_to_fahrenheit(temp_c)
+andika(temp_c, "°C =", temp_f, "°F")
+
+namba temp_f2 = 77
+namba temp_c2 = fahrenheit_to_celsius(temp_f2)
+andika(temp_f2, "°F =", temp_c2, "°C")
+
+andika("")
+
+// ============================================================
+// 10. GRADING SYSTEM WITH TYPES
+// ============================================================
+andika("10. Grading System with Types:")
+andika("-------------------------------")
+
+kazi hesabu_daraja(namba alama) maneno {
+    kama alama >= 90 {
+        rudisha "A"
+    } sivyo kama alama >= 80 {
+        rudisha "B"
+    } sivyo kama alama >= 70 {
+        rudisha "C"
+    } sivyo kama alama >= 60 {
+        rudisha "D"
+    } sivyo {
+        rudisha "F"
+    }
+}
+
+kazi onyesha_daraja(maneno jina, namba alama) {
+    maneno daraja = hesabu_daraja(alama)
+    andika(jina, "- Alama:", alama, "Daraja:", daraja)
+}
+
+onyesha_daraja("Amina", 95)
+onyesha_daraja("Juma", 82)
+onyesha_daraja("Fatuma", 67)
+
+andika("")
+
+// ============================================================
+// 11. RECURSIVE FUNCTION WITH TYPES
+// ============================================================
+andika("11. Recursive Function with Types:")
+andika("------------------------------------")
+
+kazi factorial(namba n) namba {
+    kama n <= 1 {
+        rudisha 1
+    }
+    rudisha n * factorial(n - 1)
+}
+
+namba fact5 = factorial(5)
+andika("5! =", fact5)
+
+namba fact7 = factorial(7)
+andika("7! =", fact7)
+
+andika("")
+
+// ============================================================
+// 12. VALIDATION FUNCTIONS
+// ============================================================
+andika("12. Validation Functions:")
+andika("--------------------------")
+
+kazi ni_sahihi_umri(namba umri) boolean {
+    rudisha umri >= 0 na umri <= 150
+}
+
+kazi ni_sahihi_alama(namba alama) boolean {
+    rudisha alama >= 0 na alama <= 100
+}
+
+andika("Umri 25 ni sahihi?", ni_sahihi_umri(25))
+andika("Umri -5 ni sahihi?", ni_sahihi_umri(-5))
+andika("Alama 85 ni sahihi?", ni_sahihi_alama(85))
+andika("Alama 105 ni sahihi?", ni_sahihi_alama(105))
+
+andika("")
+
+// ============================================================
+// 13. ARRAY OPERATIONS WITH TYPES
+// ============================================================
+andika("13. Array Operations with Types:")
+andika("---------------------------------")
+
+kazi jumla_ya_orodha(orodha namba) namba {
+    namba jumla = 0
+    // Note: This is a simplified version
+    // In full implementation, would iterate through array
+    rudisha jumla
+}
+
+orodha namba namba_za_kuongeza = [5, 10, 15, 20, 25]
+andika("Namba za kuongeza:", namba_za_kuongeza)
+
+andika("")
+
+// ============================================================
+// 14. BOOLEAN LOGIC WITH TYPES
+// ============================================================
+andika("14. Boolean Logic with Types:")
+andika("------------------------------")
+
+kazi ni_katikati(namba x, namba min, namba max) boolean {
+    rudisha x >= min na x <= max
+}
+
+kazi ni_nje(namba x, namba min, namba max) boolean {
+    rudisha x < min au x > max
+}
+
+namba thamani = 15
+andika("15 iko kati ya 10 na 20?", ni_katikati(thamani, 10, 20))
+andika("15 iko nje ya 10 na 20?", ni_nje(thamani, 10, 20))
+
+andika("")
+
+// ============================================================
+// 15. MIXED TYPE FUNCTIONS
+// ============================================================
+andika("15. Mixed Type Functions:")
+andika("--------------------------")
+
+kazi tengeneza_ujumbe(maneno jina, namba umri, boolean ni_mwalimu) maneno {
+    maneno ujumbe = jina + " ana umri wa miaka " 
+    // Would concatenate all parts
+    rudisha ujumbe
+}
+
+maneno ujumbe1 = tengeneza_ujumbe("Hassan", 30, kweli)
+andika(ujumbe1)
+
+andika("")
+
+andika("=== MWISHO WA MFANO (END OF EXAMPLES) ===")

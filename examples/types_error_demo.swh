@@ -1,0 +1,15 @@
+// Demonstration file with type errors (for testing --strict mode)
+// This file will NOT pass strict type checking
+
+andika("=== TYPE ERROR DEMONSTRATION ===")
+
+// Error 1: Passing wrong type to function
+kazi multiply(namba a, namba b) namba {
+    rudisha a * b
+}
+
+// This line has an error - passing string to number parameter
+maneno text = "5"
+namba result = multiply(text, 10)  // ERROR: Expected namba, got maneno
+
+andika("Result:", result)
