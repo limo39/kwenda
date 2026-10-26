@@ -28,6 +28,8 @@ func isSwahiliKeyword(word string) bool {
 		"kazi", "kama", "sivyo", "kwa", "wakati", "rudisha", "namba", "andika", "ingiza",
 		"katika", // List comprehension keyword
 		"kweli", "uwongo", "na", "au", "vunja", "endelea", "boolean", "maneno",
+		// Const/immutable keyword
+		"thabiti",
 		// Array keywords
 		"orodha", "ongeza", "ondoa", "urefu_orodha", "pata",
 		// Set keywords

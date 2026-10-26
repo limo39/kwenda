@@ -34,7 +34,13 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			continue
 		}
 
-		// Handle top-level variable declarations
+		// Handle top-level variable declarations (including const declarations)
+		// Check if this starts with thabiti keyword and adjust parsing start
+		declStart := i
+		if tokens[i].Value == "thabiti" && i+1 < len(tokens) {
+			i++ // Skip past thabiti to check the type keyword
+		}
+		
 		if (tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "kamusi" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha" || tokens[i].Value == "seti" || tokens[i].Value == "tuple") && i+3 < len(tokens) && tokens[i+2].Value == "=" {
 			end := i + 3
 			braceCount := 0
@@ -80,12 +86,15 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				end++
 			}
 			
-			stmt := Parse(tokens[i:end])
+			stmt := Parse(tokens[declStart:end])
 			if stmt != nil {
 				functions = append(functions, stmt)
 			}
 			i = end
 			continue
+		} else {
+			// Reset i if we advanced past thabiti but didn't find a valid declaration
+			i = declStart
 		}
 
 		// Handle class definitions
@@ -206,6 +215,39 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				functions = append(functions, stmt)
 			}
 			i = end
+		} else if tokens[i].Value == "thabiti" || tokens[i].Value == "namba" || tokens[i].Value == "maneno" || tokens[i].Value == "boolean" || tokens[i].Value == "orodha" || tokens[i].Value == "kamusi" || tokens[i].Value == "seti" || tokens[i].Value == "tuple" {
+			// Handle variable declarations at top level
+			// Find the end of the declaration (until next statement/keyword)
+			end := i + 1
+			for end < len(tokens) {
+				// Stop at next top-level statement keyword (but not type keywords that might be part of this declaration)
+				if tokens[end].Value == "kazi" || tokens[end].Value == "darasa" || 
+				   tokens[end].Value == "andika" || tokens[end].Value == "wakati" || 
+				   tokens[end].Value == "kama" || tokens[end].Value == "kwa" || 
+				   tokens[end].Value == "swichi" || tokens[end].Value == "thabiti" {
+					break
+				}
+				// Also stop at another variable declaration keyword ONLY if it's at the start of a new declaration
+				// (i.e., not immediately after thabiti or another type keyword)
+				if end > i+1 && (tokens[end].Value == "namba" || tokens[end].Value == "maneno" ||
+				   tokens[end].Value == "boolean" || tokens[end].Value == "orodha" ||
+				   tokens[end].Value == "kamusi" || tokens[end].Value == "seti" ||
+				   tokens[end].Value == "tuple") {
+					// Check if previous token suggests this is a new declaration
+					if tokens[end-1].Value != "thabiti" && tokens[end-1].Value != "orodha" && 
+					   tokens[end-1].Value != "seti" && tokens[end-1].Value != "tuple" {
+						break
+					}
+				}
+				end++
+			}
+			
+			// Parse this variable declaration
+			stmt := Parse(tokens[i:end])
+			if stmt != nil {
+				functions = append(functions, stmt)
+			}
+			i = end
 		} else {
 			// Handle plain statements at the top level (function calls, assignments, etc.)
 			end := i + 1
@@ -213,8 +255,8 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 			braceCount := 0
 			bracketCount := 0
 			
-			// If starting with identifier followed by paren, parse function call
-			if tokens[i].Type == lexer.TokenIdentifier && end < len(tokens) && tokens[end].Value == "(" {
+			// If starting with identifier or keyword followed by paren, parse function call
+			if (tokens[i].Type == lexer.TokenIdentifier || tokens[i].Type == lexer.TokenKeyword) && end < len(tokens) && tokens[end].Value == "(" {
 				parenCount = 1 // Start count at 1 since we're at the opening paren
 				end++ // Move past the opening paren
 				
@@ -259,7 +301,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 					
 					// If all brackets closed and we hit a keyword, stop
 					if braceCount == 0 && parenCount == 0 && bracketCount == 0 {
-						if tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
+						if tokens[end].Value == "thabiti" || tokens[end].Value == "namba" || tokens[end].Value == "maneno" || 
 						   tokens[end].Value == "kazi" || tokens[end].Value == "darasa" || 
 						   tokens[end].Value == "andika" || tokens[end].Value == "wakati" || 
 						   tokens[end].Value == "kama" || tokens[end].Value == "kwa" || 
@@ -273,7 +315,7 @@ func ParseProgram(tokens []lexer.Token) ProgramNode {
 				}
 			} else {
 				// For other statements, find next keyword
-				for end < len(tokens) && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" && tokens[end].Value != "darasa" && tokens[end].Value != "andika" && tokens[end].Value != "wakati" && tokens[end].Value != "kama" && tokens[end].Value != "kwa" && tokens[end].Value != "swichi" {
+				for end < len(tokens) && tokens[end].Value != "thabiti" && tokens[end].Value != "namba" && tokens[end].Value != "maneno" && tokens[end].Value != "kazi" && tokens[end].Value != "darasa" && tokens[end].Value != "andika" && tokens[end].Value != "wakati" && tokens[end].Value != "kama" && tokens[end].Value != "kwa" && tokens[end].Value != "swichi" {
 					end++
 				}
 			}
@@ -391,24 +433,111 @@ func Parse(tokens []lexer.Token) ast.ASTNode {
 	// Handle function variable declarations (kazi name = lambda() { ... })
 	if tokens[0].Value == "kazi" && len(tokens) >= 4 && tokens[2].Value == "=" {
 		return ast.VariableDeclarationNode{
-			Name:  tokens[1].Value,
-			Value: ParseExpression(tokens[3:]),
+			Name:    tokens[1].Value,
+			Value:   ParseExpression(tokens[3:]),
+			VarType: "kazi",
+		}
+	}
+
+	// Handle const variable declarations (thabiti namba x = 10, thabiti maneno name = "Ali", etc.)
+	if tokens[0].Value == "thabiti" && len(tokens) >= 5 {
+		varType := tokens[1].Value // namba, maneno, boolean, orodha, etc.
+		varName := tokens[2].Value
+		
+		if tokens[3].Value == "=" {
+			// Parse based on type
+			switch varType {
+			case "namba", "boolean":
+				return ast.VariableDeclarationNode{
+					Name:    varName,
+					Value:   ParseExpression(tokens[4:]),
+					IsConst: true,
+					VarType: varType,
+				}
+			case "maneno":
+				return ast.StringVariableDeclarationNode{
+					Name:    varName,
+					Value:   ParseExpression(tokens[4:]),
+					IsConst: true,
+				}
+			case "orodha":
+				// Array declaration: thabiti orodha namba arr = [1,2,3]
+				if len(tokens) >= 6 {
+					elemType := tokens[2].Value
+					actualName := tokens[3].Value
+					if tokens[4].Value == "=" {
+						arrayLiteral := ParseArrayLiteral(tokens[5:])
+						if listComp, ok := arrayLiteral.(ast.ListComprehensionNode); ok {
+							return ast.ArrayDeclarationNode{
+								Name:     actualName,
+								Type:     elemType,
+								Elements: []ast.ASTNode{listComp},
+								IsConst:  true,
+							}
+						}
+						return ast.ArrayDeclarationNode{
+							Name:     actualName,
+							Type:     elemType,
+							Elements: arrayLiteral.(ast.ArrayNode).Elements,
+							IsConst:  true,
+						}
+					}
+				}
+			case "kamusi":
+				return ast.DictionaryDeclarationNode{
+					Name:    varName,
+					Value:   ParseExpression(tokens[4:]),
+					IsConst: true,
+				}
+			case "seti":
+				// Set declaration: thabiti seti namba s = {1,2,3}
+				if len(tokens) >= 6 {
+					elemType := tokens[2].Value
+					actualName := tokens[3].Value
+					if tokens[4].Value == "=" {
+						setLiteral := ParseSetLiteral(tokens[5:])
+						return ast.SetDeclarationNode{
+							Name:     actualName,
+							Type:     elemType,
+							Elements: setLiteral.(ast.SetNode).Elements,
+							IsConst:  true,
+						}
+					}
+				}
+			case "tuple":
+				// Tuple declaration: thabiti tuple namba t = (1,2,3)
+				if len(tokens) >= 6 {
+					elemType := tokens[2].Value
+					actualName := tokens[3].Value
+					if tokens[4].Value == "=" {
+						tupleLiteral := ParseTupleLiteral(tokens[5:])
+						return ast.TupleDeclarationNode{
+							Name:     actualName,
+							Type:     elemType,
+							Elements: tupleLiteral.(ast.TupleNode).Elements,
+							IsConst:  true,
+						}
+					}
+				}
+			}
 		}
 	}
 
 	// Handle variable declarations
 	if tokens[0].Value == "namba" && len(tokens) >= 4 && tokens[2].Value == "=" {
 		return ast.VariableDeclarationNode{
-			Name:  tokens[1].Value,
-			Value: ParseExpression(tokens[3:]),
+			Name:    tokens[1].Value,
+			Value:   ParseExpression(tokens[3:]),
+			VarType: "namba",
 		}
 	}
 
 	// Handle boolean variable declarations
 	if tokens[0].Value == "boolean" && len(tokens) >= 4 && tokens[2].Value == "=" {
 		return ast.VariableDeclarationNode{
-			Name:  tokens[1].Value,
-			Value: ParseExpression(tokens[3:]),
+			Name:    tokens[1].Value,
+			Value:   ParseExpression(tokens[3:]),
+			VarType: "boolean",
 		}
 	}
 

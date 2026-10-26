@@ -38,8 +38,10 @@ type FunctionCallNode struct {
 
 // VariableDeclarationNode represents a variable declaration (e.g., namba x = 10)
 type VariableDeclarationNode struct {
-    Name  string // Variable name
-    Value ASTNode // Variable value
+    Name     string  // Variable name
+    Value    ASTNode // Variable value
+    IsConst  bool    // Whether this is a const declaration
+    VarType  string  // Variable type (namba, maneno, etc.)
 }
 
 // Parameter represents a function parameter
@@ -105,8 +107,9 @@ type FormattedStringNode struct {
 
 // StringVariableDeclarationNode represents a string variable declaration (e.g., maneno x = "habari")
 type StringVariableDeclarationNode struct {
-    Name  string  // Variable name
-    Value ASTNode // Variable value
+    Name    string  // Variable name
+    Value   ASTNode // Variable value
+    IsConst bool    // Whether this is a const declaration
 }
 
 // ArrayNode represents an array literal (e.g., [1, 2, 3])
@@ -116,9 +119,10 @@ type ArrayNode struct {
 
 // ArrayDeclarationNode represents an array variable declaration (e.g., orodha namba = [1, 2, 3])
 type ArrayDeclarationNode struct {
-    Name     string  // Variable name
-    Type     string  // Element type (namba, maneno, etc.)
+    Name     string    // Variable name
+    Type     string    // Element type (namba, maneno, etc.)
     Elements []ASTNode // Initial elements
+    IsConst  bool      // Whether this is a const declaration
 }
 
 // ArrayAccessNode represents array element access (e.g., arr[0])
@@ -249,8 +253,9 @@ type DictionaryPair struct {
 
 // DictionaryDeclarationNode represents a dictionary variable declaration (e.g., kamusi data = {})
 type DictionaryDeclarationNode struct {
-	Name  string  // Variable name
-	Value ASTNode // Dictionary value
+	Name    string  // Variable name
+	Value   ASTNode // Dictionary value
+	IsConst bool    // Whether this is a const declaration
 }
 
 // DictionaryAccessNode represents accessing a dictionary value (e.g., dict["key"])
@@ -324,6 +329,7 @@ type SetDeclarationNode struct {
 	Name     string    // Variable name
 	Type     string    // Element type (namba, maneno, etc.)
 	Elements []ASTNode // Initial elements
+	IsConst  bool      // Whether this is a const declaration
 }
 
 // TupleNode represents a tuple literal (e.g., (1, 2, 3) or ("a", "b", "c"))
@@ -336,6 +342,7 @@ type TupleDeclarationNode struct {
 	Name     string    // Variable name
 	Type     string    // Element type (namba, maneno, etc.) - optional
 	Elements []ASTNode // Initial elements
+	IsConst  bool      // Whether this is a const declaration (tuples are immutable by default)
 }
 
 // SwitchNode represents a switch statement (e.g., swichi x { ikiwa 1 { ... } ikiwa 2 { ... } kawaida { ... } })

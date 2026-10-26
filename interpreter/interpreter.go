@@ -39,17 +39,19 @@ type TupleValue struct {
 
 // Environment stores variables and their values
 type Environment struct {
-	Variables map[string]interface{}
-	Functions map[string]ast.FunctionNode
-	Classes   map[string]ast.ClassNode // Class definitions
-	Enums     map[string]ast.EnumNode  // Enum definitions
-	Modules   map[string]*Environment  // Module namespaces
-	Parent    *Environment             // For function scope
+	Variables    map[string]interface{}
+	ConstVars    map[string]bool          // Track which variables are const
+	Functions    map[string]ast.FunctionNode
+	Classes      map[string]ast.ClassNode // Class definitions
+	Enums        map[string]ast.EnumNode  // Enum definitions
+	Modules      map[string]*Environment  // Module namespaces
+	Parent       *Environment             // For function scope
 }
 
 func NewEnvironment() *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
+		ConstVars: make(map[string]bool),
 		Functions: make(map[string]ast.FunctionNode),
 		Classes:   make(map[string]ast.ClassNode),
 		Enums:     make(map[string]ast.EnumNode),
@@ -61,6 +63,7 @@ func NewEnvironment() *Environment {
 func NewChildEnvironment(parent *Environment) *Environment {
 	return &Environment{
 		Variables: make(map[string]interface{}),
+		ConstVars: make(map[string]bool),
 		Functions: parent.Functions, // Share functions with parent
 		Classes:   parent.Classes,   // Share classes with parent
 		Modules:   parent.Modules,   // Share modules with parent
@@ -69,7 +72,43 @@ func NewChildEnvironment(parent *Environment) *Environment {
 }
 
 func (env *Environment) Set(name string, value interface{}) {
+	// Check if variable is const
+	if env.IsConst(name) {
+		fmt.Printf("Hitilafu: Hauwezi kubadilisha thamani ya kigezo thabiti '%s' (Error: Cannot reassign const variable '%s')\n", name, name)
+		return
+	}
+	
+	// Check if variable exists in current environment
+	if _, exists := env.Variables[name]; exists {
+		env.Variables[name] = value
+		return
+	}
+	
+	// Check if variable exists in parent environment
+	if env.Parent != nil && env.Parent.Get(name) != nil {
+		env.Parent.Set(name, value)
+		return
+	}
+	
+	// Variable doesn't exist, create it in current environment
 	env.Variables[name] = value
+}
+
+func (env *Environment) SetConst(name string, value interface{}) {
+	env.Variables[name] = value
+	env.ConstVars[name] = true
+}
+
+func (env *Environment) IsConst(name string) bool {
+	// Check current environment
+	if isConst, exists := env.ConstVars[name]; exists && isConst {
+		return true
+	}
+	// Check if variable exists in parent and is const there
+	if env.Parent != nil {
+		return env.Parent.IsConst(name)
+	}
+	return false
 }
 
 func (env *Environment) Get(name string) interface{} {
@@ -308,9 +347,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return dict
 
 	case ast.DictionaryDeclarationNode:
-		// Handle dictionary declarations (e.g., kamusi data = {})
+		// Handle dictionary declarations (e.g., kamusi data = {} or thabiti kamusi data = {})
 		dictValue := Interpret(n.Value, env)
-		env.Set(n.Name, dictValue)
+		if n.IsConst {
+			env.SetConst(n.Name, dictValue)
+		} else {
+			env.Set(n.Name, dictValue)
+		}
 		return dictValue
 
 	case ast.ArrayNode:
@@ -403,14 +446,18 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return make(map[string]interface{})
 
 	case ast.ArrayDeclarationNode:
-		// Handle array declarations (e.g., orodha namba x = [1, 2, 3])
+		// Handle array declarations (e.g., orodha namba x = [1, 2, 3] or thabiti orodha namba x = [1, 2, 3])
 		// Special case: if the first element is a ListComprehensionNode, evaluate it directly
 		if len(n.Elements) == 1 {
 			if _, ok := n.Elements[0].(ast.ListComprehensionNode); ok {
 				// Evaluate the list comprehension and use its result
 				result := Interpret(n.Elements[0], env)
 				if arr, ok := result.([]interface{}); ok {
-					env.Set(n.Name, arr)
+					if n.IsConst {
+						env.SetConst(n.Name, arr)
+					} else {
+						env.Set(n.Name, arr)
+					}
 					return arr
 				}
 			}
@@ -422,7 +469,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			value := Interpret(element, env)
 			elements = append(elements, value)
 		}
-		env.Set(n.Name, elements)
+		if n.IsConst {
+			env.SetConst(n.Name, elements)
+		} else {
+			env.Set(n.Name, elements)
+		}
 		return elements
 
 	case ast.SetNode:
@@ -438,7 +489,7 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return set
 
 	case ast.SetDeclarationNode:
-		// Handle set declarations (e.g., seti namba x = {1, 2, 3})
+		// Handle set declarations (e.g., seti namba x = {1, 2, 3} or thabiti seti namba x = {1, 2, 3})
 		set := make(map[interface{}]bool)
 		for _, element := range n.Elements {
 			value := Interpret(element, env)
@@ -446,7 +497,11 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			key := fmt.Sprintf("%v", value)
 			set[key] = true
 		}
-		env.Set(n.Name, set)
+		if n.IsConst {
+			env.SetConst(n.Name, set)
+		} else {
+			env.Set(n.Name, set)
+		}
 		return set
 
 	case ast.TupleNode:
@@ -461,14 +516,18 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return TupleValue{Elements: elements}
 
 	case ast.TupleDeclarationNode:
-		// Handle tuple declarations (e.g., tuple namba x = (1, 2, 3))
+		// Handle tuple declarations (e.g., tuple namba x = (1, 2, 3) or thabiti tuple namba x = (1, 2, 3))
 		var elements []interface{}
 		for _, element := range n.Elements {
 			value := Interpret(element, env)
 			elements = append(elements, value)
 		}
 		tuple := TupleValue{Elements: elements}
-		env.Set(n.Name, tuple)
+		if n.IsConst {
+			env.SetConst(n.Name, tuple)
+		} else {
+			env.Set(n.Name, tuple)
+		}
 		return tuple
 
 	case ast.ArrayAccessNode:
@@ -616,9 +675,13 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return nil
 
 	case ast.StringVariableDeclarationNode:
-		// Handle string variable declarations (e.g., maneno x = "habari")
+		// Handle string variable declarations (e.g., maneno x = "habari" or thabiti maneno x = "habari")
 		value := Interpret(n.Value, env)
-		env.Set(n.Name, value)
+		if n.IsConst {
+			env.SetConst(n.Name, value)
+		} else {
+			env.Set(n.Name, value)
+		}
 		return value
 
 	case ast.ThisNode:
@@ -4366,9 +4429,15 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		return nil
 
 	case ast.VariableDeclarationNode:
-		// Handle variable declarations (e.g., namba x = 10)
+		// Handle variable declarations (e.g., namba x = 10 or thabiti namba x = 10)
 		value := Interpret(n.Value, env)
-		env.Set(n.Name, value)
+		
+		// Check for const declaration
+		if n.IsConst {
+			env.SetConst(n.Name, value)
+		} else {
+			env.Set(n.Name, value)
+		}
 		return value
 
 	case ast.IfNode:

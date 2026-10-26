@@ -1,0 +1,278 @@
+// ============================================================
+// CONST/IMMUTABLE VARIABLES DEMONSTRATION
+// ============================================================
+// This file demonstrates const (thabiti) variable declarations
+
+andika("=== KWENDA CONST VARIABLES EXAMPLES ===")
+andika("")
+
+// ============================================================
+// 1. CONST NUMBER VARIABLES
+// ============================================================
+andika("1. Const Number Variables:")
+andika("---------------------------")
+
+thabiti namba PI = 3.14159
+thabiti namba MAX_SIZE = 100
+thabiti namba MIN_VALUE = 0
+
+andika("PI =", PI)
+andika("MAX_SIZE =", MAX_SIZE)
+andika("MIN_VALUE =", MIN_VALUE)
+
+// Trying to reassign will show an error message
+// PI = 3.14  // This would print an error
+
+andika("")
+
+// ============================================================
+// 2. CONST STRING VARIABLES
+// ============================================================
+andika("2. Const String Variables:")
+andika("---------------------------")
+
+thabiti maneno APP_NAME = "Kwenda"
+thabiti maneno VERSION = "1.0.0"
+thabiti maneno AUTHOR = "Kwenda Team"
+
+andika("Application:", APP_NAME)
+andika("Version:", VERSION)
+andika("Author:", AUTHOR)
+
+andika("")
+
+// ============================================================
+// 3. CONST BOOLEAN VARIABLES
+// ============================================================
+andika("3. Const Boolean Variables:")
+andika("----------------------------")
+
+thabiti boolean DEBUG_MODE = uwongo
+thabiti boolean PRODUCTION = kweli
+
+andika("Debug Mode:", DEBUG_MODE)
+andika("Production:", PRODUCTION)
+
+andika("")
+
+// ============================================================
+// 4. MUTABLE VS CONST COMPARISON
+// ============================================================
+andika("4. Mutable vs Const Comparison:")
+andika("--------------------------------")
+
+// Mutable variable - can be changed
+namba x = 10
+andika("Mutable x =", x)
+x = 20
+andika("After change, x =", x)
+
+andika("")
+
+// Const variable - cannot be changed
+thabiti namba y = 30
+andika("Const y =", y)
+// y = 40  // This would print an error
+andika("y remains:", y)
+
+andika("")
+
+// ============================================================
+// 5. CONST WITH CALCULATIONS
+// ============================================================
+andika("5. Const with Calculations:")
+andika("----------------------------")
+
+thabiti namba RADIUS = 5
+thabiti namba PI_CONST = 3.14159
+thabiti namba AREA = RADIUS * RADIUS * PI_CONST
+
+andika("Radius:", RADIUS)
+andika("Area:", AREA)
+
+andika("")
+
+// ============================================================
+// 6. CONST IN FUNCTIONS
+// ============================================================
+andika("6. Const in Functions:")
+andika("-----------------------")
+
+kazi calculateCircleArea(namba r) namba {
+    thabiti namba pi = 3.14159
+    rudisha pi * r * r
+}
+
+namba area1 = calculateCircleArea(5)
+namba area2 = calculateCircleArea(10)
+
+andika("Area (r=5):", area1)
+andika("Area (r=10):", area2)
+
+andika("")
+
+// ============================================================
+// 7. CONST ARRAYS
+// ============================================================
+andika("7. Const Arrays:")
+andika("-----------------")
+
+thabiti orodha namba PRIME_NUMBERS = [2, 3, 5, 7, 11]
+andika("Prime numbers:", PRIME_NUMBERS)
+
+// Note: Array reference is const, but internal elements can be modified
+// This is standard behavior in most languages
+
+andika("")
+
+// ============================================================
+// 8. CONST CONFIGURATION
+// ============================================================
+andika("8. Const Configuration:")
+andika("------------------------")
+
+thabiti namba MAX_USERS = 1000
+thabiti namba TIMEOUT_SECONDS = 30
+thabiti maneno DEFAULT_LANGUAGE = "Swahili"
+
+kazi showConfig() {
+    andika("Max Users:", MAX_USERS)
+    andika("Timeout:", TIMEOUT_SECONDS, "seconds")
+    andika("Default Language:", DEFAULT_LANGUAGE)
+}
+
+showConfig()
+
+andika("")
+
+// ============================================================
+// 9. CONST IN CONDITIONAL
+// ============================================================
+andika("9. Const in Conditional:")
+andika("-------------------------")
+
+thabiti namba PASSING_GRADE = 50
+namba studentScore = 75
+
+kama studentScore >= PASSING_GRADE {
+    andika("Student passed! Score:", studentScore)
+} sivyo {
+    andika("Student failed. Score:", studentScore)
+}
+
+andika("")
+
+// ============================================================
+// 10. CONST WITH STRINGS
+// ============================================================
+andika("10. Const with Strings:")
+andika("------------------------")
+
+thabiti maneno GREETING = "Habari"
+thabiti maneno NAME = "Amina"
+
+maneno fullGreeting = GREETING + ", " + NAME + "!"
+andika(fullGreeting)
+
+andika("")
+
+// ============================================================
+// 11. MATHEMATICAL CONSTANTS
+// ============================================================
+andika("11. Mathematical Constants:")
+andika("----------------------------")
+
+thabiti namba E = 2.71828
+thabiti namba GOLDEN_RATIO = 1.618
+
+andika("Euler's number (e):", E)
+andika("Golden ratio (φ):", GOLDEN_RATIO)
+
+andika("")
+
+// ============================================================
+// 12. CONST ERROR CODES
+// ============================================================
+andika("12. Const Error Codes:")
+andika("-----------------------")
+
+thabiti namba ERROR_NOT_FOUND = 404
+thabiti namba ERROR_UNAUTHORIZED = 401
+thabiti namba SUCCESS = 200
+
+kazi getStatusMessage(namba code) maneno {
+    kama code == SUCCESS {
+        rudisha "Mafanikio (Success)"
+    } sivyo kama code == ERROR_NOT_FOUND {
+        rudisha "Haipatikani (Not Found)"
+    } sivyo kama code == ERROR_UNAUTHORIZED {
+        rudisha "Hauruhusiwi (Unauthorized)"
+    } sivyo {
+        rudisha "Kosa lisil ojulikana (Unknown Error)"
+    }
+}
+
+andika("Status 200:", getStatusMessage(SUCCESS))
+andika("Status 404:", getStatusMessage(ERROR_NOT_FOUND))
+
+andika("")
+
+// ============================================================
+// 13. CONST LIMITS AND BOUNDARIES
+// ============================================================
+andika("13. Const Limits and Boundaries:")
+andika("---------------------------------")
+
+thabiti namba MIN_AGE = 0
+thabiti namba MAX_AGE = 150
+thabiti namba MIN_SCORE = 0
+thabiti namba MAX_SCORE = 100
+
+kazi isValidAge(namba age) boolean {
+    rudisha age >= MIN_AGE na age <= MAX_AGE
+}
+
+kazi isValidScore(namba score) boolean {
+    rudisha score >= MIN_SCORE na score <= MAX_SCORE
+}
+
+andika("Age 25 valid?", isValidAge(25))
+andika("Age 200 valid?", isValidAge(200))
+andika("Score 85 valid?", isValidScore(85))
+andika("Score 150 valid?", isValidScore(150))
+
+andika("")
+
+// ============================================================
+// 14. CONST MULTIPLIERS
+// ============================================================
+andika("14. Const Multipliers:")
+andika("-----------------------")
+
+thabiti namba HOURS_PER_DAY = 24
+thabiti namba MINUTES_PER_HOUR = 60
+thabiti namba SECONDS_PER_MINUTE = 60
+
+thabiti namba SECONDS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE
+
+andika("Seconds in a day:", SECONDS_PER_DAY)
+
+andika("")
+
+// ============================================================
+// 15. CONST IN LOOPS
+// ============================================================
+andika("15. Const in Loops:")
+andika("--------------------")
+
+thabiti namba LOOP_COUNT = 5
+
+namba i = 0
+wakati i < LOOP_COUNT {
+    andika("Iteration", i)
+    i = i + 1
+}
+
+andika("")
+
+andika("=== MWISHO WA MFANO (END OF EXAMPLES) ===")

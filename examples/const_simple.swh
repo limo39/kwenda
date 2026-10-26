@@ -1,0 +1,34 @@
+// Simple const variable test
+
+andika("=== CONST SIMPLE TEST ===")
+andika("")
+
+// Test 1: Const number
+thabiti namba PI = 3.14159
+andika("PI =", PI)
+
+// Test 2: Const string
+thabiti maneno NAME = "Kwenda"
+andika("Name =", NAME)
+
+// Test 3: Const boolean
+thabiti boolean IS_READY = kweli
+andika("Ready =", IS_READY)
+
+andika("")
+
+// Test 4: Mutable variable (can change)
+namba x = 10
+andika("x (initial) =", x)
+x = 20
+andika("x (changed) =", x)
+
+andika("")
+
+// Test 5: Try to change const (should show error)
+andika("Attempting to change const PI...")
+PI = 3.14
+andika("PI after attempt =", PI)
+
+andika("")
+andika("=== TEST COMPLETE ===")

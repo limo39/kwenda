@@ -17,7 +17,10 @@
 - **Booleans**: True/false values with `kweli`/`uwongo`
 - **Arrays**: Dynamic lists with `orodha` keyword
 - **Dictionaries**: Key-value maps with `kamusi` keyword
+- **Sets**: Unordered collections with `seti` keyword
+- **Tuples**: Immutable lists with `tuple` keyword
 - **Enums**: Enumeration types with `aina` keyword (e.g., `aina Status { PENDING, ACTIVE }`)
+- **Const Variables**: Immutable variables with `thabiti` keyword
 - **Type-safe Declarations**: Explicit type declarations for variables
 
 ### Operators & Expressions
@@ -201,6 +204,7 @@ The interpreter will execute the specified `.swh` file. You can run examples fro
 | `asinh` | asinh/arcsinh | Calculate inverse hyperbolic sine |
 | `acosh` | acosh/arccosh | Calculate inverse hyperbolic cosine (domain: x >= 1) |
 | `atanh` | atanh/arctanh | Calculate inverse hyperbolic tangent (domain: -1 < x < 1) |
+| `thabiti` | const/immutable | Declare an immutable (constant) variable |
 
 ### Basic Syntax
 
@@ -214,6 +218,23 @@ maneno jina = "Amina"
 maneno salamu = "Habari"
 orodha namba namba_za_kwanza = [1, 2, 3, 4, 5]  # Array declaration
 kamusi person = {"jina": "Amina", "umri": 25}    # Dictionary declaration
+```
+
+#### Const (Immutable) Variable Declaration
+```swahili
+# Const variables cannot be reassigned after initialization
+thabiti namba PI = 3.14159
+thabiti maneno APP_NAME = "Kwenda"
+thabiti boolean IS_PRODUCTION = kweli
+
+# Attempting to reassign will show an error
+PI = 3.14  # Error: Cannot reassign const variable 'PI'
+
+# Const works with all data types
+thabiti orodha namba FIBONACCI = [1, 1, 2, 3, 5, 8]
+thabiti kamusi CONFIG = {"version": "1.0", "debug": uwongo}
+thabiti seti namba PRIMES = {2, 3, 5, 7, 11}
+thabiti tuple namba COORDINATES = (10, 20, 30)
 ```
 
 #### Function Definition
@@ -591,15 +612,15 @@ The interpreter follows a traditional architecture:
 - [x] Enum types (`aina Status { PENDING, ACTIVE, COMPLETED }`) ✅
 - [x] Interactive REPL (Read-Eval-Print Loop) ✅
 - [x] Debugger with breakpoints and variable inspection ✅
+- [x] Set data structures and operations (`seti` keyword) ✅
+- [x] Tuple data structures (`tuple` keyword for immutable lists) ✅
+- [x] Slice operations for arrays (`orodha[start:end:step]`) ✅
+- [x] String interpolation support ✅
+- [x] Pattern matching with switch/case statements (`swichi`/`ikiwa`/`kawaida`) ✅
+- [x] Type annotations and optional type checking (`--check` and `--strict` flags) ✅
+- [x] Const/immutable variable declarations (`thabiti` keyword) ✅
 
 ### 🚀 Planned Features
-- [ ] Set data structures and operations
-- [ ] Tuple data structures (immutable lists)
-- [ ] Slice operations for arrays (`orodha[start:end]`)
-- [ ] String interpolation/formatting
-- [ ] Pattern matching (switch/case statements)
-- [ ] Type annotations and optional type checking
-- [ ] Const/immutable variable declarations
 - [ ] Spread operator for arrays and dictionaries
 - [ ] Destructuring assignment
 - [ ] Anonymous functions/closures improvements
