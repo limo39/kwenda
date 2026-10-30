@@ -338,11 +338,26 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle dictionary literals (e.g., {"key": "value", "age": 25})
 		dict := make(map[string]interface{})
 		for _, pair := range n.Pairs {
-			key := Interpret(pair.Key, env)
-			value := Interpret(pair.Value, env)
-			// Convert key to string
-			keyStr := fmt.Sprintf("%v", key)
-			dict[keyStr] = value
+			// Check if this is a spread (marked with nil key)
+			if pair.Key == nil {
+				// This is a spread operator
+				if spreadNode, ok := pair.Value.(ast.SpreadNode); ok {
+					spreadValue := Interpret(spreadNode.Expression, env)
+					// If it's a dictionary, merge its key-value pairs
+					if spreadDict, ok := spreadValue.(map[string]interface{}); ok {
+						for k, v := range spreadDict {
+							dict[k] = v
+						}
+					}
+				}
+			} else {
+				// Regular key-value pair
+				key := Interpret(pair.Key, env)
+				value := Interpret(pair.Value, env)
+				// Convert key to string
+				keyStr := fmt.Sprintf("%v", key)
+				dict[keyStr] = value
+			}
 		}
 		return dict
 
@@ -360,8 +375,22 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 		// Handle array literals (e.g., [1, 2, 3])
 		var elements []interface{}
 		for _, element := range n.Elements {
-			value := Interpret(element, env)
-			elements = append(elements, value)
+			// Check if this is a spread node
+			if spreadNode, ok := element.(ast.SpreadNode); ok {
+				// Evaluate the spread expression
+				spreadValue := Interpret(spreadNode.Expression, env)
+				// If it's an array, spread its elements
+				if arr, ok := spreadValue.([]interface{}); ok {
+					elements = append(elements, arr...)
+				} else {
+					// If not an array, just add the value itself
+					elements = append(elements, spreadValue)
+				}
+			} else {
+				// Regular element
+				value := Interpret(element, env)
+				elements = append(elements, value)
+			}
 		}
 		return elements
 
@@ -463,11 +492,25 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			}
 		}
 		
-		// Regular array declaration
+		// Regular array declaration with spread operator support
 		var elements []interface{}
 		for _, element := range n.Elements {
-			value := Interpret(element, env)
-			elements = append(elements, value)
+			// Check if this is a spread node
+			if spreadNode, ok := element.(ast.SpreadNode); ok {
+				// Evaluate the spread expression
+				spreadValue := Interpret(spreadNode.Expression, env)
+				// If it's an array, spread its elements
+				if arr, ok := spreadValue.([]interface{}); ok {
+					elements = append(elements, arr...)
+				} else {
+					// If not an array, just add the value itself
+					elements = append(elements, spreadValue)
+				}
+			} else {
+				// Regular element
+				value := Interpret(element, env)
+				elements = append(elements, value)
+			}
 		}
 		if n.IsConst {
 			env.SetConst(n.Name, elements)
@@ -4832,6 +4875,12 @@ func Interpret(node ast.ASTNode, env *Environment) interface{} {
 			env.SetFunction(n.Name, n)
 			return nil
 		}
+
+	case ast.SpreadNode:
+		// SpreadNode should only appear within array or dictionary contexts
+		// If we encounter it here, just evaluate and return the expression
+		// This shouldn't normally happen but provides a fallback
+		return Interpret(n.Expression, env)
 
 	default:
 		fmt.Println("Aina ya nodi haijulikani:", n)

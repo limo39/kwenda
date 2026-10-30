@@ -139,6 +139,11 @@ type ArraySliceNode struct {
     Step  ASTNode // Step value (can be nil for default step of 1)
 }
 
+// SpreadNode represents the spread operator (e.g., ...array or ...dict)
+type SpreadNode struct {
+    Expression ASTNode // The array or dictionary expression to spread
+}
+
 // ArrayAssignmentNode represents array element assignment (e.g., arr[0] = 5)
 type ArrayAssignmentNode struct {
     Array ASTNode // The array being modified

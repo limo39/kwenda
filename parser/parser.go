@@ -1990,7 +1990,9 @@ func ParseArrayElements(tokens []lexer.Token) []ast.ASTNode {
 	var elements []ast.ASTNode
 	var currentElement []lexer.Token
 
-	for _, token := range tokens {
+	for i := 0; i < len(tokens); i++ {
+		token := tokens[i]
+		
 		if token.Value == "," {
 			if len(currentElement) > 0 {
 				element := ParseExpression(currentElement)
@@ -1998,6 +2000,24 @@ func ParseArrayElements(tokens []lexer.Token) []ast.ASTNode {
 					elements = append(elements, element)
 				}
 				currentElement = nil
+			}
+		} else if token.Type == lexer.TokenOperator && token.Value == "..." {
+			// Handle spread operator
+			// Collect tokens until next comma or end
+			spreadExpr := []lexer.Token{}
+			i++ // Move past "..."
+			for i < len(tokens) && tokens[i].Value != "," {
+				spreadExpr = append(spreadExpr, tokens[i])
+				i++
+			}
+			i-- // Back up one since loop will increment
+			
+			if len(spreadExpr) > 0 {
+				expr := ParseExpression(spreadExpr)
+				if expr != nil {
+					spreadNode := ast.SpreadNode{Expression: expr}
+					elements = append(elements, spreadNode)
+				}
 			}
 		} else {
 			currentElement = append(currentElement, token)
@@ -2610,12 +2630,26 @@ func ParseDictionaryPairs(tokens []lexer.Token) []ast.DictionaryPair {
 	var pairs []ast.DictionaryPair
 	var currentPair []lexer.Token
 
-	for _, token := range tokens {
+	for i := 0; i < len(tokens); i++ {
+		token := tokens[i]
+		
 		if token.Value == "," {
 			if len(currentPair) > 0 {
-				pair := ParseDictionaryPair(currentPair)
-				if pair != nil {
-					pairs = append(pairs, *pair)
+				// Check if this is a spread operator
+				if len(currentPair) > 0 && currentPair[0].Type == lexer.TokenOperator && currentPair[0].Value == "..." {
+					// Create a special pair with nil key to indicate spread
+					if len(currentPair) > 1 {
+						expr := ParseExpression(currentPair[1:])
+						if expr != nil {
+							spreadNode := ast.SpreadNode{Expression: expr}
+							pairs = append(pairs, ast.DictionaryPair{Key: nil, Value: spreadNode})
+						}
+					}
+				} else {
+					pair := ParseDictionaryPair(currentPair)
+					if pair != nil {
+						pairs = append(pairs, *pair)
+					}
 				}
 				currentPair = nil
 			}
@@ -2625,9 +2659,21 @@ func ParseDictionaryPairs(tokens []lexer.Token) []ast.DictionaryPair {
 	}
 
 	if len(currentPair) > 0 {
-		pair := ParseDictionaryPair(currentPair)
-		if pair != nil {
-			pairs = append(pairs, *pair)
+		// Check if this is a spread operator
+		if len(currentPair) > 0 && currentPair[0].Type == lexer.TokenOperator && currentPair[0].Value == "..." {
+			// Create a special pair with nil key to indicate spread
+			if len(currentPair) > 1 {
+				expr := ParseExpression(currentPair[1:])
+				if expr != nil {
+					spreadNode := ast.SpreadNode{Expression: expr}
+					pairs = append(pairs, ast.DictionaryPair{Key: nil, Value: spreadNode})
+				}
+			}
+		} else {
+			pair := ParseDictionaryPair(currentPair)
+			if pair != nil {
+				pairs = append(pairs, *pair)
+			}
 		}
 	}
 

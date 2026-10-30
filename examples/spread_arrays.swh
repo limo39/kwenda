@@ -1,0 +1,58 @@
+// Test spread operator with arrays
+
+// Test 1: Basic array spreading
+orodha namba arr1 = [1, 2, 3]
+orodha namba arr2 = [4, 5, 6]
+orodha namba combined = [...arr1, ...arr2]
+andika("Test 1 - Basic spreading: ", combined)
+
+// Test 2: Spreading with additional elements
+orodha namba arr3 = [1, 2]
+orodha namba arr4 = [0, ...arr3, 3, 4]
+andika("Test 2 - Spread with elements: ", arr4)
+
+// Test 3: Multiple spreads
+orodha namba a = [1, 2]
+orodha namba b = [3, 4]
+orodha namba c = [5, 6]
+orodha namba multi = [...a, ...b, ...c]
+andika("Test 3 - Multiple spreads: ", multi)
+
+// Test 4: Spreading strings (arrays of characters)
+maneno str1 = "Hello"
+maneno str2 = "World"
+orodha maneno words = [...str1, " ", ...str2]
+andika("Test 4 - String spreading: ", words)
+
+// Test 5: Nested arrays
+orodha namba inner1 = [1, 2]
+orodha namba inner2 = [3, 4]
+orodha namba nested = [[...inner1], [...inner2]]
+andika("Test 5 - Nested spreading: ", nested)
+
+// Test 6: Empty array spread
+orodha namba empty = []
+orodha namba withEmpty = [1, ...empty, 2]
+andika("Test 6 - Empty array spread: ", withEmpty)
+
+// Test 7: Single spread
+orodha namba original = [10, 20, 30]
+orodha namba copy = [...original]
+andika("Test 7 - Array copy: ", copy)
+
+// Test 8: Spread at start
+orodha namba numbers = [5, 6, 7]
+orodha namba startSpread = [...numbers, 8, 9]
+andika("Test 8 - Spread at start: ", startSpread)
+
+// Test 9: Spread at end
+orodha namba nums = [1, 2, 3]
+orodha namba endSpread = [0, ...nums]
+andika("Test 9 - Spread at end: ", endSpread)
+
+// Test 10: Complex combination
+orodha namba x = [1]
+orodha namba y = [2, 3]
+orodha namba z = [4]
+orodha namba complex = [0, ...x, ...y, ...z, 5]
+andika("Test 10 - Complex: ", complex)

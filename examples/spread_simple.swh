@@ -1,0 +1,13 @@
+// Simple spread operator test
+
+// Test 1: Array spreading
+orodha namba arr1 = [1, 2, 3]
+orodha namba arr2 = [4, 5, 6]
+orodha namba combined = [...arr1, ...arr2]
+andika("Array spread: ", combined)
+
+// Test 2: Dictionary spreading
+kamusi dict1 = {"a": 1, "b": 2}
+kamusi dict2 = {"c": 3, "d": 4}
+kamusi merged = {...dict1, ...dict2}
+andika("Dict spread: ", merged)

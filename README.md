@@ -56,6 +56,7 @@
 ### Data Structures
 - **Array Operations**: Add, remove, access, and get length
 - **Array Slicing**: Python-style slicing with `orodha[start:end:step]` syntax
+- **Spread Operator**: Expand arrays and dictionaries with `...` syntax
 - **List Comprehensions**: Create arrays with concise syntax `[expression kwa variable katika iterable kama condition]`
 - **Sets**: Unordered collections of unique elements with `seti` keyword
 - **Tuples**: Immutable ordered collections with `tuple` keyword
@@ -277,6 +278,43 @@ ongeza(arr, 4)                       # Add element to end
 ondoa(arr, 1)                        # Remove element at index 1
 andika("Orodha:", arr)               # Print array: [1, 3, 4]
 ```
+
+#### Spread Operator (`...`)
+The spread operator allows you to expand arrays and dictionaries inline:
+
+```swahili
+# Array spreading - combine arrays
+orodha namba arr1 = [1, 2, 3]
+orodha namba arr2 = [4, 5, 6]
+orodha namba combined = [...arr1, ...arr2]    # [1, 2, 3, 4, 5, 6]
+
+# Array spreading with additional elements
+orodha namba nums = [2, 3, 4]
+orodha namba extended = [1, ...nums, 5]        # [1, 2, 3, 4, 5]
+
+# Array copying (shallow)
+orodha namba original = [10, 20, 30]
+orodha namba copy = [...original]               # [10, 20, 30]
+
+# Multiple spreads
+orodha namba a = [1]
+orodha namba b = [2, 3]
+orodha namba c = [4]
+orodha namba sequence = [...a, ...b, ...c]     # [1, 2, 3, 4]
+
+# Dictionary spreading - merge dictionaries
+kamusi person = {"name": "Amina", "age": 25}
+kamusi location = {"city": "Dar", "country": "Tanzania"}
+kamusi profile = {...person, ...location}      
+# {"name": "Amina", "age": 25, "city": "Dar", "country": "Tanzania"}
+
+# Dictionary property override (last value wins)
+kamusi defaults = {"theme": "light", "size": 12}
+kamusi custom = {"size": 16}
+kamusi settings = {...defaults, ...custom}     # {"theme": "light", "size": 16}
+```
+
+**Note**: Dictionary spread with multiple declarations in the same file has known parsing limitations. Use function returns or separate files as a workaround.
 
 #### File I/O Operations
 ```swahili

@@ -1,0 +1,58 @@
+// Test spread operator with dictionaries
+
+// Test 1: Basic dictionary spreading
+kamusi dict1 = {"a": 1, "b": 2}
+kamusi dict2 = {"c": 3, "d": 4}
+kamusi combined = {...dict1, ...dict2}
+andika("Test 1 - Basic spreading: ", combined)
+
+// Test 2: Spreading with override
+kamusi base = {"name": "John", "age": 30}
+kamusi override = {"age": 31, "city": "NYC"}
+kamusi updated = {...base, ...override}
+andika("Test 2 - Override values: ", updated)
+
+// Test 3: Spreading with additional properties
+kamusi partial = {"x": 10}
+kamusi extended = {...partial, "y": 20, "z": 30}
+andika("Test 3 - Extended dict: ", extended)
+
+// Test 4: Multiple spreads
+kamusi d1 = {"a": 1}
+kamusi d2 = {"b": 2}
+kamusi d3 = {"c": 3}
+kamusi multi = {...d1, ...d2, ...d3}
+andika("Test 4 - Multiple spreads: ", multi)
+
+// Test 5: Empty dictionary spread
+kamusi empty = {}
+kamusi withEmpty = {"key": "value", ...empty}
+andika("Test 5 - Empty dict spread: ", withEmpty)
+
+// Test 6: Spread at start
+kamusi props = {"color": "red", "size": "large"}
+kamusi startSpread = {...props, "weight": "heavy"}
+andika("Test 6 - Spread at start: ", startSpread)
+
+// Test 7: Spread in middle
+kamusi first = {"a": 1}
+kamusi last = {"c": 3}
+kamusi middle = {"a": 1, ...first, "b": 2, ...last}
+andika("Test 7 - Spread in middle: ", middle)
+
+// Test 8: Clone dictionary
+kamusi original = {"name": "Alice", "score": 100}
+kamusi clone = {...original}
+andika("Test 8 - Dictionary clone: ", clone)
+
+// Test 9: Merge with key conflicts (last wins)
+kamusi config1 = {"debug": true, "port": 3000}
+kamusi config2 = {"port": 8080, "host": "localhost"}
+kamusi finalConfig = {...config1, ...config2}
+andika("Test 9 - Key conflicts: ", finalConfig)
+
+// Test 10: Complex merging
+kamusi defaults = {"theme": "dark", "lang": "en"}
+kamusi userPrefs = {"lang": "sw", "fontSize": 14}
+kamusi settings = {...defaults, ...userPrefs, "custom": true}
+andika("Test 10 - Complex merge: ", settings)

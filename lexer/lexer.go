@@ -211,8 +211,25 @@ func Lex(input string) []Token {
 				i++
 			}
 		} else if char == '.' {
-			// Handle decimal point - could be part of a number or module access
-			if currentToken.Len() > 0 {
+			// Check for spread operator (...)
+			if i+2 < len(runes) && runes[i+1] == '.' && runes[i+2] == '.' {
+				// Finalize current token first
+				if currentToken.Len() > 0 {
+					tokenValue := currentToken.String()
+					if isSwahiliKeyword(tokenValue) {
+						tokens = append(tokens, makeToken(TokenKeyword, tokenValue, lineNumber))
+					} else if isNumber(tokenValue) {
+						tokens = append(tokens, makeToken(TokenNumber, tokenValue, lineNumber))
+					} else {
+						tokens = append(tokens, makeToken(TokenIdentifier, tokenValue, lineNumber))
+					}
+					currentToken.Reset()
+				}
+				// Add spread operator token
+				tokens = append(tokens, makeToken(TokenOperator, "...", lineNumber))
+				i += 2 // Skip next two dots
+			} else if currentToken.Len() > 0 {
+				// Handle decimal point - could be part of a number or module access
 				tokenValue := currentToken.String()
 				// If current token is a number and next char is a digit, it's a decimal
 				if unicode.IsDigit(rune(tokenValue[0])) && i+1 < len(runes) && unicode.IsDigit(runes[i+1]) {

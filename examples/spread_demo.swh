@@ -1,0 +1,131 @@
+// Comprehensive Spread Operator Demonstration
+
+andika("=== SPREAD OPERATOR DEMO ===")
+andika("")
+
+// ==========================================
+// 1. Array Concatenation
+// ==========================================
+andika("1. Array Concatenation:")
+orodha namba numbers1 = [1, 2, 3]
+orodha namba numbers2 = [4, 5, 6]
+orodha namba allNumbers = [...numbers1, ...numbers2]
+andika("   Combined: ", allNumbers)
+andika("")
+
+// ==========================================
+// 2. Array Copy (Shallow)
+// ==========================================
+andika("2. Array Copy:")
+orodha namba original = [10, 20, 30]
+orodha namba copy = [...original]
+andika("   Original: ", original)
+andika("   Copy: ", copy)
+andika("")
+
+// ==========================================
+// 3. Insert Elements in Middle
+// ==========================================
+andika("3. Insert Elements in Middle:")
+orodha namba start = [1, 2]
+orodha namba end = [5, 6]
+orodha namba withMiddle = [...start, 3, 4, ...end]
+andika("   Result: ", withMiddle)
+andika("")
+
+// ==========================================
+// 4. Dictionary Merge
+// ==========================================
+andika("4. Dictionary Merge:")
+kamusi person = {"name": "Amina", "age": 25}
+kamusi location = {"city": "Dar es Salaam", "country": "Tanzania"}
+kamusi profile = {...person, ...location}
+andika("   Merged Profile: ", profile)
+andika("")
+
+// ==========================================
+// 5. Dictionary Property Override
+// ==========================================
+andika("5. Dictionary Property Override:")
+kamusi defaults = {"theme": "light", "fontSize": 12, "language": "en"}
+kamusi userSettings = {"fontSize": 16, "language": "sw"}
+kamusi finalSettings = {...defaults, ...userSettings}
+andika("   Defaults: ", defaults)
+andika("   User Settings: ", userSettings)
+andika("   Final: ", finalSettings)
+andika("")
+
+// ==========================================
+// 6. Add Properties to Dictionary
+// ==========================================
+andika("6. Add Properties to Dictionary:")
+kamusi baseConfig = {"debug": false}
+kamusi extendedConfig = {...baseConfig, "port": 3000, "host": "localhost"}
+andika("   Extended Config: ", extendedConfig)
+andika("")
+
+// ==========================================
+// 7. Array with Mixed Elements
+// ==========================================
+andika("7. Array with Mixed Elements:")
+orodha namba prefix = [0]
+orodha namba suffix = [10]
+orodha namba mixed = [...prefix, 1, 2, 3, ...suffix]
+andika("   Mixed Array: ", mixed)
+andika("")
+
+// ==========================================
+// 8. Empty Spread (No Effect)
+// ==========================================
+andika("8. Empty Spread:")
+orodha namba emptyArr = []
+kamusi emptyDict = {}
+orodha namba arrWithEmpty = [1, ...emptyArr, 2]
+kamusi dictWithEmpty = {"a": 1, ...emptyDict, "b": 2}
+andika("   Array with empty spread: ", arrWithEmpty)
+andika("   Dict with empty spread: ", dictWithEmpty)
+andika("")
+
+// ==========================================
+// 9. Multiple Consecutive Spreads
+// ==========================================
+andika("9. Multiple Consecutive Spreads:")
+orodha namba a = [1]
+orodha namba b = [2]
+orodha namba c = [3]
+orodha namba d = [4]
+orodha namba sequence = [...a, ...b, ...c, ...d]
+andika("   Sequence: ", sequence)
+andika("")
+
+// ==========================================
+// 10. Practical Use Case: Function Arguments Array
+// ==========================================
+andika("10. Building Function Arguments:")
+orodha namba baseArgs = [100, 200]
+orodha namba extraArgs = [300, 400]
+orodha namba allArgs = [...baseArgs, ...extraArgs]
+andika("   All Arguments: ", allArgs)
+andika("")
+
+// ==========================================
+// 11. Practical Use Case: Configuration Merging
+// ==========================================
+andika("11. Configuration Merging:")
+kamusi productionDefaults = {"env": "production", "cache": true, "timeout": 5000}
+kamusi customConfig = {"timeout": 10000, "maxRetries": 3}
+kamusi finalConfig = {...productionDefaults, ...customConfig}
+andika("   Production Config: ", finalConfig)
+andika("")
+
+// ==========================================
+// 12. Dictionary Cloning
+// ==========================================
+andika("12. Dictionary Cloning:")
+kamusi source = {"id": 123, "status": "active"}
+kamusi cloned = {...source}
+andika("   Source: ", source)
+andika("   Cloned: ", cloned)
+andika("")
+
+andika("=== END OF DEMO ===")
